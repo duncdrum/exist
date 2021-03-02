@@ -25,11 +25,11 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Maven Build
-        run: mvn -V -B -q -DskipTests=true "-Dmaven.javadoc.skip=true" install
+        run: mvn -V -B -q -T2C -DskipTests=true "-Dmaven.javadoc.skip=true" install
       - name: Maven Test
         run: mvn -V -B verify -Ptests
       - name: Maven Javadoc
-        run: mvn -V -B -q javadoc:javadoc
+        run: mvn -V -B -q -T2C javadoc:javadoc
   deploy:
       runs-on: ubuntu-latest
       needs: build    
@@ -43,7 +43,7 @@ jobs:
             java-version: '8'
         # TODO: reuse artiefacts from Build step
         - name: Maven Build
-          run: mvn -V -T2C clean package -DskipTests -Ddependency-check.skip=true -Ddocker=true    
+          run: mvn -V -T2C -P \!mac-dmg-on-mac,\!codesign-mac-dmg,\!mac-dmg-on-unix,\!installer clean package -DskipTests -Ddependency-check.skip=true -Ddocker=true
         - name: Build and push latest images
           if: github.ref == 'refs/heads/develop'
           env:
