@@ -2,15 +2,15 @@ name: CI
 on: [push, pull_request]
 jobs:
   build:
-    name: Build and Test (${{ matrix.os }} / OpenJDK ${{ matrix.jdk }})
+    name: (${{ matrix.os }} / JDK ${{ matrix.jdk }}) Build and Test 
     strategy:
       fail-fast: true
       matrix:
-        jdk: ['8', '11', '15']
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        exclude:
-          - os: [macOS-latest, windows-latest]
-            jdk: 15
+        jdk: ['8', '11']        
+        include:
+          - os: ubuntu-latest
+            jdk: '15'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
         - name: Set up JDK 8
           uses: actions/setup-java@v1
           with:
-            java-version: 8
+            java-version: '8'
         # TODO: reuse artiefacts from Build step
         - name: Maven Build
           run: mvn -V -T2C clean package -DskipTests -Ddependency-check.skip=true -Ddocker=true    
