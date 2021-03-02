@@ -27,7 +27,9 @@ jobs:
       - name: Maven Build
         run: mvn -V -B -q -T2C -DskipTests=true "-Dmaven.javadoc.skip=true" install
       - name: Maven Test
-        run: mvn -V -B verify -Ptests
+        run: |
+          mvn clean
+          mvn -V verify
       - name: Maven Javadoc
         run: mvn -V -B -q -T2C javadoc:javadoc
   deploy:
@@ -41,7 +43,7 @@ jobs:
           uses: actions/setup-java@v1
           with:
             java-version: '8'
-        # TODO: reuse artiefacts from Build step
+        # TODO: reuse artefacts from Build step
         - name: Maven Build
           run: mvn -V -T2C -P \!mac-dmg-on-mac,\!codesign-mac-dmg,\!mac-dmg-on-unix,\!installer clean package -DskipTests -Ddependency-check.skip=true -Ddocker=true
         - name: Build and push latest images
