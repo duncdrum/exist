@@ -27,10 +27,9 @@ jobs:
       - name: Maven Build
         run: mvn -V -B -q -T2C -DskipTests=true "-Dmaven.javadoc.skip=true" install
       - name: Maven Test
-        run: |
-          mvn clean
-          mvn -V verify
+        run: mvn -V clean verify
       - name: Maven Javadoc
+        if: ${{ matrix.jdk == '8' }}
         run: mvn -V -B -q -T2C javadoc:javadoc
   deploy:
       runs-on: ubuntu-latest
