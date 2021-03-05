@@ -4,13 +4,12 @@ jobs:
   test:
     name: (JDK ${{ matrix.jdk }} / ${{ matrix.os }}) Test 
         runs-on: ubuntu-latest
-        jdk: '8'
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK ${{ matrix.jdk }}
         uses: actions/setup-java@v1
         with:
-          java-version: ${{ matrix.jdk }}
+          java-version: '8'
       - name: Cache Maven packages
         uses: actions/cache@v2
         with:

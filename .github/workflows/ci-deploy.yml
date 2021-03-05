@@ -4,7 +4,6 @@ jobs:
   deploy:
     name: Publishing docker images
     runs-on: ubuntu-latest
-    jdk: '8'
     needs: build
     if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master') }}
     steps:
