@@ -4,7 +4,7 @@ jobs:
   build:
     name: Build and Test Images
     runs-on: ubuntu-latest
-    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master' || 'refs/heads/docker-test') }}
+#    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master' || 'refs/heads/docker-test') }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -28,11 +28,10 @@ jobs:
           sleep 30s
       - name: run tests
         run: bats exist-docker/src/test/bats/*.bats
-
   deploy:
     name: Publishing docker images
     runs-on: ubuntu-latest
-    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master' || 'refs/heads/docker-test') }}
+    needs: build
     steps:
       - uses: actions/checkout@v2
         with:
@@ -43,22 +42,22 @@ jobs:
           java-version: '8'
       - name: Download workflow run artifacts
         uses: actions/download-artifact@v2
-      - name: Push latest images
-        if: ${{ github.ref == 'refs/heads/develop' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
-        working-directory: ./exist-docker
-      - name: Push release images
-        if: ${{ github.ref == 'refs/heads/master' }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
-        working-directory: ./exist-docker
+#      - name: Push latest images
+#        if: ${{ github.ref == 'refs/heads/develop' }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
+#        working-directory: ./exist-docker
+#      - name: Push release images
+#        if: ${{ github.ref == 'refs/heads/master' }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
+#        working-directory: ./exist-docker
       - name: Push experimental images
         if: ${{ github.ref == 'refs/heads/docker-test' }}
         env:
