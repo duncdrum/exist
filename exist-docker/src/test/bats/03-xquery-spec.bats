@@ -2,7 +2,7 @@
 
 # Tests that execute xquery via Java entrypoint
 @test "Change admin password" {
-  run docker exec exist java org.exist.start.Main client -q -u admin -P '' -x 'sm:passwd("admin", "nimda")'
+  run docker exec exist-ci java org.exist.start.Main client -q -u admin -P '' -x 'sm:passwd("admin", "nimda")'
   [ "$status" -eq 0 ]
 }
 
@@ -29,11 +29,11 @@
   skip
   run curl -i -X PUT -H "Content-Type: application/xquery" -d $'xquery version "3.0";\nmodule namespace host = "http://host/service";\nimport module namespace rest = "http://exquery.org/ns/restxq";\ndeclare\n %rest:POST\n	%rest:path("/forgot")\n %rest:query-param("email", "{$email}")\n	%rest:consumes("application/x-www-form-urlencoded")\n %rest:produces("text/html")\nfunction host:function1($email) {\n let $doc := \n<Customer>\n <Metadata>\n <Created>{current-dateTime()}</Created>\n </Metadata>\n <Contact>\n <Email>{$email}</Email>\n </Contact>\n </Customer>\n return\n let $new-file-path := xmldb:store("/db/forgot", concat($email, ".xml"), $doc)\n return\n <html xmlns="http://www.w3.org/1999/xhtml">\n <body>SUCCESS</body>\n </html>\n};' http://admin:nimda@127.0.0.1:8080/exist/rest/db/forgot.xqm
   [ "$status" -eq 0 ]
-  result=$(docker exec exist java org.exist.start.Main client -q -u admin -P 'nimda' -x 'rest:resource-functions()' | grep -o 'http://host/service')
+  result=$(docker exec exist-ci java org.exist.start.Main client -q -u admin -P 'nimda' -x 'rest:resource-functions()' | grep -o 'http://host/service')
   [ "$result" == 'http://host/service' ]
 }
 
 @test "teardown revert changes" {
-  run docker exec exist java org.exist.start.Main client -q -u admin -P 'nimda' -x 'sm:passwd("admin", "")'
+  run docker exec exist-ci java org.exist.start.Main client -q -u admin -P 'nimda' -x 'sm:passwd("admin", "")'
   [ "$status" -eq 0 ]
 }

@@ -2,7 +2,7 @@
 
 # Tests for modifying eXist's configuration files
 @test "copy configuration file from container to disk" {
-  run docker cp exist:exist/etc/conf.xml ./conf.xml && [[ -e ./conf.xml ]] && ls -l ./conf.xml
+  run docker cp exist-ci:exist/etc/conf.xml ./conf.xml && [[ -e ./conf.xml ]] && ls -l ./conf.xml
   [ "$status" -eq 0 ]
 }
 

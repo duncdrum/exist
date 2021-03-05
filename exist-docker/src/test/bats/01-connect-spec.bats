@@ -2,7 +2,7 @@
 
 # Basic start-up and connection tests
 @test "jvm responds from client" {
-  run docker exec exist java -version
+  run docker exec exist-ci java -version
   [ "$status" -eq 0 ]
 }
 
@@ -17,11 +17,11 @@
 }
 
 @test "eXist logs show clean start" {
-  result=$(docker logs exist | grep -o 'Server has started')
+  result=$(docker logs exist-ci | grep -o 'Server has started')
   [ "$result" == 'Server has started' ]
 }
 
 @test "logs are error free" {
-  result=$(docker logs exist | grep -ow -c 'ERROR' || true)
+  result=$(docker logs exist-ci | grep -ow -c 'ERROR' || true)
   [ "$result" -eq 0 ]
 }
