@@ -1,4 +1,4 @@
-name: Test
+name: Javadoc
 on: [push, pull_request]
 jobs:
   test:
