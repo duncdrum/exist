@@ -15,8 +15,14 @@ jobs:
           java-version: '8'
       - name: Install bats
         run: sudo apt-get install bats
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
       - name: Build images
-        run: mvn -V -B -Pdocker -DskipTests -Ddependency-check.skip=true clean package
+        run: mvn -V -B -q -Pdocker -DskipTests -Ddependency-check.skip=true clean package
       - name: Archive exist-docker target
         uses: actions/upload-artifact@v2
         with:
