@@ -4,7 +4,7 @@ jobs:
   build:
     name: Build and Test Images
     runs-on: ubuntu-latest
-    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master') }}
+    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master' || 'refs/heads/docker-test') }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -13,20 +13,26 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-      # TODO(DP): reuse artefacts from Build step
-      - name: Build exist
-        run: mvn -V -B -q -T 2C -P \!mac-dmg-on-mac,\!codesign-mac-dmg,\!mac-dmg-on-unix,\!installer clean package -DskipTests -Ddependency-check.skip=true -Ddocker=true
       - name: Install bats
         run: sudo apt-get install bats
-      - name: Run Container
+      - name: Build images
+        run: mvn -V -B -Pdocker -DskipTests -Ddependency-check.skip=true clean package
+      - name: Archive exist-docker target
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker package
+          path: exist-docker/target
+      - name: Start container
         run: |
-          cd exist-docker
-          mvn -DskipTests -Ddocker.tag=ci docker:build docker:run
-          cd ..
+          docker run -dit -p 8080:8080 --name exist-ci --rm existdb/existdb:latest
+          sleep 30s
+      - name: run tests
+        run: bats exist-docker/src/test/bats/*.bats
+
   deploy:
     name: Publishing docker images
     runs-on: ubuntu-latest
-    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master') }}
+    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master' || 'refs/heads/docker-test') }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,26 +41,29 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-      # TODO(DP): reuse artefacts from Build step
-      - name: Maven Build
-        run: mvn -V -B -q -T 2C -P \!mac-dmg-on-mac,\!codesign-mac-dmg,\!mac-dmg-on-unix,\!installer clean package -DskipTests -Ddependency-check.skip=true -Ddocker=true
-      - name: Build and push latest images
+      - name: Download workflow run artifacts
+        uses: actions/download-artifact@v2
+      - name: Push latest images
         if: ${{ github.ref == 'refs/heads/develop' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: $ {{ secrets.DOCKER_PASSWORD }}
-        run: |
-          cd exist-docker
-          mvn -DskipTests -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:build docker:push
-          cd ..
-      - name: Build and push release images
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
+        working-directory: ./exist-docker
+      - name: Push release images
         if: ${{ github.ref == 'refs/heads/master' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: $ {{ secrets.DOCKER_PASSWORD }}
-        run: |
-          cd exist-docker
-          mvn -DskipTests -Ddocker.tag=release -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:build docker:push
-          cd ..       
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
+        working-directory: ./exist-docker
+      - name: Push experimental images
+        if: ${{ github.ref == 'refs/heads/docker-test' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
+        working-directory: ./exist-docker
