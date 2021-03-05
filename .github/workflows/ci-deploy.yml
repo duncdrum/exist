@@ -1,6 +1,28 @@
 name: Deploy
 on: [push, pull_request]
 jobs:
+  build:
+    name: Build and Test Images
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == ('refs/heads/develop' || 'refs/heads/master') }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: '8'
+      # TODO(DP): reuse artefacts from Build step
+      - name: Build exist
+        run: mvn -V -B -q -T 2C -P \!mac-dmg-on-mac,\!codesign-mac-dmg,\!mac-dmg-on-unix,\!installer clean package -DskipTests -Ddependency-check.skip=true -Ddocker=true
+      - name: Install bats
+        run: sudo apt-get install bats
+      - name: Run Container
+        run: |
+          cd exist-docker
+          mvn -DskipTests -Ddocker.tag=ci docker:build docker:run
+          cd ..
   deploy:
     name: Publishing docker images
     runs-on: ubuntu-latest
