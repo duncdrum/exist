@@ -31,9 +31,9 @@ jobs:
       - name: Start container
         run: |
           docker run -dit -p 8080:8080 --name exist-ci --rm existdb/existdb:latest
-          sleep 30s
+          sleep 35s
       - name: run tests
-        run: bats exist-docker/src/test/bats/*.bats
+        run: bats --tap exist-docker/src/test/bats/*.bats
   deploy:
     name: Publishing docker images
     runs-on: ubuntu-latest

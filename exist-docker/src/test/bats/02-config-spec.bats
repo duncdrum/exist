@@ -42,16 +42,16 @@
   [ "$status" -eq 0 ]
 }
 
-@test "log queries to sytem are visible to docker" {
-  run docker exec exist java org.exist.start.Main client -q -u admin -P '' -x 'util:log-system-out("HELLO SYSTEM-OUT")'
+@test "log queries to system are visible to docker" {
+  run docker exec exist-ci java org.exist.start.Main client -q -u admin -P '' -x 'util:log-system-out("HELLO SYSTEM-OUT")'
   [ "$status" -eq 0 ]
-  result=$(docker logs exist | grep -o "HELLO SYSTEM-OUT" | head -1)
+  result=$(docker logs exist-ci | grep -o "HELLO SYSTEM-OUT" | head -1)
   [ "$result" == "HELLO SYSTEM-OUT" ]
 }
 
 @test "regular log queries are visible to docker" {
-  run docker exec exist java org.exist.start.Main client -q -u admin -P '' -x 'util:log("INFO", "HELLO logged INFO")'
+  run docker exec exist-ci java org.exist.start.Main client -q -u admin -P '' -x 'util:log("INFO", "HELLO logged INFO")'
   [ "$status" -eq 0 ]
-  result=$(docker logs exist | grep -o "HELLO logged INFO" | head -1)
+  result=$(docker logs exist-ci | grep -o "HELLO logged INFO" | head -1)
   [ "$result" == "HELLO logged INFO" ]
 }
