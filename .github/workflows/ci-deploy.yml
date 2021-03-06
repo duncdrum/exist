@@ -32,7 +32,7 @@ jobs:
         run: |
           docker run -dit -p 8080:8080 --name exist-ci --rm existdb/existdb:latest
           sleep 35s
-      - name: run tests
+      - name: Run tests
         run: bats --tap exist-docker/src/test/bats/*.bats
   deploy:
     name: Publishing docker images
@@ -65,13 +65,13 @@ jobs:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 #          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
+#        run: mvn -Ddocker.tag=release -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
 #        working-directory: ./exist-docker
       - name: Push experimental images
-        if: ${{ github.ref == 'refs/heads/docker-test' }}
+#        if: github.ref == 'refs/heads/docker-test'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: mvn -Ddocker.tag=latest -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
+        run: mvn -Ddocker.tag=experimental -Ddocker.username=$DOCKER_USERNAME -Ddocker.password=$DOCKER_PASSWORD docker:push
         working-directory: ./exist-docker
