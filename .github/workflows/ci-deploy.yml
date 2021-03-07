@@ -4,7 +4,7 @@ jobs:
   build:
     name: Build and Test Images
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.ref ==  'refs/heads/docker-test'
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' || github.base_ref ==  'develop' || github.base_ref ==  'master'
     steps:
       - uses: actions/checkout@v2
         with:
@@ -58,7 +58,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: target
-          path: exist-docker
+          path: exist-docker/target
       - name: Confirm Project Layout
         run: tree exist-docker/target 
       - name: Push latest images
