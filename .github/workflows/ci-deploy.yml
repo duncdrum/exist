@@ -13,6 +13,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
+      - name: Make buildkit default
+        uses: docker/setup-buildx-action@v1
+        id: buildx
+        with:
+          install: true    
       - name: Install bats
         run: sudo apt-get install bats
       - name: Cache Maven packages
@@ -34,7 +39,7 @@ jobs:
       # NOTE (DP): The below will publish an experimentally tagged image from any PR into develop.
       # Useful when working on features / debugging
       - name: Push experimental images
-        if: github.base_ref == 'develop'
+        if: github.base_ref == 'develop' || github.ref == 'refs/heads/hub-duncdrum' 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
