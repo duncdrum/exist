@@ -201,7 +201,7 @@
                   <verbose>true</verbose>
                     <images>
                         <image>
-                            <name>duncdrum/exist-docker:%v</name>
+                            <name>existdb/existdb:%v</name>
                             <alias>exist-ci</alias>
                             <build>
                                 <tags>
