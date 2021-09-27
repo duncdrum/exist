@@ -13,6 +13,9 @@
 # with optional port number e.g. -j1099 or --jmx=1099.
 #
 
+# (DP): set -e might help, but make backing up more prone to failure, 
+# need to make sure that normal completion is properly reported though
+
 case "$0" in
 	/*)
 		SCRIPTPATH=$(dirname "$0")

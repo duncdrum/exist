@@ -144,6 +144,7 @@ public class Backup {
 
 
     public static void main(final String[] args) {
+        // (DP): investigate if exit code properly reaches calling script 
         try {
             CompatibleJavaVersionCheck.checkForCompatibleJavaVersion();
 
@@ -399,6 +400,7 @@ public class Backup {
                         writer.flush();
                         output.closeEntry();
                     }
+                    // (DP): investigate resource leak warning
                     final EXistResource ris = (EXistResource) resource;
 
                     //store permissions
