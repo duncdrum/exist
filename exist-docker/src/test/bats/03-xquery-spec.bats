@@ -30,6 +30,11 @@
   [ "$result" == 'http://host/service' ]
 }
 
+# @test "create backup" {
+#   run docker exec exist-ci java org.exist.start.Main client -q -u admin -P 'nimda' -x 'sm:passwd("admin", "")'
+#   [ "$status" -eq 0 ]
+# }
+
 @test "teardown revert changes" {
   run docker exec exist-ci java org.exist.start.Main client -q -u admin -P 'nimda' -x 'sm:passwd("admin", "")'
   [ "$status" -eq 0 ]
