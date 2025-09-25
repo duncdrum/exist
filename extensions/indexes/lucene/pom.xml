@@ -90,7 +90,7 @@
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-queries</artifactId>
             <version>${lucene.version}</version>
-            <scope>runtime</scope>
+<!--            <scope>runtime</scope>-->
         </dependency>
         
         <dependency>
