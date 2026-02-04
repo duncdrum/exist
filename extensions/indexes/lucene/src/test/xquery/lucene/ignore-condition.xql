@@ -64,8 +64,8 @@ declare
 function igc:setUp() {
     ( xmldb:create-collection("/db", $igc:COLLECTION_NAME),
       xmldb:create-collection("/db/system/config/db", $igc:COLLECTION_NAME),
-      xmldb:store($igc:COLLECTION, "test.xml", $igc:XML),
       xmldb:store("/db/system/config/db/" || $igc:COLLECTION_NAME, "collection.xconf", $igc:XCONF),
+      xmldb:store($igc:COLLECTION, "test.xml", $igc:XML),
       xmldb:reindex($igc:COLLECTION) )
 };
 
