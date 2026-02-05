@@ -3,7 +3,7 @@
  : Copyright (C) 2001 The eXist-db Authors
  :
  : info@exist-db.org
- : http://exist-db.org
+ : http://www.exist-db.org
  :
  : This library is free software; you can redistribute it and/or
  : modify it under the terms of the GNU Lesser General Public

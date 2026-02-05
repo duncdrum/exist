@@ -3,7 +3,7 @@
  : Copyright (C) 2001 The eXist-db Authors
  :
  : info@exist-db.org
- : http://exist-db.org
+ : http://www.exist-db.org
  :
  : This library is free software; you can redistribute it and/or
  : modify it under the terms of the GNU Lesser General Public
@@ -85,7 +85,9 @@ declare variable $anix:COLLECTION := "/db/" || $anix:COLLECTION_NAME;
 declare
     %test:setUp
 function anix:setUp() {
-    ( xmldb:create-collection("/db", $anix:COLLECTION_NAME),
+    ( xmldb:create-collection("/db/system", "config"),
+      xmldb:create-collection("/db/system/config", "db"),
+      xmldb:create-collection("/db", $anix:COLLECTION_NAME),
       xmldb:create-collection("/db/system/config/db", $anix:COLLECTION_NAME),
       xmldb:store("/db/system/config/db/" || $anix:COLLECTION_NAME, "collection.xconf", $anix:XCONF),
       xmldb:store($anix:COLLECTION, "text.xml", $anix:XML),

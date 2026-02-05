@@ -3,7 +3,7 @@
  : Copyright (C) 2001 The eXist-db Authors
  :
  : info@exist-db.org
- : http://exist-db.org
+ : http://www.exist-db.org
  :
  : This library is free software; you can redistribute it and/or
  : modify it under the terms of the GNU Lesser General Public
@@ -97,7 +97,9 @@ declare variable $indq:EXPECTED_P2_MATCH as element(results) :=
 declare
     %test:setUp
 function indq:setUp() {
-    ( xmldb:create-collection("/db", $indq:COLLECTION_NAME),
+    ( xmldb:create-collection("/db/system", "config"),
+      xmldb:create-collection("/db/system/config", "db"),
+      xmldb:create-collection("/db", $indq:COLLECTION_NAME),
       xmldb:create-collection("/db/system/config/db", $indq:COLLECTION_NAME),
       xmldb:store("/db/system/config/db/" || $indq:COLLECTION_NAME, "collection.xconf", $indq:XCONF),
       xmldb:store($indq:COLLECTION, "test.xml", $indq:XML),
