@@ -93,6 +93,19 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         LOAD_FIELDS.add(FIELD_NODE_ID);
     }
 
+    /**
+     * Safely convert a BytesRef to a display string. ICU collation sort keys are binary, not UTF-8,
+     * so utf8ToString() throws AssertionError. Use this for logging/debug output.
+     */
+    private static String safeBytesRefToDisplay(BytesRef ref) {
+        if (ref == null) return "null";
+        try {
+            return ref.utf8ToString();
+        } catch (AssertionError e) {
+            return "[collation key, " + ref.length + " bytes]";
+        }
+    }
+
     private final RangeIndex index;
     private final DBBroker broker;
     private IndexController controller;
@@ -122,7 +135,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
             }
             if (LOG.isDebugEnabled()) {
                 LOG.debug("QUERY field={} qname={} input={} key={} operator={}",
-                        field, qname, content.getStringValue(), key != null ? key.utf8ToString() : "null", operator);
+                        field, qname, content.getStringValue(), safeBytesRefToDisplay(key), operator);
             }
             WildcardQuery query;
             switch (operator) {
@@ -719,7 +732,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 BytesRef ref;
                 int n = 0;
                 while ((ref = te.next()) != null && n < 15) {
-                    System.err.println("[RIW] TERM " + field + "=" + ref.utf8ToString());
+                    System.err.println("[RIW] TERM " + field + "=" + safeBytesRefToDisplay(ref));
                     n++;
                     totalTerms++;
                 }
@@ -918,7 +931,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 stream.close();
             }
             if (LOG.isDebugEnabled()) {
-                LOG.debug("ANALYZE result token={}", token != null ? token.utf8ToString() : "null");
+                LOG.debug("ANALYZE result token={}", safeBytesRefToDisplay(token));
             }
             return token;
         } catch (IOException e) {
@@ -1178,7 +1191,12 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                     break;
                 }
                 BytesRef ref = termsIter.term();
-                String term = ref.utf8ToString();
+                String term;
+                try {
+                    term = ref.utf8ToString();
+                } catch (AssertionError e) {
+                    continue;
+                }
                 boolean include = true;
                 if (end != null) {
                     if (term.compareTo(end) > 0)
