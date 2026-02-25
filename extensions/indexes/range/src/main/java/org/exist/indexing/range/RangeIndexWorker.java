@@ -452,10 +452,10 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         try {
             writer = index.getWriter();
 
-            // docId and nodeId are stored as doc value
+            // docId and nodeId are stored as doc value (match LuceneIndex pattern for docId retrieval)
             BinaryDocValuesField fNodeId = new BinaryDocValuesField(FIELD_NODE_ID, new BytesRef(8));
             BinaryDocValuesField fAddress = new BinaryDocValuesField(FIELD_ADDRESS, new BytesRef(8));
-            // docId also needs to be indexed. IntField in Lucene 10+ also provides doc values.
+            // docId: IntField for indexing, SortedNumericDocValuesField + StoredField for retrieval (LuceneIndexWorker pattern)
             IntField fDocIdIdx = new IntField(FIELD_DOC_ID, 0, Field.Store.NO);
             for (RangeIndexDoc pending : nodesToWrite) {
                 Document doc = new Document();
@@ -503,6 +503,8 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 }
                 fDocIdIdx.setIntValue(currentDoc.getDocId());
                 doc.add(fDocIdIdx);
+                doc.add(new SortedNumericDocValuesField(FIELD_DOC_ID, currentDoc.getDocId()));
+                doc.add(new StoredField(FIELD_DOC_ID, currentDoc.getDocId()));
 
                 Analyzer analyzer = pending.getConfig().getAnalyzer();
                 if (analyzer == null) {
@@ -592,9 +594,74 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
     private NodeSet doQuery(final int contextId, final DocumentSet docs, final NodeSet contextSet, final int axis,
                             IndexSearcher searcher, final short nodeType, Query query) throws
             IOException {
+        if (System.getProperty("exist.range.diagnose") != null) {
+            diagnoseQuery(searcher, query);
+        }
         SearchCollector collector = new SearchCollector(docs, contextSet, nodeType, axis, contextId);
         searcher.search(query, collector);
+        if (System.getProperty("exist.range.diagnose") != null) {
+            System.err.println("[RIW] SEARCH count=" + collector.getResultSet().getLength());
+        }
         return collector.getResultSet();
+    }
+
+    /**
+     * Diagnostic: dump Terms for the query's field and the search term.
+     * Enable with -Dexist.range.diagnose
+     */
+    private void diagnoseQuery(IndexSearcher searcher, Query query) {
+        String field = null;
+        String searchTerm = null;
+        if (query instanceof TermQuery tq) {
+            Term t = tq.getTerm();
+            field = t.field();
+            searchTerm = t.text();
+        } else if (query instanceof PrefixQuery pq) {
+            Term t = pq.getPrefix();
+            field = t.field();
+            searchTerm = t.text();
+        } else if (query instanceof WildcardQuery wq) {
+            Term t = wq.getTerm();
+            field = t.field();
+            searchTerm = t.text();
+        }
+        if (field == null || FIELD_DOC_ID.equals(field) || FIELD_NODE_ID.equals(field) || FIELD_ID.equals(field) || FIELD_ADDRESS.equals(field)) {
+            return;
+        }
+        try {
+            IndexReader reader = searcher.getIndexReader();
+            System.err.println("[RIW] DIAG field=" + field + " searchTerm=" + searchTerm + " reader.maxDoc=" + reader.maxDoc() + " numDocs=" + reader.numDocs());
+            int totalTerms = 0;
+            for (LeafReaderContext ctx : reader.leaves()) {
+                Terms terms = ctx.reader().terms(field);
+                if (terms == null) {
+                    System.err.println("[RIW] DIAG segment has null Terms for field=" + field);
+                    continue;
+                }
+                TermsEnum te = terms.iterator();
+                BytesRef ref;
+                int n = 0;
+                while ((ref = te.next()) != null && n < 15) {
+                    System.err.println("[RIW] TERM " + field + "=" + ref.utf8ToString());
+                    n++;
+                    totalTerms++;
+                }
+                if (n == 0) {
+                    System.err.println("[RIW] DIAG segment has 0 terms for field=" + field);
+                } else {
+                    totalTerms += countRemaining(te);
+                }
+            }
+            System.err.println("[RIW] DIAG total terms for " + field + " (approx)=" + totalTerms);
+        } catch (IOException e) {
+            System.err.println("[RIW] DIAG error: " + e.getMessage());
+        }
+    }
+
+    private int countRemaining(TermsEnum te) throws IOException {
+        int c = 0;
+        while (te.next() != null) c++;
+        return c;
     }
 
     private class SearchCollector implements Collector {
@@ -629,13 +696,16 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         }
 
         private class SearchLeafCollector implements LeafCollector {
-            private final NumericDocValues docIdValues;
+            private final LeafReader reader;
+            private final SortedNumericDocValues sortedDocIdValues;
+            private final NumericDocValues numericDocIdValues;
             private final BinaryDocValues nodeIdValues;
             private final BinaryDocValues addressValues;
 
             public SearchLeafCollector(LeafReaderContext context) throws IOException {
-                LeafReader reader = context.reader();
-                this.docIdValues = reader.getNumericDocValues(FIELD_DOC_ID);
+                this.reader = context.reader();
+                this.sortedDocIdValues = reader.getSortedNumericDocValues(FIELD_DOC_ID);
+                this.numericDocIdValues = reader.getNumericDocValues(FIELD_DOC_ID);
                 this.nodeIdValues = reader.getBinaryDocValues(FIELD_NODE_ID);
                 this.addressValues = reader.getBinaryDocValues(FIELD_ADDRESS);
             }
@@ -647,10 +717,14 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
             @Override
             public void collect(int doc) throws IOException {
-                if (docIdValues == null || !docIdValues.advanceExact(doc)) {
-                    return;
+                int docId;
+                if (sortedDocIdValues != null && sortedDocIdValues.advanceExact(doc)) {
+                    docId = (int) sortedDocIdValues.nextValue();
+                } else if (numericDocIdValues != null && numericDocIdValues.advanceExact(doc)) {
+                    docId = (int) numericDocIdValues.longValue();
+                } else {
+                    docId = reader.storedFields().document(doc).getField(FIELD_DOC_ID).numericValue().intValue();
                 }
-                int docId = (int) docIdValues.longValue();
                 DocumentImpl storedDocument = docs.getDoc(docId);
                 if (storedDocument == null) {
                     return;
@@ -1011,7 +1085,8 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         List<LeafReaderContext> leaves = reader.leaves();
         for (LeafReaderContext context : leaves) {
             LeafReader leafReader = context.reader();
-            NumericDocValues docIdValues = leafReader.getNumericDocValues(FIELD_DOC_ID);
+            SortedNumericDocValues sortedDocIdValues = leafReader.getSortedNumericDocValues(FIELD_DOC_ID);
+            NumericDocValues numericDocIdValues = leafReader.getNumericDocValues(FIELD_DOC_ID);
             BinaryDocValues nodeIdValues = leafReader.getBinaryDocValues(FIELD_NODE_ID);
             Bits liveDocs = leafReader.getLiveDocs();
             Terms terms = leafReader.terms(field);
@@ -1039,28 +1114,33 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                         if (liveDocs != null && !liveDocs.get(postings.docID())) {
                             continue;
                         }
-                        if (docIdValues != null && docIdValues.advanceExact(postings.docID())) {
-                            int docId = (int) docIdValues.longValue();
-                            DocumentImpl storedDocument = docs.getDoc(docId);
-                            if (storedDocument == null)
-                                continue;
-                            NodeId nodeId = null;
-                            if (nodes != null) {
-                                if (nodeIdValues != null && nodeIdValues.advanceExact(postings.docID())) {
-                                    final BytesRef nodeIdRef = nodeIdValues.binaryValue();
-                                    final int units = ByteConversion.byteToShortH(nodeIdRef.bytes, nodeIdRef.offset);
-                                    nodeId = index.getBrokerPool().getNodeFactory().createFromData(units, nodeIdRef.bytes, nodeIdRef.offset + 2);
-                                }
+                        int docId;
+                        if (sortedDocIdValues != null && sortedDocIdValues.advanceExact(postings.docID())) {
+                            docId = (int) sortedDocIdValues.nextValue();
+                        } else if (numericDocIdValues != null && numericDocIdValues.advanceExact(postings.docID())) {
+                            docId = (int) numericDocIdValues.longValue();
+                        } else {
+                            docId = leafReader.storedFields().document(postings.docID()).getField(FIELD_DOC_ID).numericValue().intValue();
+                        }
+                        DocumentImpl storedDocument = docs.getDoc(docId);
+                        if (storedDocument == null)
+                            continue;
+                        NodeId nodeId = null;
+                        if (nodes != null) {
+                            if (nodeIdValues != null && nodeIdValues.advanceExact(postings.docID())) {
+                                final BytesRef nodeIdRef = nodeIdValues.binaryValue();
+                                final int units = ByteConversion.byteToShortH(nodeIdRef.bytes, nodeIdRef.offset);
+                                nodeId = index.getBrokerPool().getNodeFactory().createFromData(units, nodeIdRef.bytes, nodeIdRef.offset + 2);
                             }
-                            if (nodeId == null || nodes.get(storedDocument, nodeId) != null) {
-                                Occurrences oc = map.get(term);
-                                if (oc == null) {
-                                    oc = new Occurrences(term);
-                                    map.put(term, oc);
-                                }
-                                oc.addDocument(storedDocument);
-                                oc.addOccurrences(postings.freq());
+                        }
+                        if (nodeId == null || nodes.get(storedDocument, nodeId) != null) {
+                            Occurrences oc = map.get(term);
+                            if (oc == null) {
+                                oc = new Occurrences(term);
+                                map.put(term, oc);
                             }
+                            oc.addDocument(storedDocument);
+                            oc.addOccurrences(postings.freq());
                         }
                     }
                 }
