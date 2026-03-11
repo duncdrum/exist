@@ -22,3 +22,6 @@ effective-pom.xml
 
 plans/
 work/
+
+# Debug logs (e.g. from reindex investigation)
+reindex-dbg.log
