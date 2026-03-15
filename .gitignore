@@ -22,6 +22,7 @@ effective-pom.xml
 
 plans/
 work/
+.codacy/
 
 # Debug logs (e.g. from reindex investigation)
 reindex-dbg.log
