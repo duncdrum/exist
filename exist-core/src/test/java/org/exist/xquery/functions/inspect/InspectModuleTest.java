@@ -61,48 +61,50 @@ public class InspectModuleTest {
     private static final XmldbURI TEST_COLLECTION = XmldbURI.ROOT_COLLECTION_URI.append("test-inspectModule");
     private static final XmldbURI TEST_MODULE = XmldbURI.create("test.xqm");
     private static final String MODULE =
-            "xquery version \"1.0\";\n" +
-            "module namespace x = \"http://xyz.com\";\n" +
-            "\n" +
-            "(:~\n" +
-            " : Some description.\n" +
-            " : @return taxonomy[@type = \"reign\"]\n" +
-            " :)\n" +
-            "declare function x:fun1() as xs:string {\n" +
-            "  \"hello from fun1\"\n" +
-            "};\n" +
-            "\n" +
-            "(:~\n" +
-            " : Some other description.\n" +
-            " : \n" +
-            " : @param one first parameter\n" +
-            " : @param two second parameter\n" +
-            " : \n" +
-            " : @return our result\n" +
-            " :)\n" +
-            "declare function x:fun2($one as xs:int, $two as xs:float) as xs:string {\n" +
-            "  \"hello from fun2\"\n" +
-            "};\n" +
-            "\n" +
-            "(:~\n" +
-            " : This is a multiline description and therefore\n" +
-            " : spans multiple\n" +
-            " : lines.\n" +
-            " : \n" +
-            " : @return another result\n" +
-            " :)\n" +
-            "declare function x:fun3() {\n" +
-            "  \"hello from fun3\"\n" +
-            "};\n" +
-            "\n" +
-            "(:~\n" +
-            " : An annotated function.\n" +
-            " : \n" +
-            " : @return another result\n" +
-            " :)\n" +
-            "declare %public %x:path(\"/x/y/z\") function x:fun4() {\n" +
-            "  \"hello from fun4\"\n" +
-            "};\n";
+            """
+            xquery version "1.0";
+            module namespace x = "http://xyz.com";
+            
+            (:~
+             : Some description.
+             : @return taxonomy[@type = "reign"]
+             :)
+            declare function x:fun1() as xs:string {
+              "hello from fun1"
+            };
+            
+            (:~
+             : Some other description.
+             :\s
+             : @param one first parameter
+             : @param two second parameter
+             :\s
+             : @return our result
+             :)
+            declare function x:fun2($one as xs:int, $two as xs:float) as xs:string {
+              "hello from fun2"
+            };
+            
+            (:~
+             : This is a multiline description and therefore
+             : spans multiple
+             : lines.
+             :\s
+             : @return another result
+             :)
+            declare function x:fun3() {
+              "hello from fun3"
+            };
+            
+            (:~
+             : An annotated function.
+             :\s
+             : @return another result
+             :)
+            declare %public %x:path("/x/y/z") function x:fun4() {
+              "hello from fun4"
+            };
+            """;
 
     @Ignore("https://github.com/eXist-db/exist/issues/1386")
     @Test

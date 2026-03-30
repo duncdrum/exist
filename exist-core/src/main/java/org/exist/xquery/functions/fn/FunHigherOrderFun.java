@@ -175,12 +175,10 @@ public class FunHigherOrderFun extends BasicFunction {
                 }
                 final Sequence zero = args[1];
                 final Sequence seq = args[0];
-                if (seq instanceof ValueSequence) {
-                    result = foldRightNonRecursive(ref, zero, ((ValueSequence) seq).iterateInReverse());
-                } else if (seq instanceof RangeSequence) {
-                    result = foldRightNonRecursive(ref, zero, ((RangeSequence) seq).iterateInReverse());
-                } else {
-                    result = foldRight(ref, zero, seq);
+                switch (seq) {
+                    case ValueSequence sequence1 -> result = foldRightNonRecursive(ref, zero, sequence1.iterateInReverse());
+                    case RangeSequence sequence -> result = foldRightNonRecursive(ref, zero, sequence.iterateInReverse());
+                    default -> result = foldRight(ref, zero, seq);
                 }
             }
         } else if (isCalledAs("for-each-pair")) {

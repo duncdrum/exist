@@ -27,7 +27,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.exist.util.FileUtils;
 import org.exist.util.MimeTable;
@@ -178,7 +177,7 @@ public abstract class AbstractExtractFunction extends BasicFunction
                     XMLDBAbstractCollectionManipulator.createCollection(root, path);
 
                 } else {
-                    Path file = Paths.get(path).normalize();
+                    Path file = Path.of(path).normalize();
                     name = FileUtils.fileName(file);
                     path = file.getParent().toAbsolutePath().toString();
 

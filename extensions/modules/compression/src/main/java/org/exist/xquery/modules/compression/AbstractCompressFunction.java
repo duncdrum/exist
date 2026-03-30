@@ -50,7 +50,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.zip.CRC32;
 import java.util.zip.DeflaterOutputStream;
@@ -136,8 +135,8 @@ public abstract class AbstractCompressFunction extends BasicFunction
 
                 os.flush();
 
-                if(os instanceof DeflaterOutputStream) {
-                    ((DeflaterOutputStream)os).finish();
+                if(os instanceof DeflaterOutputStream stream) {
+                    stream.finish();
                 }
 
                 return BinaryValueFromInputStream.getInstance(context, new Base64BinaryValueType(), UnsynchronizedByteArrayInputStream.builder().setByteArray(baos.toByteArray()).get(), this);
@@ -159,7 +158,7 @@ public abstract class AbstractCompressFunction extends BasicFunction
                     }
 
                     // got a file
-                    Path file = Paths.get(uri.getPath());
+                    Path file = Path.of(uri.getPath());
                     compressFile(os, file, useHierarchy, stripOffset, method, resourceName);
 
                 } else {
@@ -235,12 +234,12 @@ public abstract class AbstractCompressFunction extends BasicFunction
 
             // close the entry
             final CRC32 chksum = new CRC32();
-            if (entry instanceof ZipEntry &&
+            if (entry instanceof ZipEntry zipEntry &&
                     "store".equals(method)) {
-                ((ZipEntry) entry).setMethod(ZipOutputStream.STORED);
+                zipEntry.setMethod(ZipOutputStream.STORED);
                 chksum.update(value);
-                ((ZipEntry) entry).setCrc(chksum.getValue());
-                ((ZipEntry) entry).setSize(value.length);
+                zipEntry.setCrc(chksum.getValue());
+                zipEntry.setSize(value.length);
             }
 
             putEntry(os, entry);
@@ -336,12 +335,12 @@ public abstract class AbstractCompressFunction extends BasicFunction
                     }
                 }
 
-                if (entry instanceof ZipEntry &&
+                if (entry instanceof ZipEntry zipEntry &&
                     "store".equals(element.getAttribute("method"))) {
-                    ((ZipEntry) entry).setMethod(ZipOutputStream.STORED);
+                    zipEntry.setMethod(ZipOutputStream.STORED);
                     chksum.update(value);
-                    ((ZipEntry) entry).setCrc(chksum.getValue());
-                    ((ZipEntry) entry).setSize(value.length);
+                    zipEntry.setCrc(chksum.getValue());
+                    zipEntry.setSize(value.length);
                 }
                 putEntry(os, entry);
 
@@ -423,12 +422,12 @@ public abstract class AbstractCompressFunction extends BasicFunction
 
 		// close the entry
         final CRC32 chksum = new CRC32();
-        if (entry instanceof ZipEntry &&
+        if (entry instanceof ZipEntry zipEntry &&
             "store".equals(method)) {
-            ((ZipEntry) entry).setMethod(ZipOutputStream.STORED);
+            zipEntry.setMethod(ZipOutputStream.STORED);
             chksum.update(value);
-            ((ZipEntry) entry).setCrc(chksum.getValue());
-            ((ZipEntry) entry).setSize(value.length);
+            zipEntry.setCrc(chksum.getValue());
+            zipEntry.setSize(value.length);
         }
 
 		putEntry(os, entry);

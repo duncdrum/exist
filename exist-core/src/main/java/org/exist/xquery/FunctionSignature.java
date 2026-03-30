@@ -228,8 +228,8 @@ public class FunctionSignature {
                     buf.append(", ");
                 }
                 buf.append('$');
-                if (arguments[i] instanceof FunctionParameterSequenceType) {
-                    buf.append(((FunctionParameterSequenceType) arguments[i]).getAttributeName());
+                if (arguments[i] instanceof FunctionParameterSequenceType type) {
+                    buf.append(type.getAttributeName());
                 } else {
                     buf.append((char) (ANON_VAR + i));
                 }
