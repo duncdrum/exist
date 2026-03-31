@@ -21,18 +21,11 @@
  */
 package org.exist.xquery.modules.compression;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
-import java.nio.file.Path;
-
+import org.apache.commons.io.input.UnsynchronizedByteArrayInputStream;
+import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
 import org.exist.util.FileUtils;
 import org.exist.util.MimeTable;
 import org.exist.util.MimeType;
-import org.apache.commons.io.input.UnsynchronizedByteArrayInputStream;
-import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.LocalCollection;
 import org.exist.xquery.BasicFunction;
@@ -42,7 +35,6 @@ import org.exist.xquery.XQueryContext;
 import org.exist.xquery.functions.xmldb.XMLDBAbstractCollectionManipulator;
 import org.exist.xquery.modules.ModuleUtils;
 import org.exist.xquery.value.*;
-
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.Collection;
@@ -51,19 +43,26 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.XMLResource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.UnsupportedCharsetException;
+import java.nio.file.Path;
+
 /**
  * @author <a href="mailto:adam@exist-db.org">Adam Retter</a>
  * @version 1.0
  */
 public abstract class AbstractExtractFunction extends BasicFunction
 {
-    private FunctionReference entryFilterFunction = null;
-    protected Sequence filterParam = null;
-    private FunctionReference entryDataFunction = null;
-    protected Sequence storeParam = null;
+    private FunctionReference entryFilterFunction;
+    protected Sequence filterParam;
+    private FunctionReference entryDataFunction;
+    protected Sequence storeParam;
     private Sequence contextSequence;
     
-    public AbstractExtractFunction(XQueryContext context, FunctionSignature signature)
+    protected AbstractExtractFunction(XQueryContext context, FunctionSignature signature)
     {
         super(context, signature);
     }
@@ -73,26 +72,31 @@ public abstract class AbstractExtractFunction extends BasicFunction
     {
         this.contextSequence = contextSequence;
 
-        if(args[0].isEmpty())
+        if (args[0].isEmpty()) {
             return Sequence.EMPTY_SEQUENCE;
+        }
 
         //get the entry-filter function and check its types
-        if(!(args[1].itemAt(0) instanceof FunctionReference))
+        if (!(args[1].itemAt(0) instanceof FunctionReference)) {
             throw new XPathException(this, "No entry-filter function provided.");
+        }
         entryFilterFunction = (FunctionReference)args[1].itemAt(0);
         FunctionSignature entryFilterFunctionSig = entryFilterFunction.getSignature();
-        if(entryFilterFunctionSig.getArgumentCount() < 3)
+        if (entryFilterFunctionSig.getArgumentCount() < 3) {
             throw new XPathException(this, "entry-filter function must take at least 3 arguments.");
+        }
 
         filterParam = args[2];
 
         //get the entry-data function and check its types
-        if(!(args[3].itemAt(0) instanceof FunctionReference))
+        if (!(args[3].itemAt(0) instanceof FunctionReference)) {
             throw new XPathException(this, "No entry-data function provided.");
+        }
         entryDataFunction = (FunctionReference)args[3].itemAt(0);
         FunctionSignature entryDataFunctionSig = entryDataFunction.getSignature();
-        if(entryDataFunctionSig.getArgumentCount() < 3)
+        if (entryDataFunctionSig.getArgumentCount() < 3) {
             throw new XPathException(this, "entry-data function must take at least 3 arguments");
+        }
 
         storeParam = args[4];
 
@@ -104,7 +108,7 @@ public abstract class AbstractExtractFunction extends BasicFunction
                 encoding = StandardCharsets.UTF_8;
             }
 
-            BinaryValue compressedData = ((BinaryValue) args[0].itemAt(0));
+            BinaryValue compressedData = (BinaryValue) args[0].itemAt(0);
 
             return processCompressedData(compressedData, encoding);
         } catch(final UnsupportedCharsetException | XMLDBException e) {
@@ -147,7 +151,7 @@ public abstract class AbstractExtractFunction extends BasicFunction
         String dataType = isDirectory ? "folder" : "resource";
 
         //call the entry-filter function
-        Sequence filterParams[] = new Sequence[3];
+        Sequence[] filterParams = new Sequence[3];
         filterParams[0] = new StringValue(this, name);
         filterParams[1] = new StringValue(this, dataType);
         filterParams[2] = filterParam;
@@ -163,7 +167,7 @@ public abstract class AbstractExtractFunction extends BasicFunction
 
             if (entryDataFunction.getSignature().getReturnType().getPrimaryType() != Type.EMPTY_SEQUENCE && entryDataFunction.getSignature().getArgumentCount() == 3) {
 
-                Sequence dataParams[] = new Sequence[3];
+                Sequence[] dataParams = new Sequence[3];
                 System.arraycopy(filterParams, 0, dataParams, 0, 2);
                 dataParams[2] = storeParam;
                 entryDataFunctionResult = entryDataFunction.evalFunction(contextSequence, null, dataParams);
@@ -181,7 +185,7 @@ public abstract class AbstractExtractFunction extends BasicFunction
                     name = FileUtils.fileName(file);
                     path = file.getParent().toAbsolutePath().toString();
 
-                    Collection target = (path == null) ? root : XMLDBAbstractCollectionManipulator.createCollection(root, path);
+                    Collection target = path == null ? root : XMLDBAbstractCollectionManipulator.createCollection(root, path);
 
                     MimeType mime = MimeTable.getInstance().getContentTypeFor(name);
 
@@ -230,7 +234,7 @@ public abstract class AbstractExtractFunction extends BasicFunction
                 }
 
                 //call the entry-data function
-                Sequence dataParams[] = new Sequence[4];
+                Sequence[] dataParams = new Sequence[4];
                 System.arraycopy(filterParams, 0, dataParams, 0, 2);
                 dataParams[2] = uncompressedData;
                 dataParams[3] = storeParam;

@@ -21,15 +21,15 @@
  */
 package org.exist.xquery;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.exist.Namespaces;
 import org.exist.dom.QName;
 import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.Type;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Describes the signature of a built-in or user-defined function, i.e.
@@ -58,8 +58,8 @@ public class FunctionSignature {
     private SequenceType returnType;
     private boolean isVariadic;
     private String description;
-    private String deprecated = null;
-    private Map<String, String> metadata = null;
+    private String deprecated;
+    private Map<String, String> metadata;
 
     public FunctionSignature(final FunctionSignature other) {
         this.name = other.name;
@@ -208,7 +208,7 @@ public class FunctionSignature {
         if (annotations != null) {
             for (final Annotation annot : annotations) {
                 final QName qn = annot.getName();
-                if (qn.getNamespaceURI().equals(Namespaces.XPATH_FUNCTIONS_NS) && "private".equals(qn.getLocalPart())) {
+                if (Namespaces.XPATH_FUNCTIONS_NS.equals(qn.getNamespaceURI()) && "private".equals(qn.getLocalPart())) {
                     return true;
                 }
             }
@@ -260,14 +260,14 @@ public class FunctionSignature {
         // anonymous functions cannot be compared by name and argument count
         if (
                 name == null || other.name == null ||
-                        name.getLocalPart().equals("") ||
-                        other.name.getLocalPart().equals("")
+                        "".equals(name.getLocalPart()) ||
+                        "".equals(other.name.getLocalPart())
         ) {
             return false;
         }
 
         // compare by QName and arity
-        return (name.equals(other.name) && getArgumentCount() == other.getArgumentCount());
+        return name.equals(other.name) && getArgumentCount() == other.getArgumentCount();
     }
 
     /**

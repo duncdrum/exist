@@ -21,19 +21,19 @@
  */
 package org.exist.xquery.modules.compression;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import org.exist.dom.QName;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
+import org.exist.dom.QName;
 import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.Type;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Compresses a sequence of resources and/or collections into a Zip file
@@ -43,10 +43,10 @@ import org.exist.xquery.value.Type;
  */
 public class ZipFunction extends AbstractCompressFunction {
 
-    private final static QName ZIP_FUNCTION_NAME = new QName("zip", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX);
-    private final static String ZIP_FUNCTION_DESCRIPTION = "Zips nodes, resources and collections.";
+    private static final QName ZIP_FUNCTION_NAME = new QName("zip", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX);
+    private static final String ZIP_FUNCTION_DESCRIPTION = "Zips nodes, resources and collections.";
 
-    public final static FunctionSignature signatures[] = {
+    public static final FunctionSignature[] signatures = {
 
         new FunctionSignature(
             ZIP_FUNCTION_NAME,

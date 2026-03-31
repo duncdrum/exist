@@ -21,12 +21,13 @@
  */
 package org.exist.xquery.modules.compression;
 
-import java.util.List;
-import java.util.Map;
 import org.exist.dom.QName;
 import org.exist.xquery.*;
 import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.exist.xquery.FunctionDSL.functionDefs;
 
@@ -38,13 +39,13 @@ import static org.exist.xquery.FunctionDSL.functionDefs;
  */
 public class CompressionModule extends AbstractInternalModule {
 
-    public final static String NAMESPACE_URI = "http://exist-db.org/xquery/compression";
+    public static final String NAMESPACE_URI = "http://exist-db.org/xquery/compression";
 
-    public final static String PREFIX = "compression";
-    public final static String INCLUSION_DATE = "2007-07-10";
-    public final static String RELEASED_IN_VERSION = "eXist-1.2";
+    public static final String PREFIX = "compression";
+    public static final String INCLUSION_DATE = "2007-07-10";
+    public static final String RELEASED_IN_VERSION = "eXist-1.2";
 
-    private final static FunctionDef[] functions = functionDefs(
+    private static final FunctionDef[] functions = functionDefs(
             functionDefs(ZipFunction.class,
                     ZipFunction.signatures[0],
                     ZipFunction.signatures[1],
@@ -119,7 +120,7 @@ public class CompressionModule extends AbstractInternalModule {
         return FunctionDSL.functionSignatures(new QName(name, NAMESPACE_URI, PREFIX), description, returnType, variableParamTypes);
     }
 
-    static class CompressionModuleErrorCode extends ErrorCodes.ErrorCode {
+    static final class CompressionModuleErrorCode extends ErrorCodes.ErrorCode {
         private CompressionModuleErrorCode(final String code, final String description) {
             super(new QName(code, NAMESPACE_URI, PREFIX), description);
         }

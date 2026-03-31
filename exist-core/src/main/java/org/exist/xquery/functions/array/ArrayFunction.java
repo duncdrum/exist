@@ -57,7 +57,7 @@ public class ArrayFunction extends BasicFunction {
         PUT("put"),
         SORT("sort");
 
-        final static Map<String, Fn> fnMap = new HashMap<>();
+        static final Map<String, Fn> fnMap = new HashMap<>();
         static {
             for (Fn fn: Fn.values()) {
                 fnMap.put(fn.fname, fn);

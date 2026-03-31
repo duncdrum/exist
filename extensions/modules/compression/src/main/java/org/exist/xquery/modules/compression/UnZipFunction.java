@@ -21,19 +21,16 @@
  */
 package org.exist.xquery.modules.compression;
 
+import org.exist.xquery.FunctionSignature;
+import org.exist.xquery.XPathException;
+import org.exist.xquery.XQueryContext;
+import org.exist.xquery.value.*;
+import org.xmldb.api.base.XMLDBException;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.BinaryValue;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
-import org.xmldb.api.base.XMLDBException;
 
 import static org.exist.xquery.FunctionDSL.*;
 import static org.exist.xquery.modules.compression.CompressionModule.functionSignatures;
@@ -129,7 +126,7 @@ public class UnZipFunction extends AbstractExtractFunction {
 
             return results;
         } catch (final IllegalArgumentException e) {
-            final StackTraceElement trace[] = e.getStackTrace();
+            final StackTraceElement[] trace = e.getStackTrace();
             if (trace.length >= 1) {
                 if ("java.lang.StringCoding".equals(trace[0].getClassName())
                         && "throwMalformed".equals(trace[0].getMethodName())) {

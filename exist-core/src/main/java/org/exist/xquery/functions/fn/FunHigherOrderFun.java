@@ -24,19 +24,11 @@ package org.exist.xquery.functions.fn;
 import org.exist.dom.QName;
 import org.exist.xquery.*;
 import org.exist.xquery.functions.array.ArrayType;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReference;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Item;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceIterator;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
+import org.exist.xquery.value.*;
 
 public class FunHigherOrderFun extends BasicFunction {
 
-    public final static FunctionSignature FN_FOR_EACH = new FunctionSignature(
+    public static final FunctionSignature FN_FOR_EACH = new FunctionSignature(
             new QName("for-each", Function.BUILTIN_FUNCTION_NS),
             "Applies the function item $function to every item from the sequence " +
                     "$sequence in turn, returning the concatenation of the resulting sequences in order.",
@@ -47,7 +39,7 @@ public class FunHigherOrderFun extends BasicFunction {
             new FunctionReturnSequenceType(Type.ITEM, Cardinality.ZERO_OR_MORE, "result of applying the function to each item of the sequence")
     );
 
-    public final static FunctionSignature FN_FOR_EACH_PAIR = new FunctionSignature(
+    public static final FunctionSignature FN_FOR_EACH_PAIR = new FunctionSignature(
             new QName("for-each-pair", Function.BUILTIN_FUNCTION_NS),
             "Applies the function item $f to successive pairs of items taken one from $seq1 and one from $seq2, " +
                     "returning the concatenation of the resulting sequences in order.",
@@ -59,7 +51,7 @@ public class FunHigherOrderFun extends BasicFunction {
             new FunctionReturnSequenceType(Type.ITEM, Cardinality.ZERO_OR_MORE, "concatenation of resulting sequences")
     );
 
-    public final static FunctionSignature FN_FILTER = new FunctionSignature(
+    public static final FunctionSignature FN_FILTER = new FunctionSignature(
             new QName("filter", Function.BUILTIN_FUNCTION_NS),
             "Returns those items from the sequence $sequence for which the supplied function $function returns true.",
             new SequenceType[]{
@@ -69,7 +61,7 @@ public class FunHigherOrderFun extends BasicFunction {
             new FunctionReturnSequenceType(Type.ITEM, Cardinality.ZERO_OR_MORE, "result of filtering the sequence")
     );
 
-    public final static FunctionSignature FN_FOLD_LEFT = new FunctionSignature(
+    public static final FunctionSignature FN_FOLD_LEFT = new FunctionSignature(
             new QName("fold-left", Function.BUILTIN_FUNCTION_NS),
             "Processes the supplied sequence from left to right, applying the supplied function repeatedly to each " +
                     "item in turn, together with an accumulated result value.",
@@ -81,7 +73,7 @@ public class FunHigherOrderFun extends BasicFunction {
             new FunctionReturnSequenceType(Type.ITEM, Cardinality.ZERO_OR_MORE, "result of the fold-left operation")
     );
 
-    public final static FunctionSignature FN_FOLD_RIGHT = new FunctionSignature(
+    public static final FunctionSignature FN_FOLD_RIGHT = new FunctionSignature(
             new QName("fold-right", Function.BUILTIN_FUNCTION_NS),
             "Processes the supplied sequence from right to left, applying the supplied function repeatedly to each " +
                     "item in turn, together with an accumulated result value.",
@@ -93,7 +85,7 @@ public class FunHigherOrderFun extends BasicFunction {
             new FunctionReturnSequenceType(Type.ITEM, Cardinality.ZERO_OR_MORE, "result of the fold-right operation")
     );
 
-    public final static FunctionSignature FN_APPLY = new FunctionSignature(
+    public static final FunctionSignature FN_APPLY = new FunctionSignature(
             new QName("apply", Function.BUILTIN_FUNCTION_NS),
             "Processes the supplied sequence from right to left, applying the supplied function repeatedly to each " +
                     "item in turn, together with an accumulated result value.",
@@ -248,7 +240,7 @@ public class FunHigherOrderFun extends BasicFunction {
     }
 
     private boolean funcRefHasDifferentArity(final FunctionReference ref, final int n) {
-        return (!ref.getSignature().isVariadic() &&
-                ref.getSignature().getArgumentCount() != n);
+        return !ref.getSignature().isVariadic() &&
+                ref.getSignature().getArgumentCount() != n;
     }
 }

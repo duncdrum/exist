@@ -78,7 +78,7 @@ public class MapFunction extends BasicFunction {
             param("key", Type.ANY_ATOMIC_TYPE, "The key to match")
     );
 
-    public final static FunctionSignature FNS_SIZE = new FunctionSignature(
+    public static final FunctionSignature FNS_SIZE = new FunctionSignature(
         QN_SIZE,
         "Returns the number of entries in the supplied map.",
         new SequenceType[] {
@@ -87,7 +87,7 @@ public class MapFunction extends BasicFunction {
         new SequenceType(Type.INTEGER, Cardinality.EXACTLY_ONE)
     );
 
-    public final static FunctionSignature FNS_KEYS = new FunctionSignature(
+    public static final FunctionSignature FNS_KEYS = new FunctionSignature(
         QN_KEYS,
         "Returns a sequence containing all the key values present in a map.",
         new SequenceType[]{
@@ -96,7 +96,7 @@ public class MapFunction extends BasicFunction {
         new SequenceType(Type.ANY_ATOMIC_TYPE, Cardinality.ZERO_OR_MORE)
     );
 
-    public final static FunctionSignature FNS_CONTAINS = new FunctionSignature(
+    public static final FunctionSignature FNS_CONTAINS = new FunctionSignature(
         QN_CONTAINS,
         "Tests whether a supplied map contains an entry for a given key.",
         new SequenceType[] {
@@ -106,7 +106,7 @@ public class MapFunction extends BasicFunction {
         new SequenceType(Type.BOOLEAN, Cardinality.EXACTLY_ONE)
     );
 
-    public final static FunctionSignature FNS_GET = new FunctionSignature(
+    public static final FunctionSignature FNS_GET = new FunctionSignature(
         QN_GET,
         "Returns the value associated with a supplied key in a given map.",
         new SequenceType[] {
@@ -116,7 +116,7 @@ public class MapFunction extends BasicFunction {
         new SequenceType(Type.ITEM, Cardinality.ZERO_OR_MORE)
     );
 
-    public final static FunctionSignature FNS_PUT = new FunctionSignature(
+    public static final FunctionSignature FNS_PUT = new FunctionSignature(
         QN_PUT,
         "Returns a map containing all the contents of the supplied map, but with an additional entry, which replaces any existing entry for the same key.",
         new SequenceType[] {
@@ -127,7 +127,7 @@ public class MapFunction extends BasicFunction {
         new SequenceType(Type.MAP_ITEM, Cardinality.EXACTLY_ONE)
     );
 
-    public final static FunctionSignature FNS_ENTRY = new FunctionSignature(
+    public static final FunctionSignature FNS_ENTRY = new FunctionSignature(
         QN_ENTRY,
         "Creates a map that contains a single entry (a key-value pair).",
         new SequenceType[] {
@@ -137,7 +137,7 @@ public class MapFunction extends BasicFunction {
         new SequenceType(Type.MAP_ITEM, Cardinality.EXACTLY_ONE)
     );
 
-    public final static FunctionSignature FNS_REMOVE = new FunctionSignature(
+    public static final FunctionSignature FNS_REMOVE = new FunctionSignature(
         QN_REMOVE,
         "Constructs a new map by removing an entry from an existing map.",
         new SequenceType[] {
@@ -147,7 +147,7 @@ public class MapFunction extends BasicFunction {
         new SequenceType(Type.MAP_ITEM, Cardinality.EXACTLY_ONE)
     );
 
-    public final static FunctionSignature FNS_FOR_EACH = new FunctionSignature(
+    public static final FunctionSignature FNS_FOR_EACH = new FunctionSignature(
         QN_FOR_EACH,
         "takes any map as its $input argument and applies the supplied function to each entry in the map, in implementation-dependent order; the result is the sequence obtained by concatenating the results of these function calls. " +
         "The function supplied as $action takes two arguments. It is called supplying the key of the map entry as the first argument, and the associated value as the second argument.",

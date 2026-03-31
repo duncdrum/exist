@@ -21,24 +21,18 @@
  */
 package org.exist.xquery.modules.compression;
 
-import java.io.IOException;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
-
-import org.exist.dom.QName;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
+import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
 import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.Base64BinaryValueType;
-import org.exist.xquery.value.BinaryValue;
-import org.exist.xquery.value.BinaryValueFromInputStream;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.value.*;
+
+import java.io.IOException;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
 
 
 /**
@@ -49,9 +43,9 @@ import org.exist.xquery.value.Type;
  */
 public class DeflateFunction extends BasicFunction
 {
-    private final static QName DEFLATE_FUNCTION_NAME = new QName("deflate", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX);
+    private static final QName DEFLATE_FUNCTION_NAME = new QName("deflate", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX);
 
-    public final static FunctionSignature signatures[] = {
+    public static final FunctionSignature[] signatures = {
         new FunctionSignature(
 	    DEFLATE_FUNCTION_NAME,
             "Deflate data (RFC 1950)",
@@ -83,14 +77,16 @@ public class DeflateFunction extends BasicFunction
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException
     {
         // is there some data to Deflate?
-        if(args[0].isEmpty())
+        if (args[0].isEmpty()) {
             return Sequence.EMPTY_SEQUENCE;
+        }
 
         BinaryValue bin = (BinaryValue) args[0].itemAt(0);
 
 	boolean rawflag = false;
-        if(args.length > 1 && !args[1].isEmpty())
-	    rawflag = args[1].itemAt(0).convertTo(Type.BOOLEAN).effectiveBooleanValue();
+        if (args.length > 1 && !args[1].isEmpty()) {
+            rawflag = args[1].itemAt(0).convertTo(Type.BOOLEAN).effectiveBooleanValue();
+        }
 
 	Deflater defl = new Deflater(java.util.zip.Deflater.DEFAULT_COMPRESSION, rawflag);
 

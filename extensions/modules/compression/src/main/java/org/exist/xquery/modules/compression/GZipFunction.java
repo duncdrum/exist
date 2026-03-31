@@ -21,23 +21,17 @@
  */
 package org.exist.xquery.modules.compression;
 
-import java.io.IOException;
-import java.util.zip.GZIPOutputStream;
-
-import org.exist.dom.QName;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
+import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
 import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.Base64BinaryValueType;
-import org.exist.xquery.value.BinaryValue;
-import org.exist.xquery.value.BinaryValueFromInputStream;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.value.*;
+
+import java.io.IOException;
+import java.util.zip.GZIPOutputStream;
 
 
 /**
@@ -48,7 +42,7 @@ import org.exist.xquery.value.Type;
  */
 public class GZipFunction extends BasicFunction
 {
-    public final static FunctionSignature signatures[] = {
+    public static final FunctionSignature[] signatures = {
         new FunctionSignature(
             new QName("gzip", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX),
             "GZip's data",
@@ -70,8 +64,9 @@ public class GZipFunction extends BasicFunction
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException
     {
         // is there some data to GZip?
-        if(args[0].isEmpty())
+        if (args[0].isEmpty()) {
             return Sequence.EMPTY_SEQUENCE;
+        }
 
         BinaryValue bin = (BinaryValue) args[0].itemAt(0);
 

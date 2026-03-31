@@ -21,24 +21,18 @@
  */
 package org.exist.xquery.modules.compression;
 
-import java.io.IOException;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterInputStream;
-
-import org.exist.dom.QName;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
+import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
 import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.Base64BinaryValueType;
-import org.exist.xquery.value.BinaryValue;
-import org.exist.xquery.value.BinaryValueFromInputStream;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.value.*;
+
+import java.io.IOException;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 
 /**
@@ -50,7 +44,7 @@ import org.exist.xquery.value.Type;
 public class InflateFunction extends BasicFunction
 {
 
-    public final static FunctionSignature signatures[] = {
+    public static final FunctionSignature[] signatures = {
         new FunctionSignature(
             new QName("inflate", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX),
             "Inflate data (RFC 1950)",
@@ -79,14 +73,16 @@ public class InflateFunction extends BasicFunction
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException
     {
         // is there some data to inflate?
-        if(args[0].isEmpty())
+        if (args[0].isEmpty()) {
             return Sequence.EMPTY_SEQUENCE;
+        }
 
         final BinaryValue bin = (BinaryValue) args[0].itemAt(0);
 
 	boolean rawflag = false;
-        if(args.length > 1 && !args[1].isEmpty())
-	    rawflag = args[1].itemAt(0).convertTo(Type.BOOLEAN).effectiveBooleanValue();
+        if (args.length > 1 && !args[1].isEmpty()) {
+            rawflag = args[1].itemAt(0).convertTo(Type.BOOLEAN).effectiveBooleanValue();
+        }
 
 	Inflater infl = new Inflater(rawflag);
 

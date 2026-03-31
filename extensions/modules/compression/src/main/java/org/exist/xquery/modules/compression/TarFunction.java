@@ -21,20 +21,19 @@
  */
 package org.exist.xquery.modules.compression;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-
-import org.exist.dom.QName;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
+import org.exist.dom.QName;
 import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.Type;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 
 /**
  * Compresses a sequence of resources and/or collections into a Tar file
@@ -44,11 +43,11 @@ import org.exist.xquery.value.Type;
  */
 public class TarFunction extends AbstractCompressFunction
 {
-    private final static QName TAR_FUNCTION_NAME = new QName("tar", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX);
-    private final static String TAR_FUNCTION_DESCRIPTION = "Tars nodes, resources and collections.";
+    private static final QName TAR_FUNCTION_NAME = new QName("tar", CompressionModule.NAMESPACE_URI, CompressionModule.PREFIX);
+    private static final String TAR_FUNCTION_DESCRIPTION = "Tars nodes, resources and collections.";
 
 
-    public final static FunctionSignature signatures[] = {
+    public static final FunctionSignature[] signatures = {
 
         new FunctionSignature(
             TAR_FUNCTION_NAME,

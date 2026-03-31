@@ -21,13 +21,13 @@
  */
 package org.exist.xmldb;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author jmv
@@ -46,7 +46,6 @@ public class ResourceSetHelper {
             final Resource resource = m1.get(key);
             m.put(key, resource);
         }
-        final MapResourceSet res = new MapResourceSet(m);
         /*
          VectorResourceSet res = new VectorResourceSet(); 
          Collection c1 = new VectorResourceSet(s1).getResources();
@@ -55,6 +54,6 @@ public class ResourceSetHelper {
          res.getResources().retainAll(c2);
          return res;
          */
-        return res;
+        return new MapResourceSet(m);
     }
 }
