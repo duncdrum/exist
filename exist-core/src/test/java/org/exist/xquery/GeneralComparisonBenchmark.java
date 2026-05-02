@@ -81,7 +81,7 @@ public class GeneralComparisonBenchmark {
             for (int i = 0; i < size; i++) {
                 final String key = "k" + (i % 26);
                 final String value = "v" + (i % 10);
-                sb.append(String.format("<item k=\"%s\" v=\"%s\"/>", key, value));
+                sb.append("<item k=\"%s\" v=\"%s\"/>".formatted(key, value));
             }
             sb.append("</data>");
 
@@ -105,8 +105,7 @@ public class GeneralComparisonBenchmark {
     @Test
     public void predicateAttrEqLiteral() throws XMLDBException {
         for (final int size : DATA_SIZES) {
-            final String query = String.format(
-                    "count(doc('%s/data-%d.xml')//item[@v = 'v0'])",
+            final String query = "count(doc('%s/data-%d.xml')//item[@v = 'v0'])".formatted(
                     COLLECTION_PATH, size);
             runBenchmark("predicate-attr-eq-literal", size, query);
         }
@@ -115,8 +114,7 @@ public class GeneralComparisonBenchmark {
     @Test
     public void predicateAttrEqVar() throws XMLDBException {
         for (final int size : DATA_SIZES) {
-            final String query = String.format(
-                    "let $x := 'v0' return count(doc('%s/data-%d.xml')//item[@v = $x])",
+            final String query = "let $x := 'v0' return count(doc('%s/data-%d.xml')//item[@v = $x])".formatted(
                     COLLECTION_PATH, size);
             runBenchmark("predicate-attr-eq-var", size, query);
         }
