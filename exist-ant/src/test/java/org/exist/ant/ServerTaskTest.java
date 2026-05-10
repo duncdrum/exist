@@ -77,19 +77,32 @@ public class ServerTaskTest extends AbstractTaskTest {
         assertNotNull(res);
     }
 
-    @Test
-    public void backupRestore() throws IOException {
+      @Test
+    public void backupRestore() throws IOException, XMLDBException {
         final Project project = buildFileRule.getProject();
         final Path backupDir = temporaryFolder.newFolder().toPath();
         project.setProperty(PROP_ANT_TEST_DATA_BACKUP_DIR, backupDir.toAbsolutePath().toString());
 
         buildFileRule.executeTarget("backup");
 
+        assertTrue(Files.exists(backupDir.resolve("db").resolve("__contents__.xml")));
+
         buildFileRule.executeTarget("restore");
+
+        final Resource res = existEmbeddedServer.getRoot().getResource("example.xml");
+        assertNotNull(res);
     }
 
-    @Test
-    public void shutdown() {
+     @Test
+    public void shutdown() throws IOException {
+        final Project project = buildFileRule.getProject();
+        final Path backupDir = temporaryFolder.newFolder().toPath();
+        project.setProperty(PROP_ANT_TEST_DATA_BACKUP_DIR, backupDir.toAbsolutePath().toString());
+
+        buildFileRule.executeTarget("backup");
+
+        assertTrue(Files.exists(backupDir.resolve("db").resolve("__contents__.xml")));
+
         buildFileRule.executeTarget("shutdown");
     }
 }

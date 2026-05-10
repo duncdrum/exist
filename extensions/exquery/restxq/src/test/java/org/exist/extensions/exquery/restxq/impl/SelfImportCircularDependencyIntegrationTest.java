@@ -26,10 +26,16 @@
  */
 package org.exist.extensions.exquery.restxq.impl;
 
+import org.apache.http.HttpStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for XQuery Library Modules that import themselves, i.e. a self circular dependency.
@@ -70,10 +76,14 @@ public class SelfImportCircularDependencyIntegrationTest extends AbstractClassIn
         enableRestXqTrigger(TEST_COLLECTION);
     }
 
-    @Test
+     @Test
     public void storeSelfDependentXqueryLibraryModule() throws IOException {
         storeXquery(TEST_COLLECTION, XQUERY_FILENAME, STAGE1_XQUERY);
         storeXquery(TEST_COLLECTION, XQUERY_FILENAME, STAGE2_XQUERY);
         storeXquery(TEST_COLLECTION, XQUERY_FILENAME, STAGE3_XQUERY);
+
+        final String result = callXqueryResource(existWebServer, executor, TEST_COLLECTION, XQUERY_FILENAME);
+        assertNotNull("Expected f1 function to execute and return results", result);
+        assertTrue("Expected f1 function result", result.contains("<f1/>"));
     }
 }

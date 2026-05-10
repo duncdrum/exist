@@ -35,6 +35,7 @@ import org.exist.security.AuthenticationException;
 import org.exist.security.PermissionDeniedException;
 import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
+import org.exist.storage.lock.Lock.LockMode;
 import org.exist.storage.txn.TransactionManager;
 import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
@@ -53,6 +54,8 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests the serializing of constructed in-memory fragments.
@@ -114,6 +117,14 @@ public class DOMIndexerTest {
 
             txnMgr.commit(txn);
         }
+
+        // verify the document was stored and can be retrieved
+        try(final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+            try (final Collection collection = broker.openCollection(TestConstants.TEST_COLLECTION_URI, LockMode.READ_LOCK)) {
+                assertNotNull("Test collection should exist after store", collection);
+                assertNotNull("Stored document should be retrievable", collection.getDocument(broker, TestConstants.TEST_XML_URI));
+            }
+        }
     }
 
     @Test
@@ -133,7 +144,9 @@ public class DOMIndexerTest {
                 next.toSAX(broker, serializer, props);
             }
             serializer.endDocument();
-            out.toString();
+            final String output = out.toString();
+            assertTrue("XQuery result should have items", count > 0);
+            assertTrue("Serialized output should contain result element", output.contains("<result>"));
         }
     }
 }

@@ -74,15 +74,15 @@ public class TestXPathOpOrSpecialCase extends Assert {
 	public void verifyOpOrInPredicate() throws Exception
 	{
 		try
-		{
+			{
 			storeXML(testCollection, "blah.xml", "<blah>No element content.</blah>");
 			existEmbeddedServer.executeQuery("/blah[a='A' or b='B']");
-		}
+			}
 		catch(final XMLDBException e)
-		{
+			{
 			LOG.error(e.getMessage(), e);
 			throw e;
-		}
+			}
 	}
 
 	/** 

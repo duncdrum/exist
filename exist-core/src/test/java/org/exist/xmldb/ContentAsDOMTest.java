@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import static org.exist.TestUtils.*;
+import static org.junit.Assert.*;
 
 /**
  * Tests XMLResource.getContentAsDOM() for resources retrieved from
@@ -78,10 +79,14 @@ public class ContentAsDOMTest {
         Collection testCollection = DatabaseManager.getCollection(XmldbURI.LOCAL_DB + "/" + TEST_COLLECTION);
         XQueryService service = testCollection.getService(XQueryService.class);
         ResourceSet result = service.query(XQUERY);
+        assertEquals("Query should return 2 items (comment + output element)", 2, result.getSize());
+
+        int outputCount = 0;
         for(long i = 0; i < result.getSize(); i++) {
             XMLResource r = (XMLResource) result.getResource(i);
 
             Node node = r.getContentAsDOM();
+            assertNotNull("getContentAsDOM should return a non-null Node", node);
             Transformer t = TransformerFactory.newInstance().newTransformer();
             t.setOutputProperty(OutputKeys.INDENT, "yes");
             t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
@@ -89,8 +94,14 @@ public class ContentAsDOMTest {
             try (final StringWriter writer = new StringWriter()) {
                 StreamResult output = new StreamResult(writer);
                 t.transform(source, output);
+                final String transformed = writer.toString();
+                if (transformed.contains("<output>")) {
+                    outputCount++;
+                    assertTrue("Transformed output should contain test element", transformed.contains("<test>ABCDEF</test>"));
+                }
             }
         }
+        assertEquals("Should have found one output element", 1, outputCount);
     }
 
 

@@ -213,11 +213,11 @@ public class GroupManagementFunctionRemoveGroupTest {
         try (final DBBroker broker = pool.get(Optional.of(sm.getSystemSubject()));
              final Txn transaction = pool.getTransactionManager().beginTransaction()) {
             try {
-                sm.deleteGroup(primaryGroup);
-                fail("Should have received: PermissionDeniedException: Account 'user1' still has 'otherGroup1' as their primary group!");
-            } catch (final PermissionDeniedException e) {
-                // expected
-            }
+                 sm.deleteGroup(primaryGroup);
+                 fail("Should have received: PermissionDeniedException: Account 'user1' still has 'otherGroup1' as their primary group!");
+              } catch (final PermissionDeniedException e) {
+                  // expected - user1 still has otherGroup1 as their primary group
+              }
 
             transaction.commit();
         }
@@ -232,12 +232,12 @@ public class GroupManagementFunctionRemoveGroupTest {
         // attempt to remove the primary group of the second user
         try (final DBBroker broker = pool.get(Optional.of(sm.getSystemSubject()));
              final Txn transaction = pool.getTransactionManager().beginTransaction()) {
-            try {
-                sm.deleteGroup(primaryGroup);
-                fail("Should have received: PermissionDeniedException: Account 'user2' still has 'otherGroup1' as their primary group!");
-            } catch (final PermissionDeniedException e) {
-                // expected
-            }
+             try {
+                 sm.deleteGroup(primaryGroup);
+                 fail("Should have received: PermissionDeniedException: Account 'user2' still has 'otherGroup1' as their primary group!");
+               } catch (final PermissionDeniedException e) {
+                   // expected - user2 still has otherGroup1 as their primary group
+               }
 
             transaction.commit();
         }

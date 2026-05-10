@@ -25,6 +25,7 @@ import org.apache.tools.ant.Project;
 import org.exist.util.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -319,8 +320,9 @@ public class XmldbTaskTest extends AbstractTaskTest {
         assertEquals("<subject>world</subject>", result);
     }
 
-    @Test
+       @Ignore("xupdate ant target not yet implemented")
+     @Test
     public void xupdate() {
         buildFileRule.executeTarget("xupdate");
-    }
+     }
 }

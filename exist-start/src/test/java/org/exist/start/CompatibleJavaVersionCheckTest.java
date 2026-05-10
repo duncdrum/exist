@@ -145,32 +145,60 @@ public class CompatibleJavaVersionCheckTest {
         assertEquals(3, components[2]);
     }
 
-    @Test
+     @Test
     public void checkNoVersion() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.empty());
-    }
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.empty());
+        } catch (StartException e) {
+            fail("Expected no exception for optional(empty), got: " + e.getMessage());
+        }
+     }
 
-    @Test
+     @Test
     public void checkJava8() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("1.8.0_292"));
-    }
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("1.8.0_292"));
+        } catch (StartException e) {
+            fail("Expected no exception for '1.8.0_292', got: " + e.getMessage());
+        }
+     }
 
-    @Test
+     @Test
     public void checkJava9() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("9.0.4"));
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("9.0.7.1"));
-    }
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("9.0.4"));
+        } catch (StartException e) {
+            fail("Expected no exception for '9.0.4', got: " + e.getMessage());
+        }
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("9.0.7.1"));
+        } catch (StartException e) {
+            fail("Expected no exception for '9.0.7.1', got: " + e.getMessage());
+        }
+     }
 
-    @Test
+     @Test
     public void checkJava10() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("10"));
-    }
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("10"));
+        } catch (StartException e) {
+            fail("Expected no exception for '10', got: " + e.getMessage());
+        }
+     }
 
-    @Test
+     @Test
     public void checkJava11() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("11"));
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("11.0.11"));
-    }
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("11"));
+        } catch (StartException e) {
+            fail("Expected no exception for '11', got: " + e.getMessage());
+        }
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("11.0.11"));
+        } catch (StartException e) {
+            fail("Expected no exception for '11.0.11', got: " + e.getMessage());
+        }
+     }
 
     @Test(expected = StartException.class)
     public void checkJava12() throws StartException {
@@ -202,23 +230,39 @@ public class CompatibleJavaVersionCheckTest {
         CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("15.0.1"));
     }
 
-    @Test
+      @Test
     public void checkJava15_0_2() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("15.0.2"));
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("15.0.2"));
+        } catch (StartException e) {
+            fail("Expected no exception for '15.0.2', got: " + e.getMessage());
+        }
     }
 
     @Test
     public void checkJava15_0_3() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("15.0.3"));
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("15.0.3"));
+        } catch (StartException e) {
+            fail("Expected no exception for '15.0.3', got: " + e.getMessage());
+        }
     }
 
     @Test
     public void checkJava21() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("21.0.6"));
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("21.0.6"));
+        } catch (StartException e) {
+            fail("Expected no exception for '21.0.6', got: " + e.getMessage());
+        }
     }
 
     @Test
     public void checkJava25() throws StartException {
-        CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("25.0.1"));
+        try {
+            CompatibleJavaVersionCheck.checkForCompatibleJavaVersion(Optional.of("25.0.1"));
+        } catch (StartException e) {
+            fail("Expected no exception for '25.0.1', got: " + e.getMessage());
+        }
     }
 }

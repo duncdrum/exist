@@ -609,12 +609,13 @@ public class XmldbURITest {
             assertEquals("/exist/exist/xmlrpc", xmldbURI.relativizeContext(uri).toString());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
-        } catch (NullPointerException e) {
-            exceptionThrown = true;
-        }
-    }
+          } catch (NullPointerException e) {
+             exceptionThrown = true;
+          }
+         assertTrue("Expected NullPointerException to be thrown for relativizeContext with null context", exceptionThrown);
+      }
 
-    @Test
+      @Test
     public void xmldbURIResolveContext1() throws URISyntaxException {
         XmldbURI xmldbURI = XmldbURI.xmldbUriFor("xmldb:exist://localhost:8080/a/b/xmlrpc/db");
         URI uri = new URI("..");
@@ -697,18 +698,10 @@ public class XmldbURITest {
     }
 
     @Test
-    public void xmldbURIRelativizeCollectionName3() {
-        @SuppressWarnings("unused")
-        boolean exceptionThrown = false;
-        try{
-            XmldbURI xmldbURI = XmldbURI.xmldbUriFor("xmldb:exist:///");
-            URI uri = new URI("/");
-            assertEquals("", xmldbURI.relativizeCollectionPath(uri).toString());
-        } catch (URISyntaxException e) {
-            fail(e.getMessage());
-        } catch (NullPointerException e) {
-            exceptionThrown = true;
-        }
+    public void xmldbURIRelativizeCollectionName3() throws URISyntaxException {
+        XmldbURI xmldbURI = XmldbURI.xmldbUriFor("xmldb:exist:///");
+        URI uri = new URI("/");
+        assertEquals("", xmldbURI.relativizeCollectionPath(uri).toString());
     }
 
     @Test

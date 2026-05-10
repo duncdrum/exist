@@ -151,8 +151,16 @@ public abstract class AbstractIntegrationTest {
             int read = -1;
             while((read = reader.read(cbuf)) > -1) {
                 builder.append(cbuf, 0, read);
-            }
-        }
+              }
+          }
         return builder.toString();
-    }
+      }
+
+    protected static String callXqueryResource(final ExistWebServer existWebServer, final Executor executor, final String collectionPath, final String xqueryFilename) throws IOException {
+        final HttpResponse response = executor.execute(Request
+                 .Get(getRestUri(existWebServer) + collectionPath + "/" + xqueryFilename)
+        ).returnResponse();
+        assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+        return asString(response.getEntity().getContent());
+      }
 }

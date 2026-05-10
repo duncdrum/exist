@@ -48,6 +48,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ReindexTest {
 
@@ -102,6 +103,14 @@ public class ReindexTest {
             broker.reindexCollection(transaction, DOCUMENT_WITH_CHILD_NODES_COLLECTION, ReindexScope.FULLTEXT);
             broker.reindexCollection(transaction, DOCUMENT_WITH_CHILD_NODES_COLLECTION, ReindexScope.VECTOR);
             transaction.commit();
+        }
+
+        // verify collection still exists and document is accessible after reindex
+        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+            try (final Collection col = broker.openCollection(DOCUMENT_WITH_CHILD_NODES_COLLECTION, Lock.LockMode.READ_LOCK)) {
+                assertNotNull("Collection should exist after reindex", col);
+                assertNotNull("Document should be accessible after reindex", col.getDocument(broker, DOCUMENT_WITH_CHILD_NODES_NAME));
+            }
         }
     }
 

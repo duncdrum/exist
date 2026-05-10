@@ -52,6 +52,7 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.*;
 
 /**
  * @author jmv
@@ -81,6 +82,7 @@ public class DOMTest {
 		cms.removeCollection("A");
 		cms.createCollection("A");
 		Collection coll = existEmbeddedServer.getRoot().getChildCollection("A");
+		assertNotNull("Collection A should exist", coll);
 
 		XMLResource r =
 			coll.createResource(
@@ -94,12 +96,15 @@ public class DOMTest {
 		ResourceSet rs =
 			xpqs.query(
 				"//properties[property[@key='type' and text()='Table']]");
+		assertEquals("Query should return 1 result", 1, rs.getSize());
 		for (ResourceIterator i = rs.getIterator();
 			i.hasMoreResources();
 			) {
 			r = (XMLResource) i.nextResource();
 			String s = (String) r.getContent();
+			assertNotNull("Content should not be null", s);
 			Node content = r.getContentAsDOM();
+			assertNotNull("getContentAsDOM should return non-null Node", content);
 			coll.removeResource(r);
 		}
 
@@ -132,14 +137,18 @@ public class DOMTest {
 
 				resource = (XMLResource) existEmbeddedServer.getRoot().getResource(name);
 			}
+			assertNotNull("Resource should exist after store", resource);
 
 			String s = (String) resource.getContent();
+			assertNotNull("Content should not be null", s);
 			Node content = resource.getContentAsDOM();
+			assertNotNull("getContentAsDOM should return non-null Node", content);
 		}
 
 		existEmbeddedServer.restart();
 
 		XMLResource resource = (XMLResource) existEmbeddedServer.getRoot().getResource(name);
+		assertNotNull("Resource should exist after restart", resource);
 		existEmbeddedServer.getRoot().removeResource(resource);
 	}
 	
@@ -170,8 +179,12 @@ public class DOMTest {
 
 		coll = DatabaseManager.getCollection(XmldbURI.LOCAL_DB, "admin", "");
 		resource = (XMLResource) coll.getResource(name);
+		assertNotNull("Resource should exist after store", resource);
 		String s = (String) resource.getContent();
+		assertNotNull("Content should not be null", s);
+		assertTrue("Content should contain property element", s.contains("<property"));
 		Node n = resource.getContentAsDOM();
+		assertNotNull("getContentAsDOM should return non-null Node", n);
 
 		coll.removeResource(resource);
 	}
@@ -212,6 +225,7 @@ public class DOMTest {
 
 		coll = DatabaseManager.getCollection(XmldbURI.LOCAL_DB, "admin", "");
 		resource = (XMLResource) coll.getResource(name);
+		assertNotNull("Resource should exist after store", resource);
 
 		Node n;
 		if (getContentAsDOM) {
@@ -226,6 +240,7 @@ public class DOMTest {
 				n = db.parse(bais);
 			}
 		}
+		assertNotNull("Parsed DOM node should not be null", n);
 
 		Transformer t = TransformerFactory.newInstance().newTransformer();
 		DOMSource source = new DOMSource(n);

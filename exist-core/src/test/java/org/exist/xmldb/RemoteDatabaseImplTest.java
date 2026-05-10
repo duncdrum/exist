@@ -69,12 +69,12 @@ public class RemoteDatabaseImplTest extends RemoteDBTest {
 
             Resource resource = guestCollection.createResource("testguest", BinaryResource.class);
             resource.setContent("123".getBytes());
-            try {
-                guestCollection.storeResource(resource);
-                fail();
-            } catch (XMLDBException e) {
-
-            }
+             try {
+                 guestCollection.storeResource(resource);
+                 fail("Guest user should not have permission to store a resource");
+               } catch (XMLDBException e) {
+                 // expected - guest should not have write permission
+               }
 
             cms.removeCollection(ADMIN_COLLECTION_NAME);
         }

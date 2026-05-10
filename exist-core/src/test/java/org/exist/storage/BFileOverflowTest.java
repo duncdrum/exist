@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.*;
 
 /**
  * @author wolf
@@ -96,8 +97,12 @@ public class BFileOverflowTest {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
             BFile collectionsDb = (BFile)((NativeBroker)broker).getStorage(NativeBroker.COLLECTIONS_DBX_ID);
+            assertNotNull("BFile storage should be available", collectionsDb);
             
             Value key = new Value("test".getBytes());
+            // NOTE: This test depends on add() running first to populate data.
+            // Recovery is verified by the read not throwing an exception.
+            @SuppressWarnings("unused")
             Value val = collectionsDb.get(key);
         }
     }

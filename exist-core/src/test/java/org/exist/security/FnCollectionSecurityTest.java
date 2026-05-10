@@ -127,6 +127,7 @@ public class FnCollectionSecurityTest {
              final Txn transaction = pool.getTransactionManager().beginTransaction()) {
             final XQuery xqueryService = pool.getXQueryService();
             final Sequence result = xqueryService.execute(broker, query, null);
+            assertNotNull("Query should return a result sequence (access granted to root)", result);
 
             transaction.commit();
         }
@@ -145,6 +146,7 @@ public class FnCollectionSecurityTest {
              final Txn transaction = pool.getTransactionManager().beginTransaction()) {
             final XQuery xqueryService = pool.getXQueryService();
             final Sequence result = xqueryService.execute(broker, query, null);
+            assertNotNull("Query should return a result sequence (access granted to /db/all)", result);
 
             transaction.commit();
         }

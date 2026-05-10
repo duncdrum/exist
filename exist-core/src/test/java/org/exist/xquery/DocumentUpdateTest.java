@@ -32,8 +32,7 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class DocumentUpdateTest {
 
@@ -151,6 +150,8 @@ public class DocumentUpdateTest {
         String result1 = execQuery(query1);
         String result2 = execQuery(query2);
 
+        assertFalse("All attributes should have been deleted", result1.contains(" d=\""));
+        assertTrue("New AAA attribute should have been inserted", result2.contains("AAA=\"BBB\""));
     }
     
     private String execQuery(String query) throws XMLDBException {

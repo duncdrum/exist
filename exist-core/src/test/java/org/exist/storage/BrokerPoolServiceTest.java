@@ -80,7 +80,8 @@ public class BrokerPoolServiceTest {
         existEmbeddedServer.startDb();
         try {
 
-            // do nothing for a while (background jobs will be running)
+            // let background jobs run for a while (they run in loops with JOB_LOOP_DELAY=1000ms)
+            // NOTE: Cannot use Awaitility here because futures only complete after stopDb() signals them to stop
             Thread.sleep(3000);
 
         } finally {

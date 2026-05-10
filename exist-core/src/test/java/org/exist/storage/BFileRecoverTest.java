@@ -39,6 +39,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.junit.Assert.*;
 
 /**
  * @author wolf
@@ -79,6 +80,7 @@ public class BFileRecoverTest {
             
             Writer writer = new StringWriter();
             collectionsDb.dump(writer);
+            assertTrue("Dump should produce non-empty output", writer.toString().length() > 0);
         }
     }
 
@@ -88,12 +90,16 @@ public class BFileRecoverTest {
         BrokerPool.FORCE_CORRUPTION = false;
         try(final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
             BFile collectionsDb = (BFile)((NativeBroker)broker).getStorage(NativeBroker.COLLECTIONS_DBX_ID);
+            assertNotNull("BFile storage should be available", collectionsDb);
             Writer writer = new StringWriter();
             collectionsDb.dump(writer);
 
             for (int i = 1; i < 1001; i++) {
                 String key = "test" + i;
                 byte[] data = key.getBytes(UTF_8);
+                // NOTE: This test depends on add() running first to populate data.
+                // Recovery is verified by the reads not throwing exceptions.
+                @SuppressWarnings("unused")
                 Value value = collectionsDb.get(new Value(data));
             }
         }

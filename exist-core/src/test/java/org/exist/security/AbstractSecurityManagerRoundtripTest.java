@@ -31,8 +31,9 @@ import org.xmldb.api.base.Collection;
 import org.exist.security.internal.aider.GroupAider;
 import org.exist.security.internal.aider.UserAider;
 import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNotNull;
 import org.xmldb.api.base.XMLDBException;
 
 /**
@@ -258,11 +259,17 @@ public abstract class AbstractSecurityManagerRoundtripTest {
             assertEquals(1, commonGroupManagers.size());
             assertEquals(commonGroupManagers.getFirst().getName(), userName);
 
-        } finally {
-            //cleanup
-            try { ums.removeGroup(commonGroup); } catch(Exception e) {}
-            try { ums.removeAccount(userAccount); } catch(Exception e) {}
-            try { ums.removeGroup(userGroup); } catch(Exception e) {}
-        }
+         } finally {
+              //cleanup
+             try { ums.removeGroup(commonGroup); } catch(Exception e) {
+                 fail("Unexpected exception cleaning up group: " + commonGroup.getName());
+             }
+             try { ums.removeAccount(userAccount); } catch(Exception e) {
+                 fail("Unexpected exception cleaning up user: " + userAccount.getName());
+             }
+             try { ums.removeGroup(userGroup); } catch(Exception e) {
+                 fail("Unexpected exception cleaning up user group: " + userGroup.getName());
+             }
+          }
     }
 }
