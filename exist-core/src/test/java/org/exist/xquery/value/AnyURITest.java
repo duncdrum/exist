@@ -51,12 +51,12 @@ public class AnyURITest {
         assertEquals(anyUri.toURI(),uri);
     }
 
-    /**
-     * TODO: change AnyURIValue to directly store the escaped value?
-     */
-    @Ignore
-    @Test
-    public void partiallyEscapedStringToXmldbURI() throws XPathException {
+     /**
+      * TODO: change AnyURIValue to directly store the escaped value?
+      */
+     @Ignore("change AnyURIValue to directly store the escaped value")
+     @Test
+     public void partiallyEscapedStringToXmldbURI() throws XPathException {
         String escaped = TestConstants.SPECIAL_NAME.replaceAll("%20"," ").replaceAll("%C3%A0","\u00E0");
         AnyURIValue anyUri = new AnyURIValue(escaped);
         assertEquals(anyUri.toXmldbURI(), TestConstants.SPECIAL_URI);

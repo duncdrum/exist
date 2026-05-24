@@ -149,7 +149,7 @@ public class XQueryTest {
              return document { $doc }\s
             };\
             """;
-    
+
     private static final String fatherModule =
             """
             module namespace foo="foo";
@@ -1872,7 +1872,7 @@ public class XQueryTest {
 
     //TODO : understand this test and make sure that the expected result is correct
     //expected:<3> but was:<2>
-    @Ignore
+    @Ignore("make sure that the expected result is correct")
     @Test
     public void xupdateAttributesAndElements() throws XMLDBException {
         ResourceSet result;
@@ -1986,7 +1986,7 @@ public class XQueryTest {
      */
     @Test
     public void attribute_1691174() throws XMLDBException {
-        String query = "declare function local:show($el1, $el2) { " 
+        String query = "declare function local:show($el1, $el2) { "
                 + "	<Foobar> "
                 + "	{ (\"first: \", $el1, \" second: \", $el2) } "
                 + "	</Foobar> " + "}; "
@@ -2297,7 +2297,7 @@ public class XQueryTest {
      *
      * Same as {@link #asDouble_1840775()}
      */
-    @Ignore
+    @Ignore("#asDouble_1840775()")
     @Test
     public void wrongAttributeTypeCheck_1805612() throws XMLDBException {
 
@@ -2438,7 +2438,7 @@ public class XQueryTest {
     /**
      * @see http://sourceforge.net/support/tracker.php?aid=2871975
      */
-    @Ignore
+    @Ignore("http://sourceforge.net/support/tracker.php?aid=2871975")
     @Test
     public void stringOfEmptySequenceWithExplicitContext_2871975() throws XMLDBException {
 
@@ -2481,7 +2481,7 @@ public class XQueryTest {
     /**
      * @see http://sourceforge.net/support/tracker.php?aid=1848497
      */
-    @Ignore
+    @Ignore("http://sourceforge.net/support/tracker.php?aid=1848497")
     @Test
     public void attributeNamespaceDeclaration_1848497() throws XMLDBException {
         String query = "declare namespace foo = \"foo\";" +
@@ -2536,11 +2536,11 @@ public class XQueryTest {
     public void currentDateTimeInModules_1894009() throws XMLDBException {
         String module = """
                 module namespace dt = "dt";
-                
+
                 declare function dt:fib($n) {
                   if ($n < 2) then $n else dt:fib($n - 1) + dt:fib($n - 2)\s
                 };
-                
+
                 declare function dt:dateTime() {
                   (: Do something time consuming first. :) \s
                   let $a := dt:fib(25)\
@@ -2646,7 +2646,7 @@ public class XQueryTest {
         assertEquals(query, "<a>2<b/></a>", //checked with saxon
                 result.getResource(0).getContent().toString());
     }
-    
+
     /**
      * @see http://sourceforge.net/support/tracker.php?aid=1816496
      */
@@ -2725,7 +2725,7 @@ public class XQueryTest {
         assertEquals(query, "2", result.getResource(0).getContent().toString());
 
     }
-    
+
     /**
      * @see http://sourceforge.net/support/tracker.php?aid=1841635
      */
@@ -2734,7 +2734,7 @@ public class XQueryTest {
         String xmldoc = "<Root><Node1><Node2><Node3></Node3></Node2></Node1></Root>";
 
         XPathQueryService service = storeXMLStringAndGetQueryService("baseuri.xml", xmldoc);
-            
+
         String query="doc('/db/test/baseuri.xml')/Root/Node1/base-uri()";
 
 
@@ -2911,7 +2911,7 @@ public class XQueryTest {
      *
      * Same as {@link #wrongAttributeTypeCheck_1805612()}
      */
-    @Ignore
+    @Ignore("#wrongAttributeTypeCheck_1805612()")
     @Test
     public void asDouble_1840775() throws XMLDBException {
         String query = "declare function local:testCase($failure as element(Failure)?)"
