@@ -18,7 +18,9 @@ work/
 .idea/*
 !/.idea/runConfigurations
 *.iml
-.vscode
+.vscode/
+.zed/
+.cursor/
 
 # OS specific files
 .DS_Store
@@ -29,9 +31,11 @@ plans/
 .moderne/
 !.moderne/context/
 !.moderne/moderne.yml
+.github/instructions/
 
 # Debug logs (e.g. from reindex investigation)
 reindex-dbg.log
 
 # Temporary files occasionally created by Ant replaceregexp
 /tmp*tmp
+.worktrees/
