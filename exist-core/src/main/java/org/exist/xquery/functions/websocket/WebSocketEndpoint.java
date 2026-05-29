@@ -36,7 +36,6 @@ import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.channels.ClosedChannelException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -110,13 +109,13 @@ public class WebSocketEndpoint {
                 monitorService.shutdown();
                 monitorService = null;
             }
+            sessions.clear();
             initialized = false;
         }
     }
 
     @OnOpen
     public void openSession(final Session session) {
-        session.setMaxIdleTimeout(10000);
         sessions.put(session, DEFAULT_CHANNEL);
     }
 
@@ -192,19 +191,11 @@ public class WebSocketEndpoint {
      * @param message the message text
      */
     public static void sendAll(final String toChannel, final String message) {
-        final Iterator<Map.Entry<Session, String>> iterator = sessions.entrySet().iterator();
-        while (iterator.hasNext()) {
-            try {
-                final Map.Entry<Session, String> entry = iterator.next();
-                final Session session = entry.getKey();
-                final String channel = entry.getValue();
-
-                if (toChannel == null || (!channel.equals(DEFAULT_CHANNEL) && toChannel.equals(channel))) {
-                    session.getBasicRemote().sendText(message);
-                }
-            } catch (final IOException e) {
-                LOG.debug("Removing disconnected WebSocket session: {}", e.getMessage());
-                iterator.remove();
+        for (final Map.Entry<Session, String> entry : sessions.entrySet()) {
+            final Session session = entry.getKey();
+            final String channel = entry.getValue();
+            if (toChannel == null || (!channel.equals(DEFAULT_CHANNEL) && toChannel.equals(channel))) {
+                session.getAsyncRemote().sendText(message);
             }
         }
     }
