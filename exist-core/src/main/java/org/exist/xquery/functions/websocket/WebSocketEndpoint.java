@@ -35,6 +35,7 @@ import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.channels.ClosedChannelException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -124,6 +125,16 @@ public class WebSocketEndpoint {
         sessions.remove(session);
     }
 
+    @OnError
+    public void onError(final Session session, final Throwable throwable) {
+        sessions.remove(session);
+        if (throwable instanceof ClosedChannelException) {
+            LOG.debug("WebSocket client disconnected abruptly: session {}", session.getId());
+        } else {
+            LOG.warn("WebSocket error on session {}: {}", session.getId(), throwable.getMessage(), throwable);
+        }
+    }
+
     @OnMessage
     public void recv(final String message, final Session session) {
         try (final JsonParser parser = JSON_FACTORY.createParser(message)) {
@@ -192,7 +203,8 @@ public class WebSocketEndpoint {
                     session.getBasicRemote().sendText(message);
                 }
             } catch (final IOException e) {
-                LOG.error("Error sending message via websocket: {}", e.getMessage(), e);
+                LOG.debug("Removing disconnected WebSocket session: {}", e.getMessage());
+                iterator.remove();
             }
         }
     }
