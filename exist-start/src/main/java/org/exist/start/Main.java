@@ -244,6 +244,9 @@ public class Main {
      *         if the input array contains no elements or only one element, an empty array is returned
      */
     private static String[] stripFirstElement(final String[] args) {
+        if (args.length == 0) {
+            return args;
+        }
         final String[] newArguments = new String[args.length - 1];
         if (args.length > 1) {
             System.arraycopy(args, 1, newArguments, 0, args.length - 1);

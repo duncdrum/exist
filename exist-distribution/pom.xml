@@ -923,7 +923,7 @@
                             <identifier>org.exist.start.Main</identifier>
                             <mainClassName>org.exist.start.Main</mainClassName>
                             <executableName>eXist-JavaAppLauncher</executableName>
-                            <jvmRequired>21</jvmRequired>
+                            <jvmRequired>21+</jvmRequired>
                             <minimumSystemVersion>10.9</minimumSystemVersion>
                             <version>${project.version}</version>
                             <shortVersion>${project.version}</shortVersion>
