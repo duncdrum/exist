@@ -962,6 +962,52 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Create a native Windows launcher.exe in bin/ so users can double-click to start eXist-db.
+                 Mirrors what launcher.bat does: sets exist.home to the install root and invokes
+                 org.exist.start.Main with the "launcher" argument (which starts LauncherWrapper / system tray). -->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+                    <execution>
+                        <id>wrap-launcher-exe</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>${assemble.dir}/bin/launcher.exe</outfile>
+                            <downloadUrl>https://adoptium.net/</downloadUrl>
+                            <classPath>
+                                <mainClass>org.exist.start.Main</mainClass>
+                                <cp>%EXEDIR%\..\etc</cp>
+                                <cp>%EXEDIR%\..\lib\*</cp>
+                            </classPath>
+                            <cmdLine>launcher</cmdLine>
+                            <jre>
+                                <minVersion>21</minVersion>
+                                <requiresJdk>false</requiresJdk>
+                                <opts>
+                                    <opt>-Xms128m</opt>
+                                    <opt>-XX:+UseNUMA</opt>
+                                    <opt>-XX:+UseZGC</opt>
+                                    <opt>-XX:+UseStringDeduplication</opt>
+                                    <opt>-Dexist.home="%EXEDIR%\.."</opt>
+                                    <opt>-Dexist.configurationFile="%EXEDIR%\..\etc\conf.xml"</opt>
+                                    <opt>-Dexist.jetty.config="%EXEDIR%\..\etc\jetty\standard.enabled-jetty-configs"</opt>
+                                    <opt>-Djetty.home="%EXEDIR%\.."</opt>
+                                    <opt>-Dexist.autodeploy.dir="%EXEDIR%\..\autodeploy"</opt>
+                                    <opt>-Dlog4j.configurationFile="%EXEDIR%\..\etc\log4j2.xml"</opt>
+                                    <opt>-Dfile.encoding=UTF-8</opt>
+                                </opts>
+                            </jre>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
