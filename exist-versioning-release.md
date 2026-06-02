@@ -137,8 +137,9 @@ A **tag ruleset** restricts creation and deletion of `eXist-*` tags to users wit
 | `AZURE_CLIENT_ID` | `build-windows` — OIDC app registration client ID |
 | `AZURE_TENANT_ID` | `build-windows` — Azure tenant |
 | `AZURE_SUBSCRIPTION_ID` | `build-windows` — Azure subscription |
+| `EXISTDB_WIN_SIGNING_CERTCHAIN` | `build-windows` — base64-encoded PEM containing the signing certificate chain (leaf + intermediate CAs); passed to `jarsigner -certchain` to embed the full chain. Expires 2027-12-03. |
 
-Repository variables (not secrets): `AZURE_KEYVAULT_URI` (e.g. `https://exist-db-signing.vault.azure.net/`), `AZURE_KEYVAULT_CERT_NAME` (the certificate name as it appears in Key Vault, e.g. `existdb-code-signing`), and `EXISTDB_MAC_CODESIGN_IDENTITY`.
+Repository variables (not secrets): `AZURE_KEYVAULT_URI` (e.g. `https://exist-db-signing.vault.azure.net/`), `AZURE_KEYVAULT_CERT_NAME` (`exist-db-win-signing`), and `EXISTDB_MAC_CODESIGN_IDENTITY`.
 
 ### Preparing a Product Release
 
