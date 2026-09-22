@@ -1,0 +1,23 @@
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryVector.java
+  s_baf9c30b4d75ed::t_bc6511b2d53853 48-49,51,112,142-145,151,183-184
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/AbstractVectorQueryFunction.java
+  s_baf9c30b4d75ed::t_de510b20dd0dcb 1-189
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryFieldVector.java
+  s_baf9c30b4d75ed::t_c6dfbe04f7dd55 42-46,48,91-98,100-108,110-112,114-115,128-130,134-135,151-154,158-159
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "eda8cdeb09c0f396c2f192701bf23216140ce5da",
+  "prompts": {},
+  "sessions": {
+    "s_baf9c30b4d75ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "febfc04b-8f05-42cb-a19b-52f304c3fec2",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
