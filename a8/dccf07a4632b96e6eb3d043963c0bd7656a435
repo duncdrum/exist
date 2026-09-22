@@ -1,0 +1,39 @@
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryOptions.java
+  s_baf9c30b4d75ed::t_b3a3c694e6260d 90-93,96-104,107-108,112,115-116,118-119
+extensions/indexes/lucene/src/test/xquery/lucene/query-vector-k.xqm
+  s_baf9c30b4d75ed::t_8aae888ff65195 282-292
+  s_baf9c30b4d75ed::t_71bebc9490a40f 248,293-297
+  s_baf9c30b4d75ed::t_71a2b39bba3caf 249-281
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndexWorker.java
+  s_baf9c30b4d75ed::t_e028362e0cca80 965-968,970,972
+  s_baf9c30b4d75ed::t_7c8daf750210d4 82
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryFieldVector.java
+  s_baf9c30b4d75ed::t_dfc3e449d1498e 133-136,138-140,144
+  s_baf9c30b4d75ed::t_9af604daa8db74 156
+  s_baf9c30b4d75ed::t_1350b6b7b78df6 110
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryVector.java
+  s_baf9c30b4d75ed::t_1fc04d752c4355 190-197,202
+  s_baf9c30b4d75ed::t_bfcb42d583a64d 158
+  s_baf9c30b4d75ed::t_abccaade626493 222
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/AbstractVectorQueryFunction.java
+  s_baf9c30b4d75ed::t_14d63a19fb3966 88-89,91,94,97
+  s_baf9c30b4d75ed::t_526500b4aaaaef 134-141,143-144
+  s_baf9c30b4d75ed::t_a00a9f55c898e5 183
+  s_baf9c30b4d75ed::t_39bf04cb65d92c 170-178,180,182
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "a8dccf07a4632b96e6eb3d043963c0bd7656a435",
+  "prompts": {},
+  "sessions": {
+    "s_baf9c30b4d75ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "febfc04b-8f05-42cb-a19b-52f304c3fec2",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": null
+    }
+  }
+}
