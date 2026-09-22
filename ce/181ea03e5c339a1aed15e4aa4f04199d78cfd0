@@ -1,0 +1,36 @@
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryFieldVector.java
+  s_baf9c30b4d75ed::t_c6dfbe04f7dd55 42-46,48,97-98,100-101,128-130,134-135,151-154,158-159
+  s_baf9c30b4d75ed::t_dd11e8ddb1faa3 150,155-157,161
+  s_baf9c30b4d75ed::t_cf6d20d3a78777 118-125,127,131-132,136-147
+  s_baf9c30b4d75ed::t_90cfe50d25dab5 41
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/AbstractVectorQueryFunction.java
+  s_baf9c30b4d75ed::t_de510b20dd0dcb 1-189
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndexWorker.java
+  s_baf9c30b4d75ed::t_f00a18f6f63436 950-959,964-965,967,969
+extensions/indexes/lucene/src/test/xquery/lucene/query-vector-k.xqm
+  s_baf9c30b4d75ed::t_cf61477af25b90 92-95,98-99,104-105,107-113
+  s_baf9c30b4d75ed::t_cd0771387c0723 1-91,96-97,100-103,106,114-155
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryVector.java
+  s_baf9c30b4d75ed::t_eb926b153195ed 167-182,185-188
+  s_baf9c30b4d75ed::t_cf3bb9b3ead490 126-133,135-141,146-150,152-166
+  s_baf9c30b4d75ed::t_36fb3578d2d11d 47
+  s_baf9c30b4d75ed::t_bc6511b2d53853 48-49,51,112,142-145,151,183-184
+extensions/indexes/lucene/src/test/java/xquery/lucene/VectorSearchTests.java
+  s_baf9c30b4d75ed::t_fb361843935c82 36-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "ce181ea03e5c339a1aed15e4aa4f04199d78cfd0",
+  "prompts": {},
+  "sessions": {
+    "s_baf9c30b4d75ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "febfc04b-8f05-42cb-a19b-52f304c3fec2",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
