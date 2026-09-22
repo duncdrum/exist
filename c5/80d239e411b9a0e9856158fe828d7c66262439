@@ -1,0 +1,25 @@
+exist-core/src/test/java/org/exist/client/ClientDocumentEditSupportTest.java
+  s_9874e94f9c80aa::t_3fecceeeee456e 1-49
+exist-core/src/main/java/org/exist/client/ClientDocumentEditSupport.java
+  s_9874e94f9c80aa::t_3fecceeeee456e 1-57
+exist-core/src/main/java/org/exist/client/ClientSwingEdt.java
+  s_9874e94f9c80aa::t_3fecceeeee456e 1-76
+exist-core/src/test/java/org/exist/client/ClientSwingEdtTest.java
+  s_9874e94f9c80aa::t_3fecceeeee456e 1-163
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "c580d239e411b9a0e9856158fe828d7c66262439",
+  "prompts": {},
+  "sessions": {
+    "s_9874e94f9c80aa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1d02d3f2-c7c2-4980-9cb4-fc03946343d7",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
