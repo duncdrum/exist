@@ -1,0 +1,26 @@
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryOptions.java
+  s_baf9c30b4d75ed::t_8b2ddff9aee6ad 106-108
+  s_baf9c30b4d75ed::t_2f8c93233c0150 92
+  s_baf9c30b4d75ed::t_c8ec3eb0d5f193 88-91,93-105,109-114
+  s_baf9c30b4d75ed::t_163201601db0da 39
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/Query.java
+  s_baf9c30b4d75ed::t_397a0d484ea8f2 417
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/AbstractVectorQueryFunction.java
+  s_baf9c30b4d75ed::t_442973d4ff2e24 134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "00b5daae5fb12652a388044fcf81a241a5cedab7",
+  "prompts": {},
+  "sessions": {
+    "s_baf9c30b4d75ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "febfc04b-8f05-42cb-a19b-52f304c3fec2",
+        "model": "claude-sonnet-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
