@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/http/ExQueryRequestAdapterFactory.java
+  s_b6e932659c72e0::t_e8ab833ca05b28 41,43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "3caa6597cb92e39b01533ca9903a7c54e4992e77",
+  "prompts": {},
+  "sessions": {
+    "s_b6e932659c72e0": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f27e74121ffeVR20v5tf5bhXgL",
+        "model": "Qwen3.8-27B-MLX-4bit"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
