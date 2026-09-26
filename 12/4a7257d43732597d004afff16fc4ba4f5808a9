@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/http/servlets/XQueryServlet.java
+  s_fb0ea4df23c056::t_6ab0a914e93df8 639,641-671
+exist-core/src/test/java/org/exist/http/servlets/XQueryServletErrorPageTest.java
+  s_fb0ea4df23c056::t_0b4c815b1ccb57 1-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "124a7257d43732597d004afff16fc4ba4f5808a9",
+  "prompts": {},
+  "sessions": {
+    "s_fb0ea4df23c056": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f222ef02bffe8lRdgCid0o93q2",
+        "model": "qwen3.8:27b-mlx"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
