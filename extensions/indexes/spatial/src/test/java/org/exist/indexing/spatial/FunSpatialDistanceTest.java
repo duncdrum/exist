@@ -30,12 +30,10 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.DoubleValue;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -52,10 +50,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * {@code getGeometryForNode}, exercising the in-memory branch of
  * {@link org.exist.xquery.modules.spatial.FunSpatialDistance#resolveGeometry}.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class FunSpatialDistanceTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
     private static final String SPATIAL_PROLOG = """

@@ -41,12 +41,9 @@ import org.exist.collections.Collection;
 import org.exist.xmldb.XmldbURI;
 import org.exist.dom.persistent.DocumentImpl;
 import org.exist.dom.persistent.NodeProxy;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,6 +58,7 @@ import java.io.StringWriter;
 import java.io.StringReader;
 import java.util.Optional;
 import java.util.Properties;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * @author Wolfgang Meier
@@ -73,7 +71,6 @@ import java.util.Properties;
  * @author Cherif YAYA
  *
  */
-@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class MarshallerTest {
 
@@ -150,7 +147,7 @@ public class MarshallerTest {
         assertEquals("test",n.getLocalName());
     }
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @BeforeAll

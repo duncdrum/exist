@@ -52,11 +52,8 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.util.SyntaxException;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nullable;
@@ -68,6 +65,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,13 +84,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * error, which is what proves the disclosure level is per-request rather than baked into the pooled
  * compiled query.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class RESTExecuteWithoutReadTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static final String TEST_USER = "restExecUser";

@@ -39,13 +39,10 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
 import org.hamcrest.Matcher;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -53,6 +50,7 @@ import org.xmlunit.diff.Diff;
 
 import java.io.IOException;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.TestUtils.ADMIN_DB_USER;
@@ -73,7 +71,6 @@ import static org.hamcrest.Matchers.allOf;
  *
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class CopyResourceTest {
 
     private static final String USER1_NAME = "user1";
@@ -110,7 +107,7 @@ public class CopyResourceTest {
     private static final int USER2_BIN_DOC2_MODE = 0644;  // rw-r--r--
     private static final int USER2_BIN_DOC3_MODE = 0664;  // rw-rw--r--
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existWebServer = new ExistEmbeddedServer(true, true);
 
     /**

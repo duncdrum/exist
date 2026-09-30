@@ -37,13 +37,9 @@ import org.exist.xmldb.concurrent.DBUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
@@ -52,11 +48,11 @@ import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * @author wolf
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class StressTest {
 
     private static final String XML = "<root><a/><b/><c/></root>";
@@ -68,7 +64,7 @@ public class StressTest {
 
     private String[] tags;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existXmldbEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     @Test

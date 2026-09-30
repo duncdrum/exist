@@ -27,20 +27,15 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.DatabaseConfigurationException;
 import org.exist.xquery.Constants.ArithmeticOperator;
 import org.exist.xquery.value.*;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-
-@ExtendWith(ExternalResourceSupport.class)
 public class OpNumericTest {
 
     private static DBBroker broker;
@@ -53,7 +48,7 @@ public class OpNumericTest {
 	private static IntegerValue integer;
 	private static DecimalValue decimal;
 
-	@ClassRule
+	@RegisterExtension
 	public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
 	@BeforeAll

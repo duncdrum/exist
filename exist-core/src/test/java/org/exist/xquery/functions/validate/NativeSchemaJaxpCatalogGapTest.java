@@ -23,12 +23,9 @@ package org.exist.xquery.functions.validate;
 
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
@@ -37,6 +34,7 @@ import org.xmldb.api.base.XMLDBException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
@@ -69,7 +67,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see <a href="https://github.com/eXist-db/exist/issues/6686">#6686</a>
  * @see <a href="https://github.com/eXist-db/eXide/issues/842">eXide#842</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class NativeSchemaJaxpCatalogGapTest {
 
     private static final String COLLECTION_CONFIG_NS = "http://exist-db.org/collection-config/1.0";
@@ -92,7 +89,7 @@ public class NativeSchemaJaxpCatalogGapTest {
             </collection>
             """;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer =
             new ExistXmldbEmbeddedServer(false, true, true);
 

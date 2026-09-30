@@ -33,10 +33,7 @@ import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.*;
@@ -52,6 +49,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Runs the W3C XInclude 1.0 Test Suite against eXist-db's XInclude implementation.
@@ -61,10 +59,9 @@ import java.util.stream.Collectors;
  * serializes the input document with XInclude expansion and compares
  * the output to the expected result.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class W3CXIncludeTestSuite {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static final String TEST_SUITE_DIR = "xinclude-test-suite";

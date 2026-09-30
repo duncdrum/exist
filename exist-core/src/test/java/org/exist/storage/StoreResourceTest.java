@@ -43,13 +43,10 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
 import org.hamcrest.Matcher;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -58,6 +55,7 @@ import org.xmlunit.diff.Diff;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.storage.DBBroker.PreserveType.NO_PRESERVE;
@@ -65,8 +63,6 @@ import static org.exist.test.TestConstants.TEST_COLLECTION_URI;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class StoreResourceTest {
 
     private static final String USER1_NAME = "user1";
@@ -81,7 +77,7 @@ public class StoreResourceTest {
     private static final int USER1_DOC1_MODE = 0664;  // rw-rw--r--
     private static final int USER1_BIN_DOC1_MODE = 0664;  // rw-rw--r--
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existWebServer = new ExistEmbeddedServer(true, true);
 
     /**

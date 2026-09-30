@@ -34,11 +34,8 @@ import org.exist.util.ExistSAXParserFactory;
 import org.exist.xquery.*;
 import org.exist.xquery.value.AnyURIValue;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static com.evolvedbinary.j8fu.Either.Left;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,6 +70,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
@@ -80,10 +78,9 @@ import java.net.URISyntaxException;
  * @author <a href="mailto:shabanovd@gmail.com">Dmitriy Shabanov</a>
  * @author Adam Retter
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class DocTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private static SAXParserFactory saxParserFactory = ExistSAXParserFactory.getSAXParserFactory();

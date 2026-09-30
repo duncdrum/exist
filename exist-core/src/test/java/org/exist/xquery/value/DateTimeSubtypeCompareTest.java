@@ -22,12 +22,10 @@
 package org.exist.xquery.value;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,10 +39,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * {@code AbstractDateTimeValue.compareTo} guard previously used strict
  * primitive-type equality and rejected the cross-type case with XPTY0004.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class DateTimeSubtypeCompareTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer embedded =
             new ExistXmldbEmbeddedServer(false, true, true);
 

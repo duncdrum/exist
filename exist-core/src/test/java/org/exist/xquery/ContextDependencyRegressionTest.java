@@ -29,13 +29,10 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.LockException;
 import org.exist.xmldb.IndexQueryService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
@@ -45,6 +42,7 @@ import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XQueryService;
 
 import java.io.IOException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -66,7 +64,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @see <a href="https://github.com/eXist-db/exist/issues/3918">GH-3918</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ContextDependencyRegressionTest {
 
     private static final String COLLECTION_CONFIG =
@@ -80,7 +77,7 @@ public class ContextDependencyRegressionTest {
 
     private static Collection testCollection;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer =
             new ExistEmbeddedServer(true, true);
 

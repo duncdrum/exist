@@ -21,11 +21,11 @@
  */
 package org.exist.xquery.modules.httpclient.xquery;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.exist.test.runner.XSuite;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -38,9 +38,9 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 public class HttpClientXqueryTests {
 
     @ClassRule
-    public static final WireMockExtension wireMockRule = WireMockExtension.newInstance().options(wireMockConfig().dynamicPort()).build();
+    public static final WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
 
-    @BeforeAll
+    @BeforeClass
     public static void setup() {
         // Configure some default endpoints
         wireMockRule.stubFor(get(urlEqualTo("/hello"))
@@ -78,7 +78,7 @@ public class HttpClientXqueryTests {
         System.setProperty("wiremock.port", String.valueOf(wireMockRule.port()));
     }
 
-    @AfterAll
+    @AfterClass
     public static void teardown() {
         System.clearProperty("wiremock.port");
     }

@@ -25,15 +25,13 @@ import org.apache.commons.io.input.UnsynchronizedByteArrayInputStream;
 import org.exist.security.AuthenticationException;
 import org.exist.storage.BrokerPool;
 import org.exist.test.ExistEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.TestUtils.ADMIN_DB_PWD;
@@ -52,10 +50,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @see <a href="https://github.com/eXist-db/exist/issues/6189">#6189</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ValidatorXsd11Test {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(
             propertiesBuilder().build(), true, true);
 

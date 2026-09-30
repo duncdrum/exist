@@ -39,13 +39,11 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.easymock.EasyMock.createNiceMock;
@@ -65,10 +63,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * straight into {@link java.nio.file.Path#of(String, String...)}, which throws an unhandled
  * {@link NullPointerException} that surfaces to the client as a raw HTTP 500.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class XQueryServletNullPathTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static final XmldbURI TEST_COLLECTION = XmldbURI.create("/db/apps/xqueryservlet-null-path-test");

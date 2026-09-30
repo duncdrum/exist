@@ -126,7 +126,9 @@ public class ExistEmbeddedServer extends ExternalResource implements BeforeAllCa
         } catch (final Exception e) {
             throw e;
         } catch (final Throwable t) {
-            throw new Exception(t);
+            // before() declares `throws Throwable`, broader than beforeAll()'s `throws Exception`;
+            // wrap the rare non-Exception case (e.g. an Error) rather than throwing a raw Exception.
+            throw new RuntimeException(t);
         }
     }
 

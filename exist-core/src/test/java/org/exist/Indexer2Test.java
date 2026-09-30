@@ -50,20 +50,16 @@ import org.exist.xquery.value.SequenceIterator;
 import static org.exist.util.PropertiesBuilder.propertiesBuilder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests the indexer.
  *
  * @author ljo
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class Indexer2Test {
 
     private final static String XML =
@@ -149,7 +145,7 @@ public class Indexer2Test {
         }
     }
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(
             propertiesBuilder()
                 .put(Indexer.PROPERTY_PRESERVE_WS_MIXED_CONTENT, true)

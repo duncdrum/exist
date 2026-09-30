@@ -22,12 +22,10 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -49,10 +47,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * resolves to its document node; arithmetic produces a single numeric value;
  * the positional predicate has no match; count is zero.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class RootNodeContextItemDependencyTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer =
             new ExistXmldbEmbeddedServer(false, true, true);
 

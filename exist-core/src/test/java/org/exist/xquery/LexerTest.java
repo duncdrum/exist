@@ -46,15 +46,11 @@ import org.exist.xquery.parser.XQueryTreeParser;
 import org.exist.xquery.value.Sequence;
 
 import antlr.collections.AST;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.fail;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class LexerTest {
 
 	private static final String xml =
@@ -65,7 +61,7 @@ public class LexerTest {
 			+ "\u5165\u4E86\u5341\u4E09\u5E74\u65F6\u95F4\u3002"
 			+ "</body></text>";
 
-	@ClassRule
+	@RegisterExtension
 	public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
 	@Test

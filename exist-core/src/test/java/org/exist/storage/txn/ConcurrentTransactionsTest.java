@@ -46,17 +46,15 @@ import org.exist.util.InputStreamSupplierInputSource;
 import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.concurrent.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.exist.test.TransactionTestDSL.ExecutionListener;
 import static org.exist.test.TransactionTestDSL.NULL_SCHEDULE_LISTENER;
@@ -77,10 +75,9 @@ import static org.exist.samples.Samples.SAMPLES;
  *
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ConcurrentTransactionsTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     // flip this to `true` if you want to see a trace of the transaction schedule execution on Standard Out
@@ -134,10 +131,10 @@ public class ConcurrentTransactionsTest {
                 .build()
             .execute(existEmbeddedServer.getBrokerPool(), EXECUTION_LISTENER);
 
-        assertNull(null, result._1);
+        assertNull(result._1);
 
         // NOTE: This is null because eXist-db has no real transaction isolation (allows dirty reads), the document delete by t1, is seen by t2 even though t2 started before t1 committed
-        assertNull(null, result._2);  // should be null as document was deleted!
+        assertNull(result._2);  // should be null as document was deleted!
     }
 
     @org.junit.jupiter.api.Test

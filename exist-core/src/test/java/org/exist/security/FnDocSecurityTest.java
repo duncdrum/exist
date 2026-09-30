@@ -41,25 +41,21 @@ import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Optional;
 import java.util.Properties;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.exist.xmldb.XmldbURI.ROOT_COLLECTION;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class FnDocSecurityTest {
 
     private static final String TEST_USER_1 = "docTestUser1";
@@ -79,7 +75,7 @@ public class FnDocSecurityTest {
     private static final String TEST_DOC_NAME_2 = "doc2.xml";
     private static final String TEST_DOC_URI_2 = TEST_SUB_COLLECTION_2 + "/" + TEST_DOC_NAME_2;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
     /**

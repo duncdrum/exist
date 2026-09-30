@@ -26,12 +26,9 @@ import org.exist.test.ExistWebServer;
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.UserManagementService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
@@ -45,6 +42,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +51,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Integration test: requires ExistWebServer (Jetty) with XML-RPC and REST.
  * Runs in Failsafe phase.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class LoginModuleIT {
 
     private static String XQUERY = "import module namespace login=\"http://exist-db.org/xquery/login\" " +
@@ -61,7 +58,7 @@ public class LoginModuleIT {
             "login:set-user('org.exist.login', (), false())," +
             "sm:id()/(descendant::sm:effective,descendant::sm:real)[1]/sm:username/string()";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
     private final static String XQUERY_FILENAME = "test-login.xql";

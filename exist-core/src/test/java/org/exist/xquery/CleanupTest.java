@@ -33,11 +33,8 @@ import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.EXistXQueryService;
 import org.exist.xquery.value.FunctionReference;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
@@ -45,6 +42,7 @@ import org.xmldb.api.modules.CollectionManagementService;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -55,7 +53,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author Wolfgang
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class CleanupTest {
 
     private final static String MODULE_NS = "http://exist-db.org/test";
@@ -87,7 +84,7 @@ public class CleanupTest {
 
     private Collection collection;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     @BeforeEach

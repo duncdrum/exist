@@ -25,12 +25,9 @@ import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.EXistXQueryService;
 import org.exist.xquery.util.ExpressionDumper;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.CompiledExpression;
 import org.xmldb.api.base.ResourceSet;
@@ -39,6 +36,7 @@ import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -58,7 +56,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>Performance is verified separately in {@code exist-indexes-jmh}; here we
  * only assert semantic equivalence.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class UnionStepDistributionOptimizerTest {
 
     private static final String OPTIMIZE = "declare option exist:optimize 'enable=yes'; ";
@@ -89,7 +86,7 @@ public class UnionStepDistributionOptimizerTest {
             </library>
             """;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer server =
             new ExistXmldbEmbeddedServer(false, true, true);
 

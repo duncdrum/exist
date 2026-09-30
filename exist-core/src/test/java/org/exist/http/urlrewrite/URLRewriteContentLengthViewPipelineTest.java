@@ -23,12 +23,9 @@ package org.exist.http.urlrewrite;
 
 import org.exist.http.AbstractHttpTest;
 import org.exist.test.ExistWebServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.net.URI;
@@ -36,6 +33,7 @@ import java.net.http.HttpRequest;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,10 +54,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * resource's Content-Length is set by the servlet engine's default servlet,
  * not by eXist's own DB-resource serving path.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class URLRewriteContentLengthViewPipelineTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = ExistWebServer.builder()
             .useRandomPort()
             .disableAutoDeploy()

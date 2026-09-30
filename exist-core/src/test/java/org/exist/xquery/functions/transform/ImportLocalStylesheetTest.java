@@ -22,15 +22,13 @@
 package org.exist.xquery.functions.transform;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static com.ibm.icu.impl.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,7 +41,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  * @author <a href="mailto:juri.leino@existsolutions.com">Juri Leino</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ImportLocalStylesheetTest {
 
     private static final String XSL_DB_LOCATION = "/db/system/repo/functx-1.0.1/functx/functx.xsl";
@@ -87,7 +84,7 @@ public class ImportLocalStylesheetTest {
         assertEquals(EXPECTED_OUTPUT, result.getResource(0).getContent());
     }
 
-    @ClassRule
+    @RegisterExtension
     public static ExistXmldbEmbeddedServer existXmldbEmbeddedServer = new ExistXmldbEmbeddedServer(true, false, true, getConfigFile());
 
     @org.junit.jupiter.api.Test

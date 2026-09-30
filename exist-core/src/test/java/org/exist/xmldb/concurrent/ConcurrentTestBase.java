@@ -28,15 +28,13 @@ import java.util.concurrent.*;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.concurrent.action.Action;
 import org.exist.xmldb.IndexQueryService;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -47,7 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author wolf
  * @author aretter
  */
-@ExtendWith(ExternalResourceSupport.class)
 public abstract class ConcurrentTestBase {
 
     private static String COLLECTION_CONFIG =
@@ -61,7 +58,7 @@ public abstract class ConcurrentTestBase {
 
     protected Collection testCol;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existXmldbEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     @BeforeEach

@@ -22,12 +22,10 @@
 package org.exist.xquery.functions.fn;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,10 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * document root, so traversal visited ancestor elements (e.g. xsl:stylesheet)
  * and raised FOJS0006 against those rather than the JSON wrapper element.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class FunXmlToJsonTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer SERVER = new ExistXmldbEmbeddedServer(true, true, true);
 
     @Test

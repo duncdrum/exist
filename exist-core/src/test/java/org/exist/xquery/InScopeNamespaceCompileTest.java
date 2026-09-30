@@ -32,11 +32,8 @@ import org.exist.xquery.parser.XQueryParser;
 import org.exist.xquery.parser.XQueryTreeParser;
 
 import antlr.collections.AST;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Verifies that namespaces registered on the static context via
@@ -48,10 +45,9 @@ import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
  * <p>Regression test for set-operator XPST0081 failures discovered in the
  * XQ 3.1 develop gap analysis (op-intersect, op-union, op-except).
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class InScopeNamespaceCompileTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
     private static final String ATOMIC_NS = "http://www.w3.org/XQueryTest";

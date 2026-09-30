@@ -25,8 +25,8 @@ import org.exist.storage.BrokerPool;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.XMLFilenameFilter;
 import org.exist.util.XQueryFilenameFilter;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -332,7 +332,7 @@ public class XSuite extends ParentRunner<Runner> {
     @Override
     protected Statement withBeforeClasses(final Statement statement) {
         // get @BeforeClass methods
-        final List<FrameworkMethod> befores = getTestClass().getAnnotatedMethods(BeforeAll.class);
+        final List<FrameworkMethod> befores = getTestClass().getAnnotatedMethods(BeforeClass.class);
 
         // inject an eXist-db Server startup as though it were an @BeforeClass
         final Statement startExistDb = new StartExistDbStatement();
@@ -343,7 +343,7 @@ public class XSuite extends ParentRunner<Runner> {
     @Override
     protected Statement withAfterClasses(final Statement statement) {
         // get @AfterClass methods
-        final List<FrameworkMethod> afters = getTestClass().getAnnotatedMethods(AfterAll.class);
+        final List<FrameworkMethod> afters = getTestClass().getAnnotatedMethods(AfterClass.class);
 
         // inject an eXist-db Server shutdown as though it were an @AfterClass
         final Statement stopExist = new StopExistDbStatement();

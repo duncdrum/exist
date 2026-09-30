@@ -28,16 +28,14 @@ import org.exist.storage.DBBroker;
 import org.exist.storage.XQueryPool;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
 import java.util.function.Consumer;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -56,10 +54,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Constr-inscope-1 to -4 tests, which use the prefixes foo and XXX with swapped URIs, flipped
  * nondeterministically depending on which of them had last used the pooled instance (#6704).</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class PooledContextInScopeNamespacesTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
     private static final String PARENT1 = "http://www.example.com/parent1";

@@ -26,12 +26,10 @@ import org.exist.storage.DBBroker;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.functions.map.MapType;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,10 +47,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * are not constructed directly here (they require {@code OrderSpec} scaffolding) but share the identical
  * recursion.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ContainsReferenceNestedTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer SERVER = new ExistEmbeddedServer(true, true);
 
     @Test

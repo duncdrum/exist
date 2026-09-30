@@ -37,13 +37,10 @@ import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.InputStream;
@@ -53,6 +50,7 @@ import java.nio.file.Path;
 
 import java.io.IOException;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
 
@@ -60,7 +58,6 @@ import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_C
  * Integration test: requires the XAR from expathrepo-trigger-test (built in package phase).
  * Runs in Failsafe so the full build has completed and the XAR resource is available.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class PackageTriggerIT {
 
     static final String xarFile = "exist-expathrepo-trigger-test-" + Version.getVersion() + ".xar";
@@ -98,7 +95,7 @@ public class PackageTriggerIT {
     static final XmldbURI triggerTestCollection = XmldbURI.create("/db");
     static final XmldbURI xarUri = triggerTestCollection.append(xarFile);
 
-    @ClassRule
+    @RegisterExtension
     public static ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(false, true);
 
     @BeforeAll

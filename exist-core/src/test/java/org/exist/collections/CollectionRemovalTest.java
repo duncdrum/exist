@@ -43,12 +43,9 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.EXistXPathQueryService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static com.evolvedbinary.j8fu.tuple.Tuple.Tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,6 +63,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Creates 3 collections, /db/test/test2, /db/test/test2/test3 and /db/test/test2/test4
@@ -74,7 +72,6 @@ import java.util.Optional;
  * using the "guest" user account. eXist should detect the missing permissions and properly
  * abort the transaction.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class CollectionRemovalTest {
 
     private final static String DATA =
@@ -87,7 +84,7 @@ public class CollectionRemovalTest {
     private final static String QUERY1 = "/document/chapter";
     private final static String QUERY2 = "//chapter[title = 'Chapter 1']";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @org.junit.jupiter.api.Test

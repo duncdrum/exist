@@ -27,11 +27,8 @@ import org.exist.http.AbstractHttpTest;
 import org.exist.test.ExistWebServer;
 import org.exist.xmldb.DatabaseImpl;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
@@ -44,6 +41,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -55,10 +53,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Tests for retrieving a document containing CDATA via
  * various APIs.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class CDataIntergationTest extends AbstractHttpTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
     @TempDir

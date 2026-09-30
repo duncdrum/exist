@@ -24,9 +24,6 @@ package org.exist.dom.memtree;
 
 import com.googlecode.junittoolbox.ParallelParameterized;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
@@ -41,6 +38,7 @@ import org.xmlunit.diff.Diff;
 import javax.xml.transform.Source;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -50,11 +48,10 @@ import static org.xmldb.api.base.ResourceType.XML_RESOURCE;
 /**
  * https://github.com/eXist-db/exist/issues/1682#issuecomment-402108184
  */
-@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelParameterized.class)
 public class DocumentBuilderReceiverIntegrationTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     public static java.util.Collection<Object[]> data() {

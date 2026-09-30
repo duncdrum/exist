@@ -25,11 +25,8 @@ import org.exist.Namespaces;
 import org.exist.TestUtils;
 import org.exist.storage.serializers.EXistOutputKeys;
 import org.exist.test.ExistWebServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xmldb.api.DatabaseManager;
@@ -47,16 +44,15 @@ import org.xmlunit.diff.Diff;
 import javax.xml.transform.Source;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class SerializationTest {
 
-	@ClassRule
+	@RegisterExtension
 	public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 	private static final String PORT_PLACEHOLDER = "${PORT}";
 

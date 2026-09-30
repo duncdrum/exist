@@ -28,12 +28,9 @@ import org.exist.util.*;
 import org.exist.xquery.TerminatedException;
 import org.exist.xquery.value.AtomicValue;
 import org.exist.xquery.value.DoubleValue;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,11 +44,11 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Low-level tests on the B+tree.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class BTreeTest {
 
     private final static byte BTREE_TEST_FILE_ID = 0x7F;
@@ -356,7 +353,7 @@ public class BTreeTest {
         }
     }
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @TempDir

@@ -44,27 +44,23 @@ import org.exist.util.LockException;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.EXistXQueryService;
 import org.exist.xmldb.IndexQueryService;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XUpdateQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.exist.samples.Samples.SAMPLES;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class ConcurrencyTest {
 
     private static final long TIMEOUT_TERMINATION = 1000 * 60 * 3; // 3 minutes (in milliseconds)
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private static int CONCURRENT_THREADS = Math.min(16, Runtime.getRuntime().availableProcessors() * 3);

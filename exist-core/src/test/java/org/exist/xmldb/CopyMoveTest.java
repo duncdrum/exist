@@ -24,12 +24,9 @@ package org.exist.xmldb;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.security.Account;
 import org.exist.security.Permission;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,12 +35,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.*;
-
-
-@ExtendWith(ExternalResourceSupport.class)
+import org.junit.jupiter.api.extension.RegisterExtension;
 public class CopyMoveTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private final static String TEST_COLLECTION = "testCopyMove";

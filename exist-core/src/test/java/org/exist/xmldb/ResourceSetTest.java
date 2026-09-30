@@ -23,24 +23,20 @@ package org.exist.xmldb;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.*;
 
 import java.io.InputStream;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.exist.samples.Samples.SAMPLES;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class ResourceSetTest {
 
-	@ClassRule
+	@RegisterExtension
 	public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
 	private final static String TEST_COLLECTION = "testResourceSet";

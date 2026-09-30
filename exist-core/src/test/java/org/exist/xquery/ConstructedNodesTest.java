@@ -25,14 +25,12 @@ import javax.xml.transform.OutputKeys;
 
 import com.googlecode.junittoolbox.ParallelRunner;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -41,11 +39,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:adam.retter@devon.gov.uk">Adam Retter</a>
  * @author ljo
  */
-@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class ConstructedNodesTest {
 
-	@ClassRule
+	@RegisterExtension
 	public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
 	/**

@@ -32,16 +32,14 @@ import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.Configuration;
 import org.exist.util.DatabaseConfigurationException;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -64,14 +62,13 @@ import static org.junit.jupiter.api.Assertions.fail;
  * package's finish.xq / pre-install.xql / post-install.xql during autodeploy - those all run
  * via {@link org.exist.repo.AutoDeploymentTrigger}, itself a StartupTrigger.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class StartupTriggerUpdateAccountAndGroupTest {
 
     private final static String USER = "testuser2";
     private final static String PASSWORD = "testpass";
     private final static String GROUP = "testgroup2";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(null, null, properties(), true, true);
 
     public static Properties properties() {

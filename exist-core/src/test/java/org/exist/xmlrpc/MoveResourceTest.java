@@ -44,12 +44,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.samples.Samples.SAMPLES;
@@ -63,7 +60,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Due to the complex move task, threads will deadlock almost immediately if
  * something's wrong with collection locking.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class MoveResourceTest {
 
     private static final int DELAY = 10;  // milliseconds
@@ -72,7 +68,7 @@ public class MoveResourceTest {
     private static final int REST_RETRY_MAX = 3;
     private static final int REST_RETRY_DELAY_MS = 100;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
     @AfterAll

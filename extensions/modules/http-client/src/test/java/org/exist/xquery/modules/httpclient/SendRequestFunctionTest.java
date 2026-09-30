@@ -26,12 +26,9 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpExchange;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.exist.xmldb.EXistResource;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -48,6 +45,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,10 +59,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * <p>Uses an embedded {@link HttpServer} for self-contained testing — no external
  * services required. Each test endpoint simulates a specific HTTP scenario.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class SendRequestFunctionTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer =
             new ExistXmldbEmbeddedServer(false, true, true);
 

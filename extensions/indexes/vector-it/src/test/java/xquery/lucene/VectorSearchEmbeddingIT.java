@@ -30,16 +30,14 @@ import org.exist.util.ConfigurationHelper;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -58,10 +56,9 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  *   mvn verify -pl extensions/indexes/vector-it -am -Ponnx-model -DskipUnitTests=true
  * </pre>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class VectorSearchEmbeddingIT {
 
-    @ClassRule
+    @RegisterExtension
     public static ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static final String MODEL = "all-MiniLM-L6-v2";

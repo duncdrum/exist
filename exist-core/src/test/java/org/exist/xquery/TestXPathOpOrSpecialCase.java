@@ -24,15 +24,13 @@ package org.exist.xquery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -43,12 +41,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * source code. 
  * @author Jason Smith
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class TestXPathOpOrSpecialCase {
 
 	private static final Logger LOG = LogManager.getLogger(TestXPathOpOrSpecialCase.class);
 
-	@ClassRule
+	@RegisterExtension
 	public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
 	/** Database test collection (<code>/db/blah</code>). */

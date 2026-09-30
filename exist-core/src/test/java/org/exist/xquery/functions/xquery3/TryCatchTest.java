@@ -25,10 +25,7 @@ import com.googlecode.junittoolbox.ParallelRunner;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.ResourceSet;
@@ -38,6 +35,7 @@ import org.exist.xquery.XPathException;
 import org.xmldb.api.base.XMLDBException;
 
 import java.io.IOException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,11 +44,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author wessels
  */
-@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class TryCatchTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     @Test

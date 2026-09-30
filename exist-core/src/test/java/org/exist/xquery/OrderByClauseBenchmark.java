@@ -22,16 +22,14 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Micro-benchmark for {@code order by} clause performance.
@@ -57,10 +55,9 @@ import java.util.Map;
  *       -Dexist.run.benchmarks=true -Ddependency-check.skip=true
  * </pre>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class OrderByClauseBenchmark {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer server =
             new ExistXmldbEmbeddedServer(false, true, true);
 

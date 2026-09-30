@@ -30,10 +30,7 @@ import org.exist.security.PermissionDeniedException;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.OutputKeys;
@@ -42,15 +39,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.io.StringWriter;
 import java.util.Properties;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests that HTML5 serialization does not emit DOCTYPE for fragments
  * (non-html root elements).
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class HTML5FragmentTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private String serialize(final String xquery, final String method, final String version)

@@ -43,11 +43,8 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.OutputKeys;
@@ -57,6 +54,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.*;
+import org.junit.jupiter.api.extension.RegisterExtension;
+import java.nio.file.Files;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.test.TestConstants.TEST_COLLECTION_URI;
@@ -68,7 +67,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:shabanovd@gmail.com">Dmitriy Shabanov</a>
  *
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class SystemExportFiltersTest {
 
     private static final String COLLECTION_CONFIG =
@@ -101,7 +99,7 @@ public class SystemExportFiltersTest {
 
     private static final String BINARY = "test";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @TempDir
@@ -223,7 +221,15 @@ public class SystemExportFiltersTest {
         String subFolder = String.join("/", subDirs);
         File result = new File(root, subFolder);
         if (!result.mkdirs()) {
-            throw new IOException("Couldn't create folders " + root);
+            if (result.isDirectory()) {
+                // TemporaryFolder.newFolder() always returned a fresh directory; this migrated
+                // helper reuses a fixed subDirs name across repeated/parameterized invocations
+                // sharing the same root, so fall back to a uniquely-suffixed sibling instead of
+                // colliding with the previous call's directory.
+                result = Files.createTempDirectory(root.toPath(), subFolder + "-").toFile();
+            } else {
+                throw new IOException("Couldn't create folders " + root);
+            }
         }
         return result;
     }

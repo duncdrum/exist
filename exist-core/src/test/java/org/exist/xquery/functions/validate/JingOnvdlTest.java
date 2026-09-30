@@ -22,10 +22,7 @@
 package org.exist.xquery.functions.validate;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,6 +36,7 @@ import org.xmldb.api.base.ResourceSet;
 import java.io.IOException;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests for the validation:jing() function with NVDLs
@@ -46,10 +44,9 @@ import org.xmldb.api.base.XMLDBException;
  * @author jim.fuller@webcomposite.com
  * @author dizzzz@exist-db.org
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class JingOnvdlTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private final static String RNG_DATA1 =

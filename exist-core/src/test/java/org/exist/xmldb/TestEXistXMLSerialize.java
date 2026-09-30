@@ -24,7 +24,6 @@ package org.exist.xmldb;
 import org.exist.security.Account;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
-import org.junit.ClassRule;
 import org.xmldb.api.modules.CollectionManagementService;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -48,8 +47,6 @@ import org.exist.util.serializer.SAXSerializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.TestUtils.GUEST_DB_USER;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,15 +60,15 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  * @author  bmadigan
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class TestEXistXMLSerialize {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
 	private final static String XML_DATA =

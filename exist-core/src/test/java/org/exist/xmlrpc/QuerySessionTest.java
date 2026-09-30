@@ -26,12 +26,9 @@ import org.apache.logging.log4j.Logger;
 import org.exist.TestDataGenerator;
 import org.exist.TestUtils;
 import org.exist.test.ExistWebServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.*;
@@ -44,17 +41,16 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class QuerySessionTest {
 
     private static final Logger LOG = LogManager.getLogger(QuerySessionTest.class);
 
-    @ClassRule
+    @RegisterExtension
     public final static ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
     private final static String generateXQ =

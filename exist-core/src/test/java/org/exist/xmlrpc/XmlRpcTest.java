@@ -42,12 +42,8 @@ import static java.lang.Boolean.TRUE;
 import static org.exist.test.TestConstants.TEST_XML_URI;
 import static org.exist.xmldb.RemoteCollection.MAX_UPLOAD_CHUNK;
 import static org.exist.xmlrpc.RpcConnection.MAX_DOWNLOAD_CHUNK_SIZE;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -73,6 +69,7 @@ import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * JUnit test for XMLRPC interface methods.
@@ -81,10 +78,9 @@ import org.xmlunit.diff.Diff;
  * @author <a href="mailto:pierrick.brihaye@free.fr">Pierrick Brihaye</a>
  * @author ljo
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class XmlRpcTest {
 
-    @ClassRule
+    @RegisterExtension
     public final static ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
     private final static XmldbURI TARGET_COLLECTION = XmldbURI.ROOT_COLLECTION_URI.append("xmlrpc");

@@ -23,17 +23,15 @@ package org.exist.webdav;
 
 import org.exist.TestUtils;
 import org.exist.test.ExistWebServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.net.HttpURLConnection;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,7 +40,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * eXist-specific WebDAV round-trip tests (XML serialization edge cases).
  * Replaces the former milton-client JUnit suite; protocol compliance is covered by litmus.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class WebDavRoundTripTest {
 
     private static final String XML_WITH_DOCTYPE =
@@ -63,7 +60,7 @@ public class WebDavRoundTripTest {
 
     private static final String XML_WITH_NON_ASCII = "<doc>café — 日本語</doc>";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer EXIST_WEB_SERVER = new ExistWebServer(true, false, true, true);
 
     private static final List<String> STORED_DOCUMENTS = new ArrayList<>();

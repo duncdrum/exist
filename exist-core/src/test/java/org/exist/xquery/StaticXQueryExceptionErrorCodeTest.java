@@ -25,10 +25,8 @@ import org.exist.source.Source;
 import org.exist.source.StringSource;
 import org.exist.storage.BrokerPool;
 import org.exist.test.ExistEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -44,10 +42,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * surfaced by tests such as {@code K-Literals-31}, {@code Literals006},
  * {@code Literals051}, {@code K2-Literals-22}, {@code K-Literals-50}.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class StaticXQueryExceptionErrorCodeTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @Test

@@ -29,16 +29,14 @@ import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.Configuration;
 import org.exist.util.DatabaseConfigurationException;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -46,13 +44,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * Tests for startup triggers.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class StartupTriggerTest {
 
     private final static String USER = "testuser1";
     private final static String PASSWORD = "testpass";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(null, null, properties(), true, true);
 
     public static Properties properties() {

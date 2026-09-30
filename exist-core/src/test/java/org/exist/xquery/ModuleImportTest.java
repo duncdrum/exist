@@ -30,14 +30,11 @@ import org.exist.storage.DBBroker;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.StringValue;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static com.evolvedbinary.j8fu.Either.Left;
 import static com.evolvedbinary.j8fu.Either.Right;
@@ -52,9 +49,8 @@ import static org.hamcrest.Matchers.equalTo;
  *
  * @author <a href="mailto:juri@existsolutions.com">Juri Leino</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ModuleImportTest {
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(null, getConfigFile(), null, false, true);
 
     protected static Either<XPathException, CompiledXQuery> compileQuery(final String string) throws EXistException, PermissionDeniedException {

@@ -31,9 +31,6 @@ import org.exist.test.ExistWebServer;
 import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
-import org.junit.ClassRule;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.exist.EXistException;
 import org.exist.xmldb.XmldbURI;
 import org.exist.test.TestConstants;
@@ -45,6 +42,7 @@ import org.exist.storage.txn.TransactionManager;
 import org.exist.storage.txn.Txn;
 import org.xml.sax.SAXException;
 import uk.ac.ic.doc.slurp.multilock.MultiLock;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,10 +52,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Patrick Bosek<patrick.bosek@jorsek.com>
  *
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class GetXMLResourceNoLockTest {
 
-	@ClassRule
+	@RegisterExtension
 	public static final ExistWebServer existWebServer = new ExistWebServer(true, false, false, true);
 
     private static String EMPTY_BINARY_FILE = "What's an up dog?";

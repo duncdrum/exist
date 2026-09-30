@@ -37,18 +37,16 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Regression test: range index lookup with for-bound value comparand.
@@ -63,10 +61,9 @@ import java.util.stream.IntStream;
  * per-item {@code effectiveContextSequence}, so BOOLEAN-mode per-item predicate
  * evaluation returned the same non-empty NodeSet for every context item.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ForBoundXmlIdRegressionTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static final String CONFIG_LEGACY_ONLY = """

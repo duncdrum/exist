@@ -25,12 +25,8 @@ package org.exist.xquery.functions.fn;
 import com.googlecode.junittoolbox.ParallelParameterized;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.FileUtils;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
@@ -48,18 +44,17 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.xmldb.api.base.ResourceType.XML_RESOURCE;
-
-@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelParameterized.class)
 public class ExtDocTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     public static java.util.Collection<Object[]> data() {

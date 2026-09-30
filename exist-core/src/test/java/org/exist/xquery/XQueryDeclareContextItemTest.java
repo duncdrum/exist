@@ -43,12 +43,9 @@ import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.value.IntegerValue;
 import org.exist.xquery.value.NodeValue;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
 
@@ -56,6 +53,7 @@ import javax.xml.transform.OutputKeys;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Properties;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -65,13 +63,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author aretter
  */
-@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class XQueryDeclareContextItemTest {
 
     private static final String SYSEVENT_XML = "<log xmlns=\"http://syslog\">some-event</log>";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @BeforeAll

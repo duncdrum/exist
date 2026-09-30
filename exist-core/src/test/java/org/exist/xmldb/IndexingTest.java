@@ -36,11 +36,8 @@ import javax.xml.transform.sax.SAXResult;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.apache.commons.io.input.UnsynchronizedByteArrayInputStream;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -53,6 +50,7 @@ import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XMLResource;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,10 +63,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * It creates with DOM a simple document having a branch of 16 elements depth
  * connected to the root, with width (arity) of 16 at each level.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class IndexingTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private int siblingCount;

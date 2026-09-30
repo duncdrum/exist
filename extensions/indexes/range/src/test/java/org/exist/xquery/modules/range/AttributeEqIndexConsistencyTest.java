@@ -41,18 +41,16 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Regression test for <a href="https://github.com/eXist-db/exist/issues/3964">#3964</a>:
@@ -67,7 +65,6 @@ import java.util.Optional;
  * and ensure the runtime fallback to the original {@code GeneralComparison} produces correct
  * results.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class AttributeEqIndexConsistencyTest {
 
     private static final String COLLECTION_NAME = "i3964-attr-eq-test";
@@ -102,7 +99,7 @@ public class AttributeEqIndexConsistencyTest {
 
     private static final int DOC_COUNT = 5;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static XmldbURI collectionUri;

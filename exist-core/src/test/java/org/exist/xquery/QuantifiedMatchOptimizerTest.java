@@ -24,12 +24,9 @@ package org.exist.xquery;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.IndexQueryService;
 import org.exist.xquery.util.ExpressionDumper;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.CompiledExpression;
 import org.xmldb.api.base.ResourceSet;
@@ -37,6 +34,7 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -56,7 +54,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * comparison cannot tell an optimized run from an unoptimized one, since both return the same
  * answer -- which is the whole point.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class QuantifiedMatchOptimizerTest {
 
     private static final String OPTIMIZE = "declare option exist:optimize 'enable=yes'; ";
@@ -90,7 +87,7 @@ public class QuantifiedMatchOptimizerTest {
             </collection>
             """;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer server =
             new ExistXmldbEmbeddedServer(false, true, true);
 

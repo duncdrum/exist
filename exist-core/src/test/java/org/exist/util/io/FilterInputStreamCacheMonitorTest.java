@@ -29,12 +29,9 @@ import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.ExtendedResource;
 import org.exist.xmldb.LocalBinaryResource;
 import org.exist.xquery.value.BinaryValue;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
@@ -43,13 +40,12 @@ import org.xmldb.api.modules.CollectionManagementService;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class FilterInputStreamCacheMonitorTest {
 
-    @ClassRule
+    @RegisterExtension
     public static ExistXmldbEmbeddedServer existXmldbEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     protected final static Logger LOG = LogManager.getLogger(FilterInputStreamCacheMonitorTest.class);

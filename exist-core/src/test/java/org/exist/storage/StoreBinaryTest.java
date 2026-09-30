@@ -28,10 +28,7 @@ import org.exist.collections.triggers.TriggerException;
 import org.exist.security.PermissionDeniedException;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.*;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.exist.dom.persistent.BinaryDocument;
 import org.exist.EXistException;
 import org.exist.xmldb.XmldbURI;
@@ -40,6 +37,7 @@ import org.exist.collections.Collection;
 import org.exist.storage.txn.TransactionManager;
 import org.exist.storage.txn.Txn;
 import org.xml.sax.SAXException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,7 +47,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author aretter
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class StoreBinaryTest {
 
     @org.junit.jupiter.api.Test
@@ -78,7 +75,7 @@ public class StoreBinaryTest {
         assertEquals(xqueryMimeType, binaryDoc.getMimeType());
     }
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @AfterEach

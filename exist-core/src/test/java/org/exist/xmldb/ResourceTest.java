@@ -42,13 +42,10 @@ import org.exist.util.StringInputSource;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.util.serializer.AttrList;
 import org.exist.util.serializer.SAXSerializer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.TestUtils.GUEST_DB_USER;
@@ -73,13 +70,12 @@ import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 import static org.exist.samples.Samples.SAMPLES;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class ResourceTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private final static String TEST_COLLECTION = "testResource";

@@ -27,28 +27,25 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.xmldb.api.base.ResourceType.XML_RESOURCE;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Node;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XMLResource;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * @author Casey Jordan
  * @author <a href="mailto:shabanovd@gmail.com">Dmitriy Shabanov</a>
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ExpandTest {
     private static final String DOC1_CONTENT = "<doc1>doc1</doc1>";
     private static final String DOC2_CONTENT = "<!-- comment 1 before --><!-- comment 2 before -->\n<doc2>doc2</doc2>";
     private static final String DOC3_CONTENT = "<doc3 foo=\"bar\">doc3</doc3>";
     private static final String DOC4_CONTENT = "<doc4 xmlns:x=\"http://x\" x:foo=\"bar\">doc4</doc4>";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     @BeforeAll

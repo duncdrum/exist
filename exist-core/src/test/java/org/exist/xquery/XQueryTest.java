@@ -39,12 +39,9 @@ import org.exist.xquery.value.IntegerValue;
 import org.exist.xquery.value.Item;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.Type;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -67,6 +64,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.custommonkey.xmlunit.XMLUnit.compareXML;
@@ -84,12 +82,11 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  *
  * TODO maybe move the various eXist XQuery extensions in another class ...
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class XQueryTest {
 
     private final static Logger LOG = LogManager.getLogger(XQueryTest.class);
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private static final String NUMBERS_XML = "numbers.xml";

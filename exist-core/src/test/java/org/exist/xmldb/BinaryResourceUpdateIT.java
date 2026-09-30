@@ -22,12 +22,9 @@
 package org.exist.xmldb;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.XMLDBException;
@@ -40,16 +37,16 @@ import java.net.URISyntaxException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.net.URL;
 import java.nio.file.Path;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Integration test: replacing a binary resource with an XML resource using the same document name.
  * This scenario exhibits platform-specific behaviour (notably on Windows) and is run in Failsafe
  * alongside other integration tests.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class BinaryResourceUpdateIT {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private static final String TEST_COLLECTION = "testBinaryResource";

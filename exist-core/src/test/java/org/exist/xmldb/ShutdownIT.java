@@ -24,11 +24,8 @@ package org.exist.xmldb;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.concurrent.DBUtils;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
@@ -36,6 +33,7 @@ import org.xmldb.api.base.XMLDBException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,7 +47,6 @@ import static org.exist.samples.Samples.SAMPLES;
  *
  * @author wolf
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ShutdownIT {
 
 	private final static int ITERATIONS = 50;
@@ -74,7 +71,7 @@ public class ShutdownIT {
 	private static final String TEST_QUERY2 = "//user[@id = 'sam']/customer-id[. = '993834']";
 	private static final String TEST_QUERY3 = "//user[email = 'sam@email.com']";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existXmldbEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     @BeforeEach

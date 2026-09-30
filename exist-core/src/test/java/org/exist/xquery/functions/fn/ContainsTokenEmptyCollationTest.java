@@ -30,12 +30,10 @@ import org.exist.xquery.CompiledXQuery;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -44,10 +42,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * argument, per the QT4 XQTS fn-contains-token-80 / 81 / 82 cases that previously
  * failed with XPTY0004.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ContainsTokenEmptyCollationTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @Test

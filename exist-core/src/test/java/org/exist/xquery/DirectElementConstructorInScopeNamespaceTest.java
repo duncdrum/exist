@@ -27,12 +27,10 @@ import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -45,10 +43,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Covers prod-DirElemContent.namespace clusters A (prefixed names in
  * enclosed exprs) and B (default-element namespace in enclosed exprs).
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class DirectElementConstructorInScopeNamespaceTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     // Cluster A - prefixed namespace declaration on the element should be

@@ -31,11 +31,8 @@ import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
 import org.expath.pkg.repo.*;
 import org.expath.pkg.repo.tui.BatchUserInteraction;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,14 +48,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-@ExtendWith(ExternalResourceSupport.class)
+import org.junit.jupiter.api.extension.RegisterExtension;
 public class RestoreAppsTest {
 
     @TempDir
     public static File temporaryFolder;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static final String REPO_XML_APP =
@@ -346,7 +342,15 @@ public class RestoreAppsTest {
         String subFolder = String.join("/", subDirs);
         File result = new File(root, subFolder);
         if (!result.mkdirs()) {
-            throw new IOException("Couldn't create folders " + root);
+            if (result.isDirectory()) {
+                // TemporaryFolder.newFolder() always returned a fresh directory; this migrated
+                // helper reuses a fixed subDirs name across repeated/parameterized invocations
+                // sharing the same root, so fall back to a uniquely-suffixed sibling instead of
+                // colliding with the previous call's directory.
+                result = Files.createTempDirectory(root.toPath(), subFolder + "-").toFile();
+            } else {
+                throw new IOException("Couldn't create folders " + root);
+            }
         }
         return result;
     }

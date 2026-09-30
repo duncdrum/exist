@@ -23,22 +23,19 @@
 package org.exist.security;
 
 import org.exist.test.ExistWebServer;
-import org.junit.ClassRule;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Security Manager round trip tests against the XML:DB Remote API
  *
  * @author <a href="mailto:adam@exist-db.org">Adam Retter</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class RemoteSecurityManagerRoundtripTest extends AbstractSecurityManagerRoundtripTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
     @Override

@@ -47,15 +47,13 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,7 +73,6 @@ import static org.junit.jupiter.api.Assertions.fail;
  * what those loaders will do: resolve the query on EXECUTE, take the disclosure level from the
  * resolved handle, compile, execute, and filter any failure through {@link ErrorDisclosure}.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ExecuteWithoutReadTest {
 
     private static final String TEST_USER = "executeWithoutReadUser";
@@ -99,7 +96,7 @@ public class ExecuteWithoutReadTest {
     private static final String READ_AND_EXECUTE = "rwxr-xr-x";
     private static final String EXECUTE_ONLY = "rwx--x--x";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
     @BeforeAll

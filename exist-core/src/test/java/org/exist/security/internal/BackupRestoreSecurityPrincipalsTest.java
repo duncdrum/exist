@@ -33,9 +33,6 @@ import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.EXistRestoreService;
 import org.exist.xmldb.NullRestoreServiceTaskListener;
 import org.exist.xmldb.UserManagementService;
-import org.junit.ClassRule;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.xmldb.api.DatabaseManager;
@@ -52,8 +49,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-@ExtendWith(ExternalResourceSupport.class)
+import org.junit.jupiter.api.extension.RegisterExtension;
 public class BackupRestoreSecurityPrincipalsTest {
 
     private final static String BACKUP_FILE_PREFIX = "exist.BackupRestoreSecurityPrincipalsTest";
@@ -62,7 +58,7 @@ public class BackupRestoreSecurityPrincipalsTest {
     private final static String JOE_USER = "joe";
     private final static String JACK_USER = "jack";
 
-    @ClassRule
+    @RegisterExtension
     public static ExistXmldbEmbeddedServer server = new ExistXmldbEmbeddedServer(false, true, true);
 
     /**

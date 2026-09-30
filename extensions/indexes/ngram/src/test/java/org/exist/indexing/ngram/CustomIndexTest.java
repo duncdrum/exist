@@ -48,11 +48,8 @@ import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceIterator;
 import org.exist.xupdate.Modification;
 import org.exist.xupdate.XUpdateProcessor;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -64,6 +61,7 @@ import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Properties;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -71,7 +69,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * 
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class CustomIndexTest {
 
     private static String XML =
@@ -649,7 +646,7 @@ public class CustomIndexTest {
         assertEquals(count, found);        
     }
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @BeforeEach

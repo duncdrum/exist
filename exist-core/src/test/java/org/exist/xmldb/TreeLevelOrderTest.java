@@ -23,15 +23,13 @@ package org.exist.xmldb;
 
 import org.exist.TestUtils;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -41,11 +39,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Tobias Wunden
  * @version 1.0
  */
-
-@ExtendWith(ExternalResourceSupport.class)
 public class TreeLevelOrderTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer server = new ExistXmldbEmbeddedServer(false, true, true);
 
     private static final String DOC1_NAME = "survey.xml";

@@ -22,15 +22,13 @@
 package org.exist.xquery.functions.fn;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -48,7 +46,6 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  *     -Dexist.run.benchmarks=true -Ddependency-check.skip=true
  * </pre>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class FunNotBenchmark {
 
     private static final String COLLECTION_NAME = "bench-fn-not";
@@ -56,7 +53,7 @@ public class FunNotBenchmark {
     private static final int MEASURED_ITERATIONS = 500;
     private static final String DOC = "doc('/db/" + COLLECTION_NAME + "/data.xml')";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer server =
             new ExistXmldbEmbeddedServer(false, true, true);
 

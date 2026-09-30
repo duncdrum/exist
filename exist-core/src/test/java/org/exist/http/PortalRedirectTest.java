@@ -22,14 +22,12 @@
 package org.exist.http;
 
 import org.exist.test.ExistWebServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,10 +36,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Distribution-mode portal at {@code /} — landing page and redirect target to {@code /exist}.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class PortalRedirectTest extends AbstractHttpTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true, false);
 
     @Test

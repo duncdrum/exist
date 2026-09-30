@@ -27,16 +27,14 @@ import org.exist.security.Permission;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.UserManagementService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -45,10 +43,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Dannes Wessels (dizzzz@exist-db.org)
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class DatabaseCollectionTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existServer = new ExistXmldbEmbeddedServer(false, true, true);
 
     private final static String ROOT_URI = XmldbURI.LOCAL_DB;

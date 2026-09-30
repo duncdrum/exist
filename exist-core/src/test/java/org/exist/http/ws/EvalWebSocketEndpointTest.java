@@ -40,12 +40,9 @@ import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import jakarta.websocket.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -63,11 +60,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Integration tests for the /ws/eval WebSocket endpoint.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class EvalWebSocketEndpointTest {
 
     private static final JsonFactory JSON_FACTORY = new JsonFactory();
@@ -91,7 +88,7 @@ public class EvalWebSocketEndpointTest {
             };
             """;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer =
             new ExistWebServer(true, false, true, true);
 

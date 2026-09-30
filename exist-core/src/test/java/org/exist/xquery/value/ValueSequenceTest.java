@@ -35,23 +35,20 @@ import org.exist.storage.DBBroker;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.XPathException;
-import org.junit.ClassRule;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import javax.xml.XMLConstants;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  * @author <a href="mailto:adam.retter@googlemail.com">Adam Retter</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ValueSequenceTest {
 
-    @ClassRule
+    @RegisterExtension
     public final static ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @org.junit.jupiter.api.Test

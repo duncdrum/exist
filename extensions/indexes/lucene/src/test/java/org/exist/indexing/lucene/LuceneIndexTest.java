@@ -61,19 +61,14 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.value.Sequence;
 import org.exist.xupdate.Modification;
 import org.exist.xupdate.XUpdateProcessor;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.exist.samples.Samples.SAMPLES;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class LuceneIndexTest {
 
     protected static String XUPDATE_START =
@@ -261,7 +256,7 @@ public class LuceneIndexTest {
     private static Collection root;
     private Boolean savedConfig;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(
             propertiesBuilder()
                 .set(Indexer.PROPERTY_SUPPRESS_WHITESPACE, "none")

@@ -36,11 +36,7 @@ import org.exist.test.TestConstants;
 import org.exist.util.*;
 import org.exist.xmldb.XmldbURI;
 import org.exist.TestUtils;
-
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -52,11 +48,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Random;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Test indexing and recovery of large string sequences.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class LargeValuesTest {
 
     private String CONFIG_QNAME =
@@ -70,7 +66,7 @@ public class LargeValuesTest {
 
     private static final int KEY_LENGTH = 5000;
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     @org.junit.jupiter.api.Test

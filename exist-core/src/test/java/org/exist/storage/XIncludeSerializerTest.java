@@ -28,11 +28,8 @@ import org.custommonkey.xmlunit.Diff;
 import org.exist.Namespaces;
 import org.exist.test.ExistWebServer;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.BufferedReader;
@@ -46,16 +43,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * @author jim fuller at webcomposite.com
  *
  * Test XInclude Serialiser via REST/XMLRPC/WEBDAV/SOAP interfaces
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class XIncludeSerializerTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, true, true, true);
 
     private final static XmldbURI XINCLUDE_COLLECTION = XmldbURI.ROOT_COLLECTION_URI.append("xinclude_test");

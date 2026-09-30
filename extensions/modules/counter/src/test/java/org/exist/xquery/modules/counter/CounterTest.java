@@ -23,22 +23,19 @@ package org.exist.xquery.modules.counter;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xquery.XPathException;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Jasper Linthorst (jasper.linthorst@gmail.com)
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class CounterTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true);
 
     private final static String IMPORT = "import module namespace counter=\"" + CounterModule.NAMESPACE_URI + "\" " +

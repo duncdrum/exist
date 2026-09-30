@@ -27,11 +27,8 @@ import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.IndexQueryService;
 import org.exist.xquery.FunctionFactory;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
@@ -42,6 +39,7 @@ import org.xmldb.api.modules.XQueryService;
 
 import java.io.IOException;
 import java.io.InputStream;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.util.PropertiesBuilder.propertiesBuilder;
@@ -51,11 +49,10 @@ import static org.exist.samples.Samples.SAMPLES;
 /**
  *
  */
-@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class OptimizerTest {
 
-    @ClassRule
+    @RegisterExtension
     public final static ExistXmldbEmbeddedServer server = new ExistXmldbEmbeddedServer(false, true, true);
 
     private final static String OPTIMIZE = "declare option exist:optimize 'enable=yes';";
@@ -171,7 +168,7 @@ public class OptimizerTest {
         assertEquals(expected, result.getSize(), message);
     }
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(
             propertiesBuilder()
                     .put(FunctionFactory.PROPERTY_DISABLE_DEPRECATED_FUNCTIONS, Boolean.FALSE) //Since we use the deprecated text:match-all() function, we have to be sure is is enabled

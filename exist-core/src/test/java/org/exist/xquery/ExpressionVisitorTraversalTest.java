@@ -27,10 +27,7 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.parser.XQueryLexer;
 import org.exist.xquery.parser.XQueryParser;
 import org.exist.xquery.parser.XQueryTreeParser;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import antlr.collections.AST;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests that {@link DefaultExpressionVisitor} traverses into all
@@ -47,10 +45,9 @@ import java.util.List;
  * stops at the expression boundary and never reaches the function
  * calls inside.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class ExpressionVisitorTraversalTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer =
             new ExistEmbeddedServer(true, true);
 

@@ -26,12 +26,9 @@ import org.exist.TestUtils;
 import org.exist.http.AbstractHttpTest;
 import org.exist.test.ExistWebServer;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -39,6 +36,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static com.evolvedbinary.j8fu.tuple.Tuple.Tuple;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -65,10 +63,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Organized by originating scenario (see section banners) rather than merged into one
  * undifferentiated method list, since each proves a distinct fact using its own fixtures.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class UrlRewritePipelineHttpTest extends AbstractHttpTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true, false);
 
     // Scenario fixtures

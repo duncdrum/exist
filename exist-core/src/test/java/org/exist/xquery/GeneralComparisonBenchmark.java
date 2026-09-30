@@ -22,19 +22,17 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Performance benchmark for GeneralComparison predicate evaluation.
@@ -49,10 +47,9 @@ import org.xmldb.api.modules.XQueryService;
  *     -Dexist.run.benchmarks=true -Ddependency-check.skip=true
  * </pre>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class GeneralComparisonBenchmark {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer server = new ExistXmldbEmbeddedServer(false, true, true);
 
     private static final String COLLECTION_NAME = "benchmark-general-comparison";

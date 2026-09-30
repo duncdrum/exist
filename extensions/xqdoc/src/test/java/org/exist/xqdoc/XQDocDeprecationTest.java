@@ -22,13 +22,11 @@
 package org.exist.xqdoc;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -40,10 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@code util:describe-function}, {@code inspect:inspect-module}, and the module description — while
  * the function itself remains callable. Removal is a later, separate step.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class XQDocDeprecationTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer server = new ExistXmldbEmbeddedServer(false, true, true);
 
     private static final String NS = "declare namespace xqdm='http://exist-db.org/xquery/xqdoc'; ";

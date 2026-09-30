@@ -30,17 +30,13 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.ErrorCodes;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.nio.file.Path;
-
-@ExtendWith(ExternalResourceSupport.class)
+import org.junit.jupiter.api.extension.RegisterExtension;
 public class NonLazyCacheTest {
 
     private static Path getLazyConfig() {
@@ -51,7 +47,7 @@ public class NonLazyCacheTest {
         }
     }
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(null, getLazyConfig(), null, true, true);
 
     @Test

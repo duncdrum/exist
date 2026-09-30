@@ -30,16 +30,14 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.Configuration;
 import org.exist.util.XMLReaderObjectFactory;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.exist.TestUtils.*;
 import static org.exist.samples.Samples.SAMPLES;
@@ -50,10 +48,9 @@ import static org.exist.util.PropertiesBuilder.propertiesBuilder;
  *
  * @author Dannes Wessels (dizzzz@exist-db.org)
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class DatabaseInsertResourcesNoValidationTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(
             propertiesBuilder()
                     .set(XMLReaderObjectFactory.PROPERTY_VALIDATION_MODE, "auto")

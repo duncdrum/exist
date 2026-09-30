@@ -22,14 +22,12 @@
 package org.exist.xquery.xqsuite;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -47,12 +45,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@code <system-err>} child on the {@code <testsuite>} naming the
  * error, and the {@code errors} count must be bumped by one.</p>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class XQSuiteTearDownErrorTest {
 
     private static final String COLLECTION = "/db/test-6422";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistXmldbEmbeddedServer embedded =
             new ExistXmldbEmbeddedServer(false, true, true);
 

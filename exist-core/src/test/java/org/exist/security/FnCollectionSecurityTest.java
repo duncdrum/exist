@@ -37,21 +37,17 @@ import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.Optional;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.exist.xmldb.XmldbURI.ROOT_COLLECTION;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class FnCollectionSecurityTest {
 
     private static final String TEST_USER_1 = "docTestUser1";
@@ -67,7 +63,7 @@ public class FnCollectionSecurityTest {
     private static final String TEST_SUB_COLLECTION_2 = TEST_COLLECTION_2 + "/child2";
     private static final String TEST_SUB_COLLECTION_2_2 = TEST_SUB_COLLECTION_2 + "/child2_2";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
     /**

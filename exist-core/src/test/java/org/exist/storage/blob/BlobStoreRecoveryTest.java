@@ -68,6 +68,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Random;
+import java.nio.file.Files;
 
 import static com.evolvedbinary.j8fu.tuple.Tuple.Tuple;
 import static org.easymock.EasyMock.*;
@@ -573,7 +574,15 @@ public class BlobStoreRecoveryTest {
         String subFolder = String.join("/", subDirs);
         File result = new File(root, subFolder);
         if (!result.mkdirs()) {
-            throw new IOException("Couldn't create folders " + root);
+            if (result.isDirectory()) {
+                // TemporaryFolder.newFolder() always returned a fresh directory; this migrated
+                // helper reuses a fixed subDirs name across repeated/parameterized invocations
+                // sharing the same root, so fall back to a uniquely-suffixed sibling instead of
+                // colliding with the previous call's directory.
+                result = Files.createTempDirectory(root.toPath(), subFolder + "-").toFile();
+            } else {
+                throw new IOException("Couldn't create folders " + root);
+            }
         }
         return result;
     }

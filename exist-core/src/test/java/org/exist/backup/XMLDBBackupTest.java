@@ -26,11 +26,7 @@ import org.exist.test.ExistWebServer;
 import org.exist.xmldb.AbstractRestoreServiceTaskListener;
 import org.exist.xmldb.EXistRestoreService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.ClassRule;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
@@ -59,17 +55,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-@ExtendWith(ExternalResourceSupport.class)
 public class XMLDBBackupTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
     private static final String PORT_PLACEHOLDER = "${PORT}";
 
@@ -105,6 +100,7 @@ public class XMLDBBackupTest {
     @MethodSource("data") @ParameterizedTest(name = "{0}")
     public void backupRestore(String apiName, String baseUri, boolean deduplicateBlobs) throws XMLDBException, SAXException, IOException, URISyntaxException, ParserConfigurationException {
         initXMLDBBackupTest(apiName, baseUri, deduplicateBlobs);
+        setUpTestCollection();
         final XmldbURI collectionUri = XmldbURI.create(getBaseUri()).append("/db").append(COLLECTION_NAME);
         final String backupFilename = "test-xmldb-backup-" + System.currentTimeMillis() + ".zip";
 
@@ -147,6 +143,7 @@ public class XMLDBBackupTest {
     @MethodSource("data") @ParameterizedTest(name = "{0}")
     public void backupRestoreWithXmlDecl(String apiName, String baseUri, boolean deduplicateBlobs) throws XMLDBException, SAXException, IOException, URISyntaxException, ParserConfigurationException {
         initXMLDBBackupTest(apiName, baseUri, deduplicateBlobs);
+        setUpTestCollection();
         final XmldbURI collectionUri = XmldbURI.create(getBaseUri()).append("/db").append(COLLECTION_NAME);
         final String docWithDeclName = "docWithDecl.xml";
         final String xmlDecl = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
@@ -218,8 +215,7 @@ public class XMLDBBackupTest {
         colService.removeCollection(collectionUri.lastSegment().toString());
     }
 
-    @BeforeEach
-    public void before() throws XMLDBException {
+    private void setUpTestCollection() throws XMLDBException {
         final Collection root = DatabaseManager.getCollection(getBaseUri() + "/db", TestUtils.ADMIN_DB_USER, TestUtils.ADMIN_DB_PWD);
         final CollectionManagementService colService = root.getService(CollectionManagementService.class);
         final Collection testCollection = colService.createCollection(COLLECTION_NAME);

@@ -40,12 +40,9 @@ import org.exist.xquery.CompiledXQuery;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,6 +50,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -67,7 +65,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @see <a href="https://github.com/eXist-db/exist/issues/4074">#4074</a>
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class Issue4074IndexKeysServletContextTest {
 
     private static final String COLLECTION_NAME = "i4074-servlet-test";
@@ -96,7 +93,7 @@ public class Issue4074IndexKeysServletContextTest {
             at "java:org.exist.xquery.modules.range.RangeIndexModule";
             range:index-keys-for-field("elem-field", function($key, $nums) { $key }, 100)""";
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
     private static XmldbURI collectionUri;

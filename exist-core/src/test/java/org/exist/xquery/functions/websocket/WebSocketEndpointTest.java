@@ -22,10 +22,7 @@
 package org.exist.xquery.functions.websocket;
 
 import org.exist.test.ExistWebServer;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import jakarta.websocket.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,15 +33,15 @@ import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Integration test for the WebSocket endpoint.
  * Starts an embedded eXist-db server and connects a WebSocket client.
  */
-@ExtendWith(ExternalResourceSupport.class)
 public class WebSocketEndpointTest {
 
-    @ClassRule
+    @RegisterExtension
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
     @Test
