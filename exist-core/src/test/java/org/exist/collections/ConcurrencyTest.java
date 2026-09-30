@@ -25,12 +25,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.EXistXPathQueryService;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import org.junit.BeforeClass;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -47,6 +50,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Test concurrent access to collections.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ConcurrencyTest {
 
     private static final Logger LOG = LogManager.getLogger(ConcurrencyTest.class);
@@ -145,7 +149,7 @@ public class ConcurrencyTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void initDB() throws XMLDBException {
         final CollectionManagementService mgmt = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         try (final Collection test = mgmt.createCollection("test")) {
@@ -163,7 +167,7 @@ public class ConcurrencyTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws XMLDBException {
         final CollectionManagementService cmgr = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         cmgr.removeCollection("test");

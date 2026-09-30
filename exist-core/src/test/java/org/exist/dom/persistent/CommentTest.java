@@ -35,17 +35,20 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-
+@ExtendWith(ExternalResourceSupport.class)
 public class CommentTest {
 
     @ClassRule
@@ -78,7 +81,7 @@ public class CommentTest {
                         .checkForSimilar()
                         .build();
 
-                assertFalse(diff.toString(), diff.hasDifferences());
+                assertFalse(diff.hasDifferences(), diff.toString());
             }
 
             transaction.commit();

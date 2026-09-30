@@ -33,14 +33,16 @@ import org.exist.xquery.Cardinality;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import javax.xml.XMLConstants;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link SequenceType#checkType(Item)} of nodes whose type is only known as {@link Type#NODE}:
@@ -48,6 +50,7 @@ import static org.junit.Assert.assertTrue;
  * Their kind comes from {@link org.w3c.dom.Node#getNodeType()}, which is a DOM node kind, not a
  * {@link Type} code.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class SequenceTypeNodeKindTest {
 
     @ClassRule

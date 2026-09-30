@@ -37,8 +37,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import static org.junit.Assert.fail;
 import static org.exist.repo.AutoDeploymentTrigger.AUTODEPLOY_PROPERTY;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit {@link org.junit.rules.ExternalResource} that starts an embedded eXist Jetty server for tests.

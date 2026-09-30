@@ -32,14 +32,16 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * fn:matches and fn:analyze-string raise XPST0017 with a "not yet implemented"
@@ -48,6 +50,7 @@ import static org.junit.Assert.fail;
  * inactive on the XQ 3.1 runtime, so such patterns fell through to Saxon and
  * produced opaque regex errors.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class RegexXPath4NotImplementedTest {
 
     @ClassRule
@@ -74,10 +77,10 @@ public class RegexXPath4NotImplementedTest {
             fail("Expected XPST0017 for XPath 4.0 lookaround");
         } catch (final Exception e) {
             final XPathException xpe = unwrap(e);
-            assertNotNull("Expected an XPathException, got: " + e, xpe);
+            assertNotNull(xpe, "Expected an XPathException, got: " + e);
             assertEquals(ErrorCodes.XPST0017, xpe.getErrorCode());
-            assertTrue("Expected 'not yet implemented' message, got: " + xpe.getMessage(),
-                    xpe.getMessage().contains("not yet implemented"));
+            assertTrue(xpe.getMessage().contains("not yet implemented"),
+                    "Expected 'not yet implemented' message, got: " + xpe.getMessage());
         }
     }
 

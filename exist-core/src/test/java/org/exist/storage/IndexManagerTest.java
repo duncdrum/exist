@@ -43,13 +43,16 @@ import org.exist.util.Occurrences;
 import org.exist.xquery.QueryRewriter;
 import org.exist.xquery.XQueryContext;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class IndexManagerTest {
 
   @ClassRule

@@ -23,10 +23,12 @@ package org.exist.http.urlrewrite;
 
 import org.exist.http.AbstractHttpTest;
 import org.exist.test.ExistWebServer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.net.URI;
@@ -36,8 +38,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Reproduces https://github.com/eXist-db/exist/issues/6669 : a controller
@@ -54,6 +56,7 @@ import static org.junit.Assert.assertTrue;
  * resource's Content-Length is set by the servlet engine's default servlet,
  * not by eXist's own DB-resource serving path.</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class URLRewriteContentLengthViewPipelineTest {
 
     @ClassRule
@@ -102,7 +105,7 @@ public class URLRewriteContentLengthViewPipelineTest {
 
     private static Path testDir;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         // Mirrors the relative path used by exist-webapp-context.xml (jetty.home/../../../webapp)
         // to locate the distribution-mode "/exist" main webapp's exploded document root.
@@ -114,7 +117,7 @@ public class URLRewriteContentLengthViewPipelineTest {
         Files.writeString(testDir.resolve("B.xql"), B_XQL, StandardCharsets.UTF_8);
     }
 
-    @AfterClass
+    @AfterAll
     public static void teardown() throws Exception {
         if (testDir != null) {
             Files.deleteIfExists(testDir.resolve("controller.xql"));
@@ -133,10 +136,10 @@ public class URLRewriteContentLengthViewPipelineTest {
         final AbstractHttpTest.HttpResponseResult result =
                 AbstractHttpTest.executeForStatusAndBody(AbstractHttpTest.newHttpClient(), request);
 
-        assertEquals("Expected 200 OK but got " + result.statusCode() + ": "
-                        + result.body().substring(0, Math.min(300, result.body().length())),
-                HTTP_OK, result.statusCode());
-        assertTrue("Response should contain the view's longer output",
-                result.body().contains("Hello Bob, how do you do today Bob ?"));
+        assertEquals(HTTP_OK,
+                result.statusCode(), "Expected 200 OK but got " + result.statusCode() + ": "
+                        + result.body().substring(0, Math.min(300, result.body().length())));
+        assertTrue(result.body().contains("Hello Bob, how do you do today Bob ?"),
+                "Response should contain the view's longer output");
     }
 }

@@ -38,10 +38,13 @@ import org.exist.storage.txn.Txn;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.samples.Samples.SAMPLES;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -49,6 +52,7 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.concurrent.*;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class DirtyShutdownTest {
 
     private static final Logger LOG = LogManager.getLogger(DirtyShutdownTest.class);

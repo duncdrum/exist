@@ -23,20 +23,23 @@ package org.exist.validation;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Small test to show than entities are required to be resolved.
  *
  * @author wessels
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DtdEntityTest {
 
     @ClassRule
@@ -61,7 +64,7 @@ public class DtdEntityTest {
     }
 
     @Test
-    @Ignore("Entity resolve bug")
+    @Disabled("Entity resolve bug")
     public void bugloadWithEntities() throws XMLDBException {
         final String input = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                 + "<!DOCTYPE procedure PUBLIC \"-//AAAA//DTD Procedure 0.4//EN\" \"aaaa.dtd\" >"

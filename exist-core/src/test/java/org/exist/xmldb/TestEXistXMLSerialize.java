@@ -45,13 +45,16 @@ import org.apache.xml.serialize.XMLSerializer;
 
 import org.exist.util.serializer.DOMSerializer;
 import org.exist.util.serializer.SAXSerializer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.TestUtils.GUEST_DB_USER;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -65,6 +68,7 @@ import org.xmldb.api.modules.XMLResource;
  *
  * @author  bmadigan
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class TestEXistXMLSerialize {
 
     @ClassRule
@@ -89,7 +93,7 @@ public class TestEXistXMLSerialize {
 
     private final static String TEST_COLLECTION = "testXmlSerialize";
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         CollectionManagementService service = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         Collection testCollection = service.createCollection(TEST_COLLECTION);
@@ -100,7 +104,7 @@ public class TestEXistXMLSerialize {
         ums.chmod("rwxr-xr-x");
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XMLDBException {
         //delete the test collection
         CollectionManagementService cms = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);

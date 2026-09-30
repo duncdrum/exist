@@ -22,11 +22,13 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.AfterClass;
-import org.junit.Assume;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
@@ -47,6 +49,7 @@ import org.xmldb.api.modules.XQueryService;
  *     -Dexist.run.benchmarks=true -Ddependency-check.skip=true
  * </pre>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class GeneralComparisonBenchmark {
 
     @ClassRule
@@ -59,13 +62,13 @@ public class GeneralComparisonBenchmark {
     private static final int WARMUP_ITERATIONS = 3;
     private static final int MEASURE_ITERATIONS = 5;
 
-    @BeforeClass
+    @BeforeAll
     public static void assumeBenchmarks() {
-        Assume.assumeTrue("Benchmarks are disabled. Set -Dexist.run.benchmarks=true to enable.",
-                Boolean.getBoolean("exist.run.benchmarks"));
+        Assumptions.assumeTrue(Boolean.getBoolean("exist.run.benchmarks"),
+                "Benchmarks are disabled. Set -Dexist.run.benchmarks=true to enable.");
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws XMLDBException {
         if (!Boolean.getBoolean("exist.run.benchmarks")) {
             return;
@@ -91,7 +94,7 @@ public class GeneralComparisonBenchmark {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws XMLDBException {
         if (!Boolean.getBoolean("exist.run.benchmarks")) {
             return;

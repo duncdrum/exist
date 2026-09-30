@@ -23,12 +23,14 @@ package org.exist.xquery.functions.fn;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Correctness and performance regression coverage for {@link FunIndexOf}'s
@@ -42,6 +44,7 @@ import static org.junit.Assert.assertTrue;
  * its second hit. These tests pin both the behaviour and a coarse runtime
  * upper bound so a regression in either direction will fail explicitly.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class FunIndexOfPerformanceTest {
 
     @ClassRule
@@ -143,8 +146,8 @@ public class FunIndexOfPerformanceTest {
         // gone or has a 4-5x slowdown bug), not a fine-grained perf assertion
         // -- those belong in JMH. Threshold raised from 10s after Ubuntu CI
         // measured 14.4s on this test (slower JIT warmup + shared runner).
-        assertTrue("Expected #3682 query to complete under 60s (regression fence), took " + elapsedMs + "ms",
-                elapsedMs < 60_000);
+        assertTrue(elapsedMs < 60_000,
+                "Expected #3682 query to complete under 60s (regression fence), took " + elapsedMs + "ms");
     }
 
     /**
@@ -189,7 +192,7 @@ public class FunIndexOfPerformanceTest {
 
         assertEquals("1", result);
         // Same regression-fence framing as issue3682FlworVariantCompletesQuickly above.
-        assertTrue("Expected #3682 predicate variant to complete under 60s (regression fence), took " + elapsedMs + "ms",
-                elapsedMs < 60_000);
+        assertTrue(elapsedMs < 60_000,
+                "Expected #3682 predicate variant to complete under 60s (regression fence), took " + elapsedMs + "ms");
     }
 }

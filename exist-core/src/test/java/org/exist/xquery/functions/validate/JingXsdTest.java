@@ -24,12 +24,14 @@ package org.exist.xquery.functions.validate;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
 import static org.exist.samples.Samples.SAMPLES;
-import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.*;
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 
 import java.io.IOException;
@@ -46,6 +48,7 @@ import org.xmldb.api.base.XMLDBException;
  *
  * @author dizzzz@exist-db.org
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class JingXsdTest {
 
     private static final String[] TEST_RESOURCES = { "personal-valid.xml", "personal-invalid.xml", "personal.xsd" };
@@ -53,7 +56,7 @@ public class JingXsdTest {
     @ClassRule
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareResources() throws XMLDBException, URISyntaxException, IOException {
         final String noValidation = "<?xml version='1.0'?>" +
                 "<collection xmlns='http://exist-db.org/collection-config/1.0'>" +
@@ -77,7 +80,7 @@ public class JingXsdTest {
 
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_stored_valid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jing-report( " +
                 "doc('/db/personal/personal-valid.xml'), " +
@@ -85,7 +88,7 @@ public class JingXsdTest {
         executeAndEvaluate(query,"valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_stored_invalid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jing-report( " +
                 "doc('/db/personal/personal-invalid.xml'), " +
@@ -93,7 +96,7 @@ public class JingXsdTest {
         executeAndEvaluate(query,"invalid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_anyuri_valid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jing-report( " +
                 "xs:anyURI('xmldb:exist:///db/personal/personal-valid.xml'), " +
@@ -101,7 +104,7 @@ public class JingXsdTest {
         executeAndEvaluate(query, "valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_anyuri_invalid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jing-report( " +
                 "xs:anyURI('xmldb:exist:///db/personal/personal-invalid.xml'), " +

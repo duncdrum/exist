@@ -41,16 +41,18 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.Optional;
 
 /**
  * Regression test for <a href="https://github.com/eXist-db/exist/issues/3964">#3964</a>:
@@ -65,6 +67,7 @@ import static org.junit.Assert.assertEquals;
  * and ensure the runtime fallback to the original {@code GeneralComparison} produces correct
  * results.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class AttributeEqIndexConsistencyTest {
 
     private static final String COLLECTION_NAME = "i3964-attr-eq-test";
@@ -104,7 +107,7 @@ public class AttributeEqIndexConsistencyTest {
 
     private static XmldbURI collectionUri;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws EXistException, PermissionDeniedException, LockException,
             TriggerException, SAXException, CollectionConfigurationException, IOException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -126,7 +129,7 @@ public class AttributeEqIndexConsistencyTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws EXistException, PermissionDeniedException, LockException,
             TriggerException, IOException {
         if (collectionUri == null) {
@@ -154,12 +157,12 @@ public class AttributeEqIndexConsistencyTest {
         final long shapeB = count(
                 "collection('/db/" + COLLECTION_NAME + "')//contrib-id[@contrib-id-type/string() eq 'jb-contributor-id']");
 
-        assertEquals("Sanity: " + DOC_COUNT + " articles stored", DOC_COUNT, shapeB);
+        assertEquals(DOC_COUNT, shapeB, "Sanity: " + DOC_COUNT + " articles stored");
         assertEquals(
-                "Shape A (@x eq 'val') must return the same count as Shape B (@x/string() eq 'val'); "
+                shapeB,
+                shapeA, "Shape A (@x eq 'val') must return the same count as Shape B (@x/string() eq 'val'); "
                         + "issue #3964 — without this fix Shape A returned 0 because the optimizer rewrote "
-                        + "to range:eq even when no range index is configured.",
-                shapeB, shapeA);
+                        + "to range:eq even when no range index is configured.");
     }
 
     /**
@@ -172,8 +175,8 @@ public class AttributeEqIndexConsistencyTest {
         final long shapeB = count(
                 "collection('/db/" + COLLECTION_NAME + "')//contrib-id[@contrib-id-type/string() = 'jb-contributor-id']");
 
-        assertEquals("Sanity: " + DOC_COUNT + " articles stored", DOC_COUNT, shapeB);
-        assertEquals("Shape A (general '=') must agree with Shape B", shapeB, shapeA);
+        assertEquals(DOC_COUNT, shapeB, "Sanity: " + DOC_COUNT + " articles stored");
+        assertEquals(shapeB, shapeA, "Shape A (general '=') must agree with Shape B");
     }
 
     /**
@@ -186,8 +189,8 @@ public class AttributeEqIndexConsistencyTest {
         final long shapeA = count("doc('" + docPath + "')//contrib-id[@contrib-id-type eq 'jb-contributor-id']");
         final long shapeB = count("doc('" + docPath + "')//contrib-id[@contrib-id-type/string() eq 'jb-contributor-id']");
 
-        assertEquals("Sanity: 1 contrib-id in one document", 1L, shapeB);
-        assertEquals("Shape A (doc) must agree with Shape B", shapeB, shapeA);
+        assertEquals(1L, shapeB, "Sanity: 1 contrib-id in one document");
+        assertEquals(shapeB, shapeA, "Shape A (doc) must agree with Shape B");
     }
 
     private long count(final String xpath) throws EXistException, PermissionDeniedException, XPathException {

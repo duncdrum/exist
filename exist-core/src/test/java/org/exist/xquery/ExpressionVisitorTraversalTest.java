@@ -28,15 +28,16 @@ import org.exist.xquery.parser.XQueryLexer;
 import org.exist.xquery.parser.XQueryParser;
 import org.exist.xquery.parser.XQueryTreeParser;
 import org.junit.ClassRule;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import antlr.collections.AST;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests that {@link DefaultExpressionVisitor} traverses into all
@@ -46,6 +47,7 @@ import static org.junit.Assert.*;
  * stops at the expression boundary and never reaches the function
  * calls inside.</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ExpressionVisitorTraversalTest {
 
     @ClassRule
@@ -89,7 +91,7 @@ public class ExpressionVisitorTraversalTest {
                 final XQueryLexer lexer = new XQueryLexer(context, new StringReader(xquery));
                 final XQueryParser parser = new XQueryParser(lexer);
                 parser.xpath();
-                assertFalse("Parse error: " + xquery, parser.foundErrors());
+                assertFalse(parser.foundErrors(), "Parse error: " + xquery);
 
                 final AST ast = parser.getAST();
                 final PathExpr path = new PathExpr(context);
@@ -102,9 +104,9 @@ public class ExpressionVisitorTraversalTest {
                 path.accept(collector);
 
                 assertTrue(
+                        collector.names.contains(expectedFunction),
                         "Expected '" + expectedFunction + "' in: " + xquery +
-                                " — found: " + collector.names,
-                        collector.names.contains(expectedFunction));
+                                " — found: " + collector.names);
             } finally {
                 context.runCleanupTasks();
                 context.reset(false);

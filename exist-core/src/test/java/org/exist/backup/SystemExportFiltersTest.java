@@ -43,11 +43,16 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.XmldbURI;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import javax.xml.transform.OutputKeys;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
@@ -55,12 +60,15 @@ import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.test.TestConstants.TEST_COLLECTION_URI;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:shabanovd@gmail.com">Dmitriy Shabanov</a>
  *
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class SystemExportFiltersTest {
 
     private static final String COLLECTION_CONFIG =
@@ -96,10 +104,10 @@ public class SystemExportFiltersTest {
     @ClassRule
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
-    @ClassRule
-    public static final TemporaryFolder tempFolder = new TemporaryFolder();
+    @TempDir
+    public static File tempFolder;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, PermissionDeniedException, IOException, SAXException, CollectionConfigurationException, LockException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
 
@@ -121,7 +129,7 @@ public class SystemExportFiltersTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void exportImport() throws Exception {
         Path file;
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -138,7 +146,7 @@ public class SystemExportFiltersTest {
 
             boolean direct = true;
             final SystemExport sysexport = new SystemExport(broker, transaction, null, null, direct);
-            final Path backupDir = tempFolder.newFolder().toPath();
+            final Path backupDir = newFolder(tempFolder, "junit").toPath();
             file = sysexport.export(backupDir.toAbsolutePath().toString(), false, false, null);
 
             transaction.commit();
@@ -209,5 +217,14 @@ public class SystemExportFiltersTest {
 
     private static void storeXMLDocument(final Txn txn, final DBBroker broker, final Collection col, final XmldbURI name, final String data) throws LockException, SAXException, PermissionDeniedException, EXistException, IOException {
         broker.storeDocument(txn, name, new StringInputSource(data), MimeType.XML_TYPE, col);
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = new File(root, subFolder);
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
     }
 }

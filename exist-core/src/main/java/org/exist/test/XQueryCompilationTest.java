@@ -32,6 +32,8 @@ import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static com.evolvedbinary.j8fu.Either.Left;
 import static com.evolvedbinary.j8fu.Either.Right;
@@ -40,6 +42,7 @@ import static com.evolvedbinary.j8fu.Either.Right;
  * Base class for test suites testing XQuery compilation
  * @author <a href="mailto:juri@existsolutions.com">Juri Leino</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public abstract class XQueryCompilationTest {
 
     @ClassRule

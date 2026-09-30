@@ -23,11 +23,13 @@ package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Integration tests for FLWOR {@code order by} and {@code count} clause semantic compliance.
@@ -39,6 +41,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @see <a href="https://github.com/eXist-db/exist/issues/5089">Issue #5089</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class OrderByCountClauseTest {
 
     @ClassRule

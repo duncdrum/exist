@@ -24,11 +24,15 @@ package org.exist.xquery.functions.validate;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
 import static org.exist.samples.Samples.SAMPLES;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 
 import java.io.IOException;
@@ -64,6 +68,7 @@ import org.xmldb.api.base.XMLDBException;
  * with the exact same error, which is itself the point: XSD's verdict does not change based on whether
  * {@code nbrParticipants} matches {@code nbrTeams}, confirming it can't see that constraint either.</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class TournamentSchemaLanguageComparisonTest {
 
     private static final String[] TEST_RESOURCES =
@@ -77,7 +82,7 @@ public class TournamentSchemaLanguageComparisonTest {
             "    <validation mode='no'/>" +
             "</collection>";
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareResources() throws Exception {
 
         // Switch off validation
@@ -95,7 +100,7 @@ public class TournamentSchemaLanguageComparisonTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsdStructureRejectsValidDocumentOnUnrelatedIdrefDefect() throws XMLDBException, SAXException, XpathException, IOException {
         // No xsi:schemaLocation hint on the instance -- resolved purely by Tournament.xsd's
         // targetNamespace via directory-search, the same mechanism JaxpXsdCatalogTest's
@@ -105,7 +110,7 @@ public class TournamentSchemaLanguageComparisonTest {
                 "cvc-id.1: There is no ID/IDREF binding for IDREF 't5'.");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsdStructureRejectsCoOccurrenceViolatingDocumentIdentically() throws XMLDBException, SAXException, XpathException, IOException {
         // Bare XSD structural validation cannot see the Singles/nbrParticipants-vs-nbrTeams
         // co-occurrence constraint -- proven here by getting the exact same verdict and error as
@@ -116,13 +121,13 @@ public class TournamentSchemaLanguageComparisonTest {
                 "cvc-id.1: There is no ID/IDREF binding for IDREF 't5'.");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void rngStructureAcceptsValidDocument() throws XMLDBException, SAXException, XpathException, IOException {
         executeAndEvaluate("validation:jing-report( doc('/db/tournament/1.5/Tournament-valid.xml'), " +
                 "doc('/db/tournament/1.5/Tournament.rng') )", "valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void rngStructureAcceptsCoOccurrenceViolatingDocument() throws XMLDBException, SAXException, XpathException, IOException {
         // Same co-occurrence limitation as the XSD case above, for RELAX NG.
         executeAndEvaluate("validation:jing-report( doc('/db/tournament/1.5/Tournament-invalid.xml'), " +

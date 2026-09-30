@@ -22,8 +22,8 @@
 package org.exist.backup;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -53,6 +53,9 @@ import org.exist.storage.serializers.EXistOutputKeys;
 import org.exist.storage.serializers.Serializer;
 import org.exist.storage.txn.Txn;
 import static org.exist.test.TestConstants.TEST_COLLECTION_URI;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.LockException;
@@ -60,12 +63,13 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.XmldbURI;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 
@@ -73,20 +77,14 @@ import org.xmldb.api.base.XMLDBException;
  * @author <a href="mailto:shabanovd@gmail.com">Dmitriy Shabanov</a>
  *
  */
-@RunWith(Parameterized.class)
+@ExtendWith(ExternalResourceSupport.class)
 public class SystemExportImportTest {
-
-    @Parameter
     public String apiName;
-
-    @Parameter(value = 1)
     public boolean direct;
-
-    @Parameter(value = 2)
     public boolean zip;
 
-    @ClassRule
-    public static TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public static File temporaryFolder;
 
     @ClassRule
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
@@ -124,7 +122,6 @@ public class SystemExportImportTest {
 
     private static String BINARY = "test";
 
-    @Parameters(name = "{0} zip:{2}")
     public static java.util.Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {"direct", true, false},
@@ -134,8 +131,9 @@ public class SystemExportImportTest {
         });
     }
 
-    @Test
-    public void exportImport() throws EXistException, IOException, PermissionDeniedException, SAXException, ParserConfigurationException, AuthenticationException, URISyntaxException, XMLDBException {
+    @MethodSource("data") @ParameterizedTest(name = "{0} zip:{2}")
+    public void exportImport(String apiName, boolean direct, boolean zip) throws EXistException, IOException, PermissionDeniedException, SAXException, ParserConfigurationException, AuthenticationException, URISyntaxException, XMLDBException {
+        initSystemExportImportTest(apiName, direct, zip);
         Path file;
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()));
@@ -145,7 +143,7 @@ public class SystemExportImportTest {
             assertNotNull(test);
 
             final SystemExport sysexport = new SystemExport(broker, transaction, null, null, direct);
-            final String backupDir = temporaryFolder.newFolder().getAbsolutePath();
+            final String backupDir = newFolder(temporaryFolder, "junit").getAbsolutePath();
             file = sysexport.export(backupDir, false, zip, null);
 
             transaction.commit();
@@ -198,6 +196,7 @@ public class SystemExportImportTest {
 	}
 
     private final static Properties contentsOutputProps = new Properties();
+
     static {
         contentsOutputProps.setProperty( OutputKeys.INDENT, "yes" );
         contentsOutputProps.setProperty( EXistOutputKeys.OUTPUT_DOCTYPE, "yes" );
@@ -232,7 +231,7 @@ public class SystemExportImportTest {
         }
     }
 
-	@BeforeClass
+	@BeforeAll
     public static void setup() throws EXistException, PermissionDeniedException, IOException, SAXException, CollectionConfigurationException, LockException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
 
@@ -254,5 +253,20 @@ public class SystemExportImportTest {
 
             transaction.commit();
         }
+    }
+
+    private static File newFolder(File root, String... subDirs) throws IOException {
+        String subFolder = String.join("/", subDirs);
+        File result = new File(root, subFolder);
+        if (!result.mkdirs()) {
+            throw new IOException("Couldn't create folders " + root);
+        }
+        return result;
+    }
+
+    public void initSystemExportImportTest(String apiName, boolean direct, boolean zip) {
+        this.apiName = apiName;
+        this.direct = direct;
+        this.zip = zip;
     }
 }

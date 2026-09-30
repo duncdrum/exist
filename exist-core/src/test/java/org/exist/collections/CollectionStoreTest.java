@@ -41,7 +41,9 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -54,11 +56,12 @@ import java.nio.file.Files;
 import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class CollectionStoreTest {
 
     @ClassRule
@@ -94,7 +97,7 @@ public class CollectionStoreTest {
                                 .checkForSimilar()
                                 .build();
 
-                        assertFalse(diff.toString(), diff.hasDifferences());
+                        assertFalse(diff.hasDifferences(), diff.toString());
                     }
                 }
             }

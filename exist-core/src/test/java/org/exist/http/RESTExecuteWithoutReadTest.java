@@ -52,9 +52,11 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.util.SyntaxException;
 import org.exist.xmldb.XmldbURI;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Nullable;
@@ -68,12 +70,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Executing a stored query over REST requires EXECUTE, not READ. A caller which may execute but not
@@ -84,6 +86,7 @@ import static org.junit.Assert.assertTrue;
  * error, which is what proves the disclosure level is per-request rather than baked into the pooled
  * compiled query.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class RESTExecuteWithoutReadTest {
 
     @ClassRule
@@ -140,7 +143,7 @@ public class RESTExecuteWithoutReadTest {
 
     private static String credentials;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, PermissionDeniedException, LockException, SAXException, IOException, TriggerException, SyntaxException {
         credentials = Base64.encodeBase64String((TEST_USER + ":" + TEST_USER).getBytes(UTF_8));
 
@@ -178,8 +181,8 @@ public class RESTExecuteWithoutReadTest {
         final Response response = get(EXEC_ONLY_VALID, null);
 
         assertEquals(HttpStatus.OK_200, response.status);
-        assertTrue("the query the caller cannot read still returns its results: " + response.body,
-                response.body.contains("<result>6</result>"));
+        assertTrue(response.body.contains("<result>6</result>"),
+                "the query the caller cannot read still returns its results: " + response.body);
     }
 
     @Test
@@ -187,10 +190,10 @@ public class RESTExecuteWithoutReadTest {
         final Response response = get(EXEC_ONLY_BROKEN, null);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR_500, response.status);
-        assertTrue("the caller learns only that it failed: " + response.body,
-                response.body.contains("Query execution failed"));
-        assertTrue("and is given a correlation id to quote: " + response.body,
-                response.body.matches("(?s).*\\(ref [0-9a-f-]+\\).*"));
+        assertTrue(response.body.contains("Query execution failed"),
+                "the caller learns only that it failed: " + response.body);
+        assertTrue(response.body.matches("(?s).*\\(ref [0-9a-f-]+\\).*"),
+                "and is given a correlation id to quote: " + response.body);
 
         assertNoLeak(response.body);
     }
@@ -200,10 +203,10 @@ public class RESTExecuteWithoutReadTest {
         final Response response = get(READABLE_BROKEN, null);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR_500, response.status);
-        assertTrue("a caller which may read the query sees the real error: " + response.body,
-                response.body.contains("XPST0003"));
-        assertFalse("and is not fobbed off with the generic error: " + response.body,
-                response.body.contains("Query execution failed"));
+        assertTrue(response.body.contains("XPST0003"),
+                "a caller which may read the query sees the real error: " + response.body);
+        assertFalse(response.body.contains("Query execution failed"),
+                "and is not fobbed off with the generic error: " + response.body);
     }
 
     /**
@@ -216,10 +219,10 @@ public class RESTExecuteWithoutReadTest {
         final Response response = get(EXEC_ONLY_SERIALIZE_FAIL, null);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR_500, response.status);
-        assertTrue("a serialization failure of an unreadable query must also be generic: " + response.body,
-                response.body.contains("Query execution failed"));
-        assertFalse("the serialization error code must not leak: " + response.body,
-                response.body.contains("SENR0001"));
+        assertTrue(response.body.contains("Query execution failed"),
+                "a serialization failure of an unreadable query must also be generic: " + response.body);
+        assertFalse(response.body.contains("SENR0001"),
+                "the serialization error code must not leak: " + response.body);
         assertNoLeak(response.body);
     }
 
@@ -230,10 +233,10 @@ public class RESTExecuteWithoutReadTest {
         // a readable caller keeps the original failure's status and detail — here a serialization
         // BadRequestException, which the servlet maps to 400. Only the read-blind path is normalized
         // to a uniform 500 + generic message (executeOnlySerializationFailureIsGeneric)
-        assertTrue("a readable caller gets a real error status, not 200: " + response.status,
-                response.status >= 400);
-        assertFalse("a caller which may read the query is not fobbed off with the generic error: " + response.body,
-                response.body.contains("Query execution failed"));
+        assertTrue(response.status >= 400,
+                "a readable caller gets a real error status, not 200: " + response.status);
+        assertFalse(response.body.contains("Query execution failed"),
+                "a caller which may read the query is not fobbed off with the generic error: " + response.body);
     }
 
     /**
@@ -244,13 +247,13 @@ public class RESTExecuteWithoutReadTest {
     public void theCacheHeaderIsSuppressedForAReadBlindCaller() throws IOException {
         final Response readBlind = get(EXEC_ONLY_VALID, null);
         assertEquals(HttpStatus.OK_200, readBlind.status);
-        assertFalse("the shared-pool activity oracle must not reach a read-blind caller",
-                readBlind.headers.containsKey("X-XQuery-Cached"));
+        assertFalse(readBlind.headers.containsKey("X-XQuery-Cached"),
+                "the shared-pool activity oracle must not reach a read-blind caller");
 
         final Response readable = get(READABLE_VALID, null);
         assertEquals(HttpStatus.OK_200, readable.status);
-        assertTrue("a read-capable caller still gets the cache header",
-                readable.headers.containsKey("X-XQuery-Cached"));
+        assertTrue(readable.headers.containsKey("X-XQuery-Cached"),
+                "a read-capable caller still gets the cache header");
     }
 
     /**
@@ -264,13 +267,13 @@ public class RESTExecuteWithoutReadTest {
         assertTrue(readable.body.contains("XPST0003"));
 
         final Response readBlind = get(EXEC_ONLY_BROKEN, null);
-        assertTrue("a read-blind caller must not inherit the verbosity of a read-capable one: " + readBlind.body,
-                readBlind.body.contains("Query execution failed"));
+        assertTrue(readBlind.body.contains("Query execution failed"),
+                "a read-blind caller must not inherit the verbosity of a read-capable one: " + readBlind.body);
         assertNoLeak(readBlind.body);
 
         final Response readableAgain = get(READABLE_BROKEN, null);
-        assertTrue("nor must a read-capable caller be starved of detail: " + readableAgain.body,
-                readableAgain.body.contains("XPST0003"));
+        assertTrue(readableAgain.body.contains("XPST0003"),
+                "nor must a read-capable caller be starved of detail: " + readableAgain.body);
     }
 
     /**
@@ -281,8 +284,8 @@ public class RESTExecuteWithoutReadTest {
         final Response response = get(EXEC_ONLY_VALID, "_source=yes");
 
         assertEquals(HttpStatus.FORBIDDEN_403, response.status);
-        assertFalse("the source must not leak through the ?_source view: " + response.body,
-                response.body.contains("sum(1 to 3)"));
+        assertFalse(response.body.contains("sum(1 to 3)"),
+                "the source must not leak through the ?_source view: " + response.body);
     }
 
     /**
@@ -317,29 +320,29 @@ public class RESTExecuteWithoutReadTest {
         // COLD: nothing pooled -> recompile -> module resolved on READ -> denied -> generic failure.
         xqPool.clear();
         final Response cold = get(IMPORTS_LIB, null);
-        assertEquals("cold: recompile resolves the module on READ, denied: " + cold.body,
-                HttpStatus.INTERNAL_SERVER_ERROR_500, cold.status);
-        assertTrue("cold failure is generic for a read-blind caller: " + cold.body,
-                cold.body.contains("Query execution failed"));
-        assertFalse("no result when the import failed: " + cold.body, cold.body.contains("<result>42</result>"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR_500,
+                cold.status, "cold: recompile resolves the module on READ, denied: " + cold.body);
+        assertTrue(cold.body.contains("Query execution failed"),
+                "cold failure is generic for a read-blind caller: " + cold.body);
+        assertFalse(cold.body.contains("<result>42</result>"), "no result when the import failed: " + cold.body);
 
         // WARM: a read-capable principal has compiled and pooled the query (module linked in). The
         // read-blind caller still fails identically — and the pooled entry is untouched.
         xqPool.clear();
         primeQueryPool(IMPORTS_LIB);
         final CompiledXQuery pooled = peekPooledQuery(IMPORTS_LIB);
-        assertNotNull("the read-capable principal left an entry in the shared pool", pooled);
+        assertNotNull(pooled, "the read-capable principal left an entry in the shared pool");
 
         final Response warm = get(IMPORTS_LIB, null);
-        assertEquals("warm: the module gate refuses what a cold compile would refuse: " + warm.body,
-                HttpStatus.INTERNAL_SERVER_ERROR_500, warm.status);
-        assertTrue("warm failure is generic, exactly as cold: " + warm.body,
-                warm.body.contains("Query execution failed"));
-        assertFalse("a pooled module-importing query is not reusable by a read-blind caller: " + warm.body,
-                warm.body.contains("<result>42</result>"));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR_500,
+                warm.status, "warm: the module gate refuses what a cold compile would refuse: " + warm.body);
+        assertTrue(warm.body.contains("Query execution failed"),
+                "warm failure is generic, exactly as cold: " + warm.body);
+        assertFalse(warm.body.contains("<result>42</result>"),
+                "a pooled module-importing query is not reusable by a read-blind caller: " + warm.body);
 
-        assertSame("the refused caller must not evict the entry others can use",
-                pooled, peekPooledQuery(IMPORTS_LIB));
+        assertSame(pooled,
+                peekPooledQuery(IMPORTS_LIB), "the refused caller must not evict the entry others can use");
     }
 
     /**
@@ -355,14 +358,14 @@ public class RESTExecuteWithoutReadTest {
 
         assertEquals(HttpStatus.OK_200, get(EXEC_ONLY_VALID, null).status);
         final CompiledXQuery pooled = awaitPooledQuery(EXEC_ONLY_VALID);
-        assertNotNull("the first run leaves a compiled query in the shared pool", pooled);
+        assertNotNull(pooled, "the first run leaves a compiled query in the shared pool");
 
         for (int i = 0; i < 3; i++) {
             final Response response = get(EXEC_ONLY_VALID, null);
             assertEquals(HttpStatus.OK_200, response.status);
             assertTrue(response.body.contains("<result>6</result>"));
-            assertSame("run " + (i + 1) + " must be a pool hit, not an eviction and recompile",
-                    pooled, awaitPooledQuery(EXEC_ONLY_VALID));
+            assertSame(pooled,
+                    awaitPooledQuery(EXEC_ONLY_VALID), "run " + (i + 1) + " must be a pool hit, not an eviction and recompile");
         }
     }
 
@@ -381,8 +384,8 @@ public class RESTExecuteWithoutReadTest {
 
         assertEquals(HttpStatus.FORBIDDEN_403, get(NOT_EXECUTABLE, null).status);
 
-        assertSame("a caller with no EXECUTE must not perturb shared pool state",
-                pooled, peekPooledQuery(NOT_EXECUTABLE));
+        assertSame(pooled,
+                peekPooledQuery(NOT_EXECUTABLE), "a caller with no EXECUTE must not perturb shared pool state");
     }
 
     /**
@@ -402,9 +405,9 @@ public class RESTExecuteWithoutReadTest {
 
         final Response afterChange = get(EXEC_ONLY_STALENESS, null);
         assertEquals(HttpStatus.OK_200, afterChange.status);
-        assertTrue("the changed query is recompiled, not served from the pool: " + afterChange.body,
-                afterChange.body.contains("<result>10</result>"));
-        assertNotSame("the stale entry is evicted", pooled, awaitPooledQuery(EXEC_ONLY_STALENESS));
+        assertTrue(afterChange.body.contains("<result>10</result>"),
+                "the changed query is recompiled, not served from the pool: " + afterChange.body);
+        assertNotSame(pooled, awaitPooledQuery(EXEC_ONLY_STALENESS), "the stale entry is evicted");
     }
 
     /**
@@ -477,9 +480,9 @@ public class RESTExecuteWithoutReadTest {
     }
 
     private static void assertNoLeak(final String body) {
-        assertFalse("the source must not leak: " + body, body.contains("$secret"));
-        assertFalse("the spec error code must not leak: " + body, body.contains("XPST0003"));
-        assertFalse("the location must not leak: " + body, body.contains("at line"));
+        assertFalse(body.contains("$secret"), "the source must not leak: " + body);
+        assertFalse(body.contains("XPST0003"), "the spec error code must not leak: " + body);
+        assertFalse(body.contains("at line"), "the location must not leak: " + body);
     }
 
     private static Response get(final XmldbURI uri, final String queryString) throws IOException {

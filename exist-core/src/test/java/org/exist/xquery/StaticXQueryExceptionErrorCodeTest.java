@@ -26,10 +26,12 @@ import org.exist.source.StringSource;
 import org.exist.storage.BrokerPool;
 import org.exist.test.ExistEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Targeted regression tests for the XQTS prod-Literal sub-cluster where
@@ -42,6 +44,7 @@ import static org.junit.Assert.fail;
  * surfaced by tests such as {@code K-Literals-31}, {@code Literals006},
  * {@code Literals051}, {@code K2-Literals-22}, {@code K-Literals-50}.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class StaticXQueryExceptionErrorCodeTest {
 
     @ClassRule
@@ -127,8 +130,8 @@ public class StaticXQueryExceptionErrorCodeTest {
             final String actual = e.getErrorCode() == null
                     ? "<null>"
                     : e.getErrorCode().getErrorQName().getLocalPart();
-            assertEquals("Wrong error code for query [" + query + "] (message: " + e.getMessage() + ")",
-                    "XPST0003", actual);
+            assertEquals("XPST0003",
+                    actual, "Wrong error code for query [" + query + "] (message: " + e.getMessage() + ")");
         } catch (final Exception e) {
             fail("Unexpected exception for query [" + query + "]: " + e.getClass().getName() + " - " + e.getMessage());
         }

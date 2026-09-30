@@ -39,9 +39,11 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
 
@@ -49,8 +51,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.easymock.EasyMock.createNiceMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Regression test for <a href="https://github.com/eXist-db/exist/issues/6615">eXist-db/exist#6615</a>.
@@ -63,6 +65,7 @@ import static org.junit.Assert.assertTrue;
  * straight into {@link java.nio.file.Path#of(String, String...)}, which throws an unhandled
  * {@link NullPointerException} that surfaces to the client as a raw HTTP 500.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class XQueryServletNullPathTest {
 
     @ClassRule
@@ -73,7 +76,7 @@ public class XQueryServletNullPathTest {
     private static final String TEST_QUERY = "xquery version \"3.1\"; <ok/>";
 
     /** Stores a resource ONLY in the database -- there is deliberately no file on disk for it. */
-    @BeforeClass
+    @BeforeAll
     public static void storeDatabaseOnlyResource() throws Exception {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()));
@@ -109,9 +112,9 @@ public class XQueryServletNullPathTest {
 
         servlet.process(request, response);
 
-        assertEquals("body: " + response.getBodyAsString(), HttpServletResponse.SC_OK, response.getStatus());
-        assertTrue("expected the database-resident query to have executed: " + response.getBodyAsString(),
-                response.getBodyAsString().contains("<ok/>"));
+        assertEquals(HttpServletResponse.SC_OK, response.getStatus(), "body: " + response.getBodyAsString());
+        assertTrue(response.getBodyAsString().contains("<ok/>"),
+                "expected the database-resident query to have executed: " + response.getBodyAsString());
     }
 
     @Test

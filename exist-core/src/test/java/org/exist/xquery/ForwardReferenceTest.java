@@ -35,9 +35,11 @@ import org.exist.util.StringInputSource;
 import org.exist.util.serializer.XQuerySerializer;
 import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.value.Sequence;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -47,10 +49,11 @@ import java.util.Optional;
 import java.util.Properties;
 
 import static org.exist.test.Util.*;
-import static org.junit.Assert.assertEquals;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class ForwardReferenceTest {
 
     @ClassRule
@@ -117,7 +120,7 @@ public class ForwardReferenceTest {
             """).getBytes(UTF_8));
     private static XmldbURI TEST_PAGES_MODULE_URI = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, PermissionDeniedException, IOException, SAXException, LockException {
         final BrokerPool brokerPool = EXIST_EMBEDDED_SERVER.getBrokerPool();
         try (final DBBroker broker = brokerPool.get(Optional.of(brokerPool.getSecurityManager().getSystemSubject()));

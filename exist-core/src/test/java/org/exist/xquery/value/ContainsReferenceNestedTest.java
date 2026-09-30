@@ -27,12 +27,14 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.functions.map.MapType;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@code Sequence.containsReference} must detect an item that is nested inside a map (or array) held by
@@ -47,6 +49,7 @@ import static org.junit.Assert.assertTrue;
  * are not constructed directly here (they require {@code OrderSpec} scaffolding) but share the identical
  * recursion.</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ContainsReferenceNestedTest {
 
     @ClassRule

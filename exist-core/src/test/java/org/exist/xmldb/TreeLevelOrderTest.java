@@ -24,14 +24,16 @@ package org.exist.xmldb;
 import org.exist.TestUtils;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Tests the TreeLevelOrder function.
@@ -40,6 +42,7 @@ import static org.junit.Assert.assertNotNull;
  * @version 1.0
  */
 
+@ExtendWith(ExternalResourceSupport.class)
 public class TreeLevelOrderTest {
 
     @ClassRule

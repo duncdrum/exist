@@ -24,12 +24,15 @@ package org.exist.xquery.functions.validate;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
-import static org.junit.Assert.*;
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 import static org.exist.samples.Samples.SAMPLES;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +47,7 @@ import org.xmldb.api.base.XMLDBException;
  * 
  * @author dizzzz@exist-db.org
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ParseDtdNokTest {
 
     @ClassRule
@@ -54,7 +58,7 @@ public class ParseDtdNokTest {
             "<validation mode=\"no\"/>" +
             "</collection>";
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareResources() throws Exception {
 
         // Switch off validation
@@ -75,7 +79,7 @@ public class ParseDtdNokTest {
 
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_stored_valid() throws XMLDBException, SAXException, IOException, XpathException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/hamlet/hamlet_valid.xml'), false(), xs:anyURI('/db/hamlet/') )";
@@ -87,7 +91,7 @@ public class ParseDtdNokTest {
         assertXpathEvaluatesTo("valid", "//status/text()", r);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_stored_invalid() throws XMLDBException, SAXException, IOException, XpathException {
         final String query = "validation:jaxp-report( xs:anyURI('/db/hamlet/hamlet_invalid.xml'), false(), xs:anyURI('/db/hamlet/') )";
 
@@ -98,7 +102,7 @@ public class ParseDtdNokTest {
         assertXpathEvaluatesTo("invalid", "//status/text()", r);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_anyuri_valid() throws XMLDBException, SAXException, IOException, XpathException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/hamlet/hamlet_valid.xml'), false(), xs:anyURI('/db/hamlet/') )";
@@ -110,7 +114,7 @@ public class ParseDtdNokTest {
         assertXpathEvaluatesTo("valid", "//status/text()", r);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xsd_anyuri_invalid() throws XMLDBException, SAXException, IOException, XpathException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/hamlet/hamlet_invalid.xml'), false(), xs:anyURI('/db/hamlet/') )";

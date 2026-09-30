@@ -34,10 +34,12 @@ import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -46,9 +48,10 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class ReindexTest {
 
     @ClassRule
@@ -240,13 +243,13 @@ public class ReindexTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws LockException, SAXException, PermissionDeniedException, EXistException, IOException {
         storeDocument(DOCUMENT_WITH_CHILD_NODES_COLLECTION, DOCUMENT_WITH_CHILD_NODES_NAME, DOCUMENT_WITH_CHILD_NODES_XML);
         storeDocument(ELEMENT_WITH_CHILD_NODES_COLLECTION, ELEMENT_WITH_CHILD_NODES_NAME, ELEMENT_WITH_CHILD_NODES_XML);
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws LockException, TriggerException, PermissionDeniedException, EXistException, IOException {
         removeCollection(ELEMENT_WITH_CHILD_NODES_COLLECTION);
         removeCollection(DOCUMENT_WITH_CHILD_NODES_COLLECTION);

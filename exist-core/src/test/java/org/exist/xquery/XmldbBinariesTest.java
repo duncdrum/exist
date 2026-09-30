@@ -25,8 +25,8 @@ package org.exist.xquery;
 import org.exist.test.ExistWebServer;
 import org.exist.xmldb.XmldbURI;
 import org.junit.ClassRule;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.BinaryResource;
@@ -44,25 +44,20 @@ import static org.xmldb.api.base.ResourceType.BINARY_RESOURCE;
 /**
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  */
-@RunWith(Parameterized.class)
+@ExtendWith(ExternalResourceSupport.class)
 public class XmldbBinariesTest extends AbstractBinariesTest<ResourceSet, Resource, XMLDBException> {
 
     @ClassRule
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
     private static final String PORT_PLACEHOLDER = "${PORT}";
 
-    @Parameterized.Parameters(name = "{0}")
     public static java.util.Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
 //                { "local", "xmldb:exist://" },
                 { "remote", "xmldb:exist://localhost:" + PORT_PLACEHOLDER + "/xmlrpc" }
         });
     }
-
-    @Parameterized.Parameter
     public String apiName;
-
-    @Parameterized.Parameter(value = 1)
     public String baseUri;
 
     private final String getBaseUri() {
@@ -175,5 +170,10 @@ public class XmldbBinariesTest extends AbstractBinariesTest<ResourceSet, Resourc
     @Override
     protected boolean getBoolean(final Resource item) throws XMLDBException {
         return Boolean.parseBoolean(item.getContent().toString());
+    }
+
+    public void initXmldbBinariesTest(String apiName, String baseUri) {
+        this.apiName = apiName;
+        this.baseUri = baseUri;
     }
 }

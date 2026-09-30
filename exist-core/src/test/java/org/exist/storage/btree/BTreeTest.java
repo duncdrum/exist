@@ -28,12 +28,19 @@ import org.exist.util.*;
 import org.exist.xquery.TerminatedException;
 import org.exist.xquery.value.AtomicValue;
 import org.exist.xquery.value.DoubleValue;
-import org.junit.*;
-import org.junit.rules.TemporaryFolder;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
-import static org.junit.Assert.*;
-
+import java.io.File;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +51,7 @@ import java.util.TreeMap;
 /**
  * Low-level tests on the B+tree.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class BTreeTest {
 
     private final static byte BTREE_TEST_FILE_ID = 0x7F;
@@ -54,7 +62,7 @@ public class BTreeTest {
     private int count = 0;
     private static final int COUNT = 5000;
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void simpleUpdates() throws DBException, IOException, TerminatedException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final BTree btree = new BTree(pool, BTREE_TEST_FILE_ID, BTREE_TEST_FILE_VERSION, false, pool.getCacheManager(), file)) {
@@ -90,7 +98,7 @@ public class BTreeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void strings() throws DBException, IOException, TerminatedException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final BTree btree = new BTree(pool, BTREE_TEST_FILE_ID, BTREE_TEST_FILE_VERSION, false, pool.getCacheManager(), file)) {
@@ -145,7 +153,7 @@ public class BTreeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void longStrings() throws DBException, IOException {
         // Test storage of long keys up to half of the page size (4k)
         final Random rand = new Random(System.currentTimeMillis());
@@ -183,7 +191,7 @@ public class BTreeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void stringsTruncated() throws DBException, IOException, TerminatedException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(BTree btree = new BTree(pool, BTREE_TEST_FILE_ID, BTREE_TEST_FILE_VERSION, false, pool.getCacheManager(), file)) {
@@ -211,7 +219,7 @@ public class BTreeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void removeStrings() throws DBException, IOException, TerminatedException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final BTree btree = new BTree(pool, BTREE_TEST_FILE_ID, BTREE_TEST_FILE_VERSION, false, pool.getCacheManager(), file)) {
@@ -248,7 +256,7 @@ public class BTreeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void numbers() throws TerminatedException, DBException, EXistException, IOException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final BTree btree = new BTree(pool, BTREE_TEST_FILE_ID, BTREE_TEST_FILE_VERSION, false, pool.getCacheManager(), file)) {
@@ -287,7 +295,7 @@ public class BTreeTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void numbersWithPrefix() throws DBException, EXistException, IOException, TerminatedException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final BTree btree = new BTree(pool, BTREE_TEST_FILE_ID, BTREE_TEST_FILE_VERSION, false, pool.getCacheManager(), file)) {
@@ -351,16 +359,16 @@ public class BTreeTest {
     @ClassRule
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
-    @Rule
-    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
+    @TempDir
+    public File temporaryFolder;
 
-    @Before
+    @BeforeEach
     public void initialize() throws IOException {
-        file = temporaryFolder.newFile("test.dbx").toPath();
+        file = newFile(temporaryFolder, "test.dbx").toPath();
         assertTrue(Files.exists(file));
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         FileUtils.deleteQuietly(file);
     }
@@ -433,5 +441,11 @@ public class BTreeTest {
             ByteConversion.intToByte(prefix, data, 0);
             pos = 0;
         }
+    }
+
+    private static File newFile(File parent, String child) throws IOException {
+        File result = new File(parent, child);
+        result.createNewFile();
+        return result;
     }
 }

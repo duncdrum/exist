@@ -34,7 +34,9 @@ import org.exist.xquery.parser.XQueryTreeParser;
 import antlr.collections.AST;
 
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 /**
  * Verifies that namespaces registered on the static context via
@@ -46,6 +48,7 @@ import org.junit.Test;
  * <p>Regression test for set-operator XPST0081 failures discovered in the
  * XQ 3.1 develop gap analysis (op-intersect, op-union, op-except).
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class InScopeNamespaceCompileTest {
 
     @ClassRule

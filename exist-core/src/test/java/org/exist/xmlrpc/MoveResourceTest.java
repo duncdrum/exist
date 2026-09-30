@@ -45,13 +45,15 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.AfterClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.samples.Samples.SAMPLES;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test for deadlocks when moving resources from one collection to another. Uses
@@ -61,6 +63,7 @@ import static org.junit.Assert.*;
  * Due to the complex move task, threads will deadlock almost immediately if
  * something's wrong with collection locking.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class MoveResourceTest {
 
     private static final int DELAY = 10;  // milliseconds
@@ -72,7 +75,7 @@ public class MoveResourceTest {
     @ClassRule
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
 
-    @AfterClass
+    @AfterAll
     public static void closeHttpConnectionManager() {
         CheckThread.closeConnectionManager();
     }
@@ -250,7 +253,7 @@ public class MoveResourceTest {
                     }
                     Thread.sleep(REST_RETRY_DELAY_MS);
                 }
-                assertEquals("HTTP " + lastStatus, HTTP_OK, lastStatus);
+                assertEquals(HTTP_OK, lastStatus, "HTTP " + lastStatus);
 
                 Thread.sleep(DELAY);
             }

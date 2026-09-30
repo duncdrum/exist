@@ -28,15 +28,18 @@ import java.util.concurrent.*;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.concurrent.action.Action;
 import org.exist.xmldb.IndexQueryService;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Abstract base class for concurrent tests.
@@ -44,6 +47,7 @@ import static org.junit.Assert.*;
  * @author wolf
  * @author aretter
  */
+@ExtendWith(ExternalResourceSupport.class)
 public abstract class ConcurrentTestBase {
 
     private static String COLLECTION_CONFIG =
@@ -60,7 +64,7 @@ public abstract class ConcurrentTestBase {
     @ClassRule
     public static final ExistXmldbEmbeddedServer existXmldbEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
-    @Before
+    @BeforeEach
     public final void startupDb() throws Exception {
         final Collection rootCol = existXmldbEmbeddedServer.getRoot();
         assertNotNull(rootCol);
@@ -75,7 +79,7 @@ public abstract class ConcurrentTestBase {
         assertNotNull(testCol);
     }
 
-    @After
+    @AfterEach
     public final void tearDownDb() throws XMLDBException {
         final Collection rootCol = existXmldbEmbeddedServer.getRoot();
         DBUtils.removeCollection(rootCol, getTestCollectionName());

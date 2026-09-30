@@ -26,7 +26,9 @@ import org.apache.commons.lang3.SystemUtils;
 import org.exist.http.AbstractHttpTest;
 import org.exist.test.ExistWebServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -41,10 +43,11 @@ import static com.evolvedbinary.j8fu.tuple.Tuple.Tuple;
 import static org.exist.management.client.JMXtoXML.JMX_NAMESPACE;
 import static org.exist.management.client.JMXtoXML.JMX_PREFIX;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class JmxRemoteTest extends AbstractHttpTest {
 
     @ClassRule
@@ -117,7 +120,7 @@ public class JmxRemoteTest extends AbstractHttpTest {
 
     @Test
     public void vectorCategoryIncludesVectorEmbeddingWhenExtensionPresent() throws IOException {
-        assumeTrue("Vector extension not on classpath", isVectorExtensionPresent());
+        assumeTrue(isVectorExtensionPresent(), "Vector extension not on classpath");
 
         final HttpRequest request = HttpRequest.newBuilder(URI.create(getServerUri() + "?c=vector")).GET().build();
         final String jmxXml = withHttpClient(client ->

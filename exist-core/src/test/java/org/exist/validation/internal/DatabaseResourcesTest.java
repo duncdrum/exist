@@ -27,7 +27,9 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,9 +37,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.exist.TestUtils.ADMIN_DB_PWD;
 import static org.exist.TestUtils.ADMIN_DB_USER;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class DatabaseResourcesTest {
 
     @ClassRule
@@ -60,7 +63,7 @@ public class DatabaseResourcesTest {
 
         final Sequence result = resources.executeQuery(context, DatabaseResources.FIND_XSD, params, admin);
 
-        assertNotNull("query should succeed (return an empty sequence, not null)", result);
-        assertTrue("registered cleanup task must run on the success path", cleaned.get());
+        assertNotNull(result, "query should succeed (return an empty sequence, not null)");
+        assertTrue(cleaned.get(), "registered cleanup task must run on the success path");
     }
 }

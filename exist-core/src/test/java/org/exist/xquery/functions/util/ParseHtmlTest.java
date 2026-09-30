@@ -30,15 +30,18 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import javax.xml.transform.Source;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class ParseHtmlTest {
 
     @ClassRule
@@ -63,7 +66,7 @@ public class ParseHtmlTest {
                     .checkForIdentical()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
         }
     }
 }

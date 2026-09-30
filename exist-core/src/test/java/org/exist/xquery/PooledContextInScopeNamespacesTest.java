@@ -29,7 +29,9 @@ import org.exist.storage.XQueryPool;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
@@ -37,9 +39,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;
 import java.util.function.Consumer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A compiled query returned to the {@link XQueryPool} must not carry the in-scope namespaces of its
@@ -54,6 +56,7 @@ import static org.junit.Assert.assertTrue;
  * Constr-inscope-1 to -4 tests, which use the prefixes foo and XXX with swapped URIs, flipped
  * nondeterministically depending on which of them had last used the pooled instance (#6704).</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class PooledContextInScopeNamespacesTest {
 
     @ClassRule
@@ -111,8 +114,8 @@ public class PooledContextInScopeNamespacesTest {
 
         final String serialized = run(context -> { });
         final Element element = parse(serialized);
-        assertNotNull("attr1 must stay in " + PARENT1 + "; got " + serialized,
-                element.getAttributeNodeNS(PARENT1, "attr1"));
+        assertNotNull(element.getAttributeNodeNS(PARENT1, "attr1"),
+                "attr1 must stay in " + PARENT1 + "; got " + serialized);
     }
 
     /**
@@ -144,9 +147,9 @@ public class PooledContextInScopeNamespacesTest {
         final XQueryContext context = new XQueryContext(pool);
         context.declareInScopeNamespace("foo", PARENT1);
         context.reset();
-        assertTrue("in-scope namespaces after reset: " + context.getInScopeNamespaces(),
-                context.getInScopeNamespaces().isEmpty());
-        assertTrue("in-scope prefixes after reset: " + context.getInScopePrefixes(),
-                context.getInScopePrefixes().isEmpty());
+        assertTrue(context.getInScopeNamespaces().isEmpty(),
+                "in-scope namespaces after reset: " + context.getInScopeNamespaces());
+        assertTrue(context.getInScopePrefixes().isEmpty(),
+                "in-scope prefixes after reset: " + context.getInScopePrefixes());
     }
 }

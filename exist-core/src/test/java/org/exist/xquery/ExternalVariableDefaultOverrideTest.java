@@ -23,19 +23,22 @@ package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * A value supplied for an external variable by the external environment must take precedence over the
  * variable's declared default value (XQuery 3.1 §4.15 External Variables). Previously eXist always
  * evaluated the default for an {@code external := ...} declaration, ignoring a supplied value.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ExternalVariableDefaultOverrideTest {
 
     @ClassRule

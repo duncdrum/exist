@@ -38,15 +38,18 @@ import org.exist.storage.DBBroker;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.DatabaseConfigurationException;
 import org.exist.xquery.value.*;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class CastExpressionTest {
 
   private static DBBroker broker;
@@ -55,7 +58,7 @@ public class CastExpressionTest {
   @ClassRule
   public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
-  @BeforeClass
+  @BeforeAll
   public static void setUp() throws DatabaseConfigurationException, EXistException, XPathException {
     final BrokerPool pool = existEmbeddedServer.getBrokerPool();
 
@@ -63,7 +66,7 @@ public class CastExpressionTest {
     context = new XQueryContext(pool);
   }
 
-  @AfterClass
+  @AfterAll
   public static void tearDown() throws EXistException {
     if (broker != null) {
       broker.close();

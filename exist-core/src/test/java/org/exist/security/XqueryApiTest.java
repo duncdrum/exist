@@ -31,15 +31,18 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.StringWriter;
 import java.util.Optional;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-
+@ExtendWith(ExternalResourceSupport.class)
 public class XqueryApiTest extends AbstractApiSecurityTest {
 
     @ClassRule

@@ -31,10 +31,8 @@ import org.exist.security.internal.aider.UserAider;
 import org.exist.test.ExistWebServer;
 import org.exist.xmldb.UserManagementService;
 import org.junit.ClassRule;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -47,25 +45,20 @@ import org.xmldb.api.modules.XMLResource;
  *
  * @author <a href="mailto:adam.retter@googlemail.com">Adam Retter</a>
  */
-@RunWith(Parameterized.class)
+@ExtendWith(ExternalResourceSupport.class)
 public class XmldbApiSecurityTest extends AbstractApiSecurityTest {
 
     @ClassRule
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
     private static final String PORT_PLACEHOLDER = "${PORT}";
 
-    @Parameters(name = "{0}")
     public static java.util.Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "local", "xmldb:exist://" },
             { "remote", "xmldb:exist://localhost:" + PORT_PLACEHOLDER + "/xmlrpc" }
         });
     }
-    
-    @Parameter
     public String apiName;
-    
-    @Parameter(value = 1)
     public String baseUri;
 
     private final String getBaseUri() {
@@ -406,5 +399,10 @@ public class XmldbApiSecurityTest extends AbstractApiSecurityTest {
                 }
             }
         }
+    }
+
+    public void initXmldbApiSecurityTest(String apiName, String baseUri) {
+        this.apiName = apiName;
+        this.baseUri = baseUri;
     }
 }

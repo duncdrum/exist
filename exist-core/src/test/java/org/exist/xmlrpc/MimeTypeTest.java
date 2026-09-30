@@ -22,14 +22,16 @@
 package org.exist.xmlrpc;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.exist.TestUtils;
 import org.exist.test.ExistWebServer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
@@ -40,6 +42,7 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class MimeTypeTest {
 
 	@ClassRule
@@ -74,7 +77,7 @@ public class MimeTypeTest {
     	}
     }
 
-	@BeforeClass
+	@BeforeAll
     public static void startServer() throws ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException, SAXException {
         // initialize XML:DB driver
         Class<?> cl = Class.forName("org.exist.xmldb.DatabaseImpl");
@@ -87,7 +90,7 @@ public class MimeTypeTest {
         assertThatNoException().isThrownBy(() -> mgmt.createCollection(COLLECTION_NAME));
     }
 
-    @AfterClass
+    @AfterAll
     public static void stopServer() throws XMLDBException {
         Collection root = DatabaseManager.getCollection(getBaseUri() + "/db", TestUtils.ADMIN_DB_USER, TestUtils.ADMIN_DB_PWD);
         CollectionManagementService mgmt =

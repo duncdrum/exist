@@ -21,8 +21,8 @@
  */
 package org.exist.collections.triggers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URISyntaxException;
 
@@ -35,7 +35,11 @@ import org.exist.xmldb.EXistCollectionManagementService;
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.IndexQueryService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
@@ -49,6 +53,7 @@ import org.xmldb.api.modules.XUpdateQueryService;
 /** class under test : {@link XQueryTrigger}
  * @author <a href="mailto:pierrick.brihaye@free.fr">Pierrick Brihaye</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class XQueryTriggerTest {
 
     @ClassRule
@@ -244,7 +249,7 @@ public class XQueryTriggerTest {
 
     /** create "log" document that will be updated by the trigger,
      * and store the XQuery module implementing the trigger under test */
-    @Before
+    @BeforeEach
     public void setup() throws XMLDBException {
         final CollectionManagementService service = existEmbeddedServer.getRoot()
                 .getService(CollectionManagementService.class);
@@ -261,7 +266,7 @@ public class XQueryTriggerTest {
         testCollection.storeResource(module);
     }
 
-    @After
+    @AfterEach
     public void cleanup() throws XMLDBException {
         final CollectionManagementService service = existEmbeddedServer.getRoot()
                 .getService(CollectionManagementService.class);
@@ -271,7 +276,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by storing a new Document  */
-    @Test
+    @org.junit.jupiter.api.Test
     public void documentCreate() throws XMLDBException {
         // configure the Collection with the trigger under test
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
@@ -307,7 +312,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by a Document Update */
-    @Test
+    @org.junit.jupiter.api.Test
     public void documentUpdate() throws XMLDBException {
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);
@@ -359,7 +364,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by a Document Delete */
-    @Test
+    @org.junit.jupiter.api.Test
     public void documentDelete() throws XMLDBException {
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);
@@ -410,7 +415,7 @@ public class XQueryTriggerTest {
     }
 
 	/** test a trigger fired by creating a new Binary Document  */
-    @Test
+    @org.junit.jupiter.api.Test
     public void documentBinaryCreate() throws XMLDBException {
         // configure the Collection with the trigger under test
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
@@ -450,7 +455,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by a Binary Document Delete */
-    @Test
+    @org.junit.jupiter.api.Test
     public void documentBinaryDelete() throws XMLDBException {
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);
@@ -504,7 +509,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by a Collection manipulations */
-    @Test
+    @org.junit.jupiter.api.Test
     public void collectionCreate() throws XMLDBException {
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);
@@ -538,7 +543,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by a Collection manipulations */
-    @Test
+    @org.junit.jupiter.api.Test
     public void collectionCopy() throws XMLDBException, URISyntaxException {
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);
@@ -602,7 +607,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by a Collection manipulations */
-    @Test
+    @org.junit.jupiter.api.Test
     public void collectionMove() throws XMLDBException, URISyntaxException {
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);
@@ -666,7 +671,7 @@ public class XQueryTriggerTest {
     }
 
     /** test a trigger fired by a Collection manipulations */
-    @Test
+    @org.junit.jupiter.api.Test
     public void collectionDelete() throws XMLDBException {
         final IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);
@@ -711,7 +716,7 @@ public class XQueryTriggerTest {
         assertEquals(8, result.getSize());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void storeDocumentInvalidTriggerForPrepare() throws XMLDBException {
         final BinaryResource invalidModule = testCollection.createResource(MODULE_NAME, BinaryResource.class );
         ((EXistResource)invalidModule).setMimeType("application/xquery");

@@ -32,8 +32,6 @@ import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.exist.collections.Collection;
 import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
@@ -56,6 +54,11 @@ import org.exist.xquery.value.NodeValue;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.Type;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -65,11 +68,9 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
-import org.junit.Test;
-
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
 import static org.exist.samples.Samples.SAMPLES;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -79,6 +80,7 @@ import static org.exist.samples.Samples.SAMPLES;
  * @author <a href="mailto:adam@exist-db.org">wolf
  * @author Adam Retter</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class BasicNodeSetTest {
 
@@ -531,7 +533,7 @@ public class BasicNodeSetTest {
     @ClassRule
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws EXistException, PermissionDeniedException, IOException, SAXException, URISyntaxException, LockException, XPathException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -559,7 +561,7 @@ public class BasicNodeSetTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws PermissionDeniedException, IOException, TriggerException, EXistException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();

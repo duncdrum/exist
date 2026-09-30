@@ -24,7 +24,10 @@ package org.exist.http;
 import org.exist.test.ExistWebServer;
 import org.exist.xmldb.XmldbURI;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
+@ExtendWith(ExternalResourceSupport.class)
 public abstract class RESTTest extends AbstractHttpTest {
 
     @ClassRule

@@ -23,23 +23,26 @@ package org.exist.dom.memtree;
 
 import com.googlecode.junittoolbox.ParallelRunner;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author <a href="mailto:adam.retter@googlemail.com">Adam Retter</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class MemtreeInXQueryTest {
 
     @ClassRule
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(true, true, true);
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void pi_attributes() throws XMLDBException {
         final String xquery = """
                 let $doc := document{
@@ -56,7 +59,7 @@ public class MemtreeInXQueryTest {
         result.clear();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void pi_children() throws XMLDBException {
         final String xquery = """
                 let $doc := document{
@@ -73,7 +76,7 @@ public class MemtreeInXQueryTest {
         result.clear();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void pi_descendantAttributes() throws XMLDBException {
         final String xquery = """
                 let $doc := document{
@@ -90,7 +93,7 @@ public class MemtreeInXQueryTest {
         result.clear();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void attr_attributes() throws XMLDBException {
         final String xquery = """
                 let $doc := document {
@@ -108,7 +111,7 @@ public class MemtreeInXQueryTest {
         result.clear();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void attr_children() throws XMLDBException {
         final String xquery = """
                 let $doc := document {

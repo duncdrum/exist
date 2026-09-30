@@ -24,10 +24,12 @@ package org.exist.xquery;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.IndexQueryService;
 import org.exist.xquery.util.ExpressionDumper;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.CompiledExpression;
 import org.xmldb.api.base.ResourceSet;
@@ -36,9 +38,9 @@ import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests that {@code some $v in PATH satisfies matches($v, ...)} reaches the range index.
@@ -54,6 +56,7 @@ import static org.junit.Assert.assertTrue;
  * comparison cannot tell an optimized run from an unoptimized one, since both return the same
  * answer -- which is the whole point.</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class QuantifiedMatchOptimizerTest {
 
     private static final String OPTIMIZE = "declare option exist:optimize 'enable=yes'; ";
@@ -91,7 +94,7 @@ public class QuantifiedMatchOptimizerTest {
     public static final ExistXmldbEmbeddedServer server =
             new ExistXmldbEmbeddedServer(false, true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void loadFixture() throws XMLDBException {
         final Collection root = server.getRoot();
         final CollectionManagementService cms = root.getService(CollectionManagementService.class);
@@ -105,7 +108,7 @@ public class QuantifiedMatchOptimizerTest {
         coll.storeResource(res);
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws XMLDBException {
         final Collection root = server.getRoot();
         final CollectionManagementService cms = root.getService(CollectionManagementService.class);
@@ -160,8 +163,8 @@ public class QuantifiedMatchOptimizerTest {
     @Test
     public void theQuantifiedFormReachesTheIndex() throws XMLDBException {
         final String dump = plan("$d//speech[some $s in speaker satisfies matches($s, '^HAM')]");
-        assertTrue("some ... satisfies matches(...) should be wrapped in the optimize pragma. Plan:\n" + dump,
-                dump.contains(OPTIMIZE_PRAGMA_MARKER));
+        assertTrue(dump.contains(OPTIMIZE_PRAGMA_MARKER),
+                "some ... satisfies matches(...) should be wrapped in the optimize pragma. Plan:\n" + dump);
     }
 
     /** The pragma in the plan must also pre-select from the index when the query runs. */
@@ -196,8 +199,8 @@ public class QuantifiedMatchOptimizerTest {
     @Test
     public void theEveryFormIsLeftAlone() throws XMLDBException {
         final String dump = plan("$d//speech[every $s in speaker satisfies matches($s, '^HAM')]");
-        assertFalse("every ... satisfies must not be optimized through the index. Plan:\n" + dump,
-                dump.contains(OPTIMIZE_PRAGMA_MARKER));
+        assertFalse(dump.contains(OPTIMIZE_PRAGMA_MARKER),
+                "every ... satisfies must not be optimized through the index. Plan:\n" + dump);
         assertEquals(0, optimizedIndexUses("$d//speech[every $s in speaker satisfies matches($s, '^HAM')]"));
     }
 
@@ -210,9 +213,9 @@ public class QuantifiedMatchOptimizerTest {
     public void aDisjunctionInSatisfiesIsLeftAlone() throws XMLDBException {
         final String body = "$d//speech[some $s in speaker satisfies (matches($s, '^HAM') or $s = 'CLAUDIUS')]";
         final String dump = plan(body);
-        assertFalse("a disjunction in the satisfies clause must not be optimized. Plan:\n" + dump,
-                dump.contains(OPTIMIZE_PRAGMA_MARKER));
-        assertEquals("and it must still return the right answer", 3, count(body, true));
+        assertFalse(dump.contains(OPTIMIZE_PRAGMA_MARKER),
+                "a disjunction in the satisfies clause must not be optimized. Plan:\n" + dump);
+        assertEquals(3, count(body, true), "and it must still return the right answer");
         assertEquals(0, optimizedIndexUses(body));
     }
 
@@ -224,9 +227,9 @@ public class QuantifiedMatchOptimizerTest {
     public void aPatternReferencingTheBoundVariableIsLeftAlone() throws XMLDBException {
         final String body = "$d//speech[some $s in speaker satisfies matches($s, $s)]";
         final String dump = plan(body);
-        assertFalse("a pattern mentioning the bound variable must not be optimized. Plan:\n" + dump,
-                dump.contains(OPTIMIZE_PRAGMA_MARKER));
-        assertEquals("every speaker matches itself as a pattern", 4, count(body, true));
+        assertFalse(dump.contains(OPTIMIZE_PRAGMA_MARKER),
+                "a pattern mentioning the bound variable must not be optimized. Plan:\n" + dump);
+        assertEquals(4, count(body, true), "every speaker matches itself as a pattern");
         assertEquals(0, optimizedIndexUses(body));
     }
 

@@ -22,16 +22,18 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Regression test for GH-2697: following-sibling axis was O(N^2) on persistent
@@ -40,6 +42,7 @@ import static org.junit.Assert.assertTrue;
  * symmetric {@code selectPrecedingSiblings} broke correctly. On the issue's
  * 100,000-element doc, the asymmetry was ~80x.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class AxisPerformanceRegressionTest {
 
     @ClassRule
@@ -48,7 +51,7 @@ public class AxisPerformanceRegressionTest {
 
     private static final String DOC_PATH = "/db/axis-perf-test.xml";
 
-    @BeforeClass
+    @BeforeAll
     public static void storeTestDocument() throws XMLDBException {
         // 1500 <a> elements, each with 20 <b> children -> 30,000 <b> total.
         // 19 of each <a>'s 20 children have a preceding-sibling <b>; same for
@@ -66,7 +69,7 @@ public class AxisPerformanceRegressionTest {
                 """);
     }
 
-    @AfterClass
+    @AfterAll
     public static void removeTestDocument() throws XMLDBException {
         final XQueryService xqs =
                 existEmbeddedServer.getRoot().getService(XQueryService.class);
@@ -112,8 +115,8 @@ public class AxisPerformanceRegressionTest {
         // tolerates CI variance but still catches a re-regression.
         final long threshold = Math.max(500L, precedingMs * 5L);
         assertTrue(
+                followingMs <= threshold,
                 "following-sibling=" + followingMs + "ms, preceding-sibling=" + precedingMs
-                        + "ms; threshold=" + threshold + "ms (5x preceding-sibling, min 500ms)",
-                followingMs <= threshold);
+                        + "ms; threshold=" + threshold + "ms (5x preceding-sibling, min 500ms)");
     }
 }

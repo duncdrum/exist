@@ -23,17 +23,20 @@ package org.exist.xquery.functions.xquery3;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 
-import org.junit.Test;
 import org.xmldb.api.base.XMLDBException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
  * @author ljo
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class SwitchTest {
 
     @ClassRule

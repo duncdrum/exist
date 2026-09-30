@@ -49,6 +49,10 @@ import org.exist.xmldb.XmldbURI;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -56,9 +60,7 @@ import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.transform.Source;
 
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
@@ -66,11 +68,11 @@ import org.xmlunit.diff.Diff;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeThat;
+import static org.hamcrest.junit.MatcherAssume.assumeThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A test case for accessing a remote server via REST-Style Web API.
@@ -78,6 +80,7 @@ import static org.junit.Assume.assumeThat;
  * @author Pierrick Brihaye</a>
  */
 //@RunWith(ParallelRunner.class)    // TODO(AR) when running in parallel a deadlock is encountered in eXist-db... this needs to be resolved!
+@ExtendWith(ExternalResourceSupport.class)
 public class RESTServiceTest {
 
     @ClassRule
@@ -320,7 +323,7 @@ public class RESTServiceTest {
     @ClassRule
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws PermissionDeniedException, IOException, TriggerException {
         credentials = Base64.encodeBase64String("admin:".getBytes(UTF_8));
         badCredentials = Base64.encodeBase64String("johndoe:this pw should fail".getBytes(UTF_8));
@@ -370,7 +373,7 @@ public class RESTServiceTest {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.NOT_FOUND_404, r);
+            assertEquals(HttpStatus.NOT_FOUND_404, r, "Server returned response code " + r);
         } finally {
             connect.disconnect();
         }
@@ -388,14 +391,14 @@ public class RESTServiceTest {
             connect.setRequestMethod("GET");
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             final String response = readResponse(connect.getInputStream());
             final String pathInfo = response.substring("pathInfo=".length(), response.indexOf("servletPath=") - 2);
             final String servletPath = response.substring(response.indexOf("servletPath=") + "servletPath=".length(), response.lastIndexOf("\r\n"));
 
             //check the responses
-            assertEquals("XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"", "/db/test/requestwithpath.xq", servletPath);
-            assertEquals("XQuery pathInfo is: \"" + pathInfo + "\" expected: \"\"", "", pathInfo);
+            assertEquals("/db/test/requestwithpath.xq", servletPath, "XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"");
+            assertEquals("", pathInfo, "XQuery pathInfo is: \"" + pathInfo + "\" expected: \"\"");
         } finally {
             connect.disconnect();
         }
@@ -411,14 +414,14 @@ public class RESTServiceTest {
 try {
         connect.connect();
         final int r = connect.getResponseCode();
-        assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+        assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
         final String response = readResponse(connect.getInputStream());
         final String pathInfo = response.substring("pathInfo=".length(), response.indexOf("servletPath=")-2);
         final String servletPath = response.substring(response.indexOf("servletPath=") + "servletPath=".length(), response.lastIndexOf("\r\n"));
 
         //check the responses
-        assertEquals("XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"", "/db/test/requestwithpath.xq", servletPath);
-        assertEquals("XQuery pathInfo is: \"" + pathInfo + "\" expected: \"\"", "", pathInfo);
+        assertEquals("/db/test/requestwithpath.xq", servletPath, "XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"");
+        assertEquals("", pathInfo, "XQuery pathInfo is: \"" + pathInfo + "\" expected: \"\"");
         } finally {
             connect.disconnect();
         }
@@ -436,14 +439,14 @@ try {
             connect.setRequestMethod("GET");
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             final String response = readResponse(connect.getInputStream());
             final String pathInfo = response.substring("pathInfo=".length(), response.indexOf("servletPath=") - 2);
             final String servletPath = response.substring(response.indexOf("servletPath=") + "servletPath=".length(), response.lastIndexOf("\r\n"));
 
             //check the responses
-            assertEquals("XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"", "/db/test/requestwithpath.xq", servletPath);
-            assertEquals("XQuery pathInfo is: \"" + pathInfo + "\" expected: \"/some/path\"", "/some/path", pathInfo);
+            assertEquals("/db/test/requestwithpath.xq", servletPath, "XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"");
+            assertEquals("/some/path", pathInfo, "XQuery pathInfo is: \"" + pathInfo + "\" expected: \"/some/path\"");
         } finally {
             connect.disconnect();
         }
@@ -459,14 +462,14 @@ try {
         try {
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             final String response = readResponse(connect.getInputStream());
             final String pathInfo = response.substring("pathInfo=".length(), response.indexOf("servletPath=") - 2);
             final String servletPath = response.substring(response.indexOf("servletPath=") + "servletPath=".length(), response.lastIndexOf("\r\n"));
 
             //check the responses
-            assertEquals("XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"", "/db/test/requestwithpath.xq", servletPath);
-            assertEquals("XQuery pathInfo is: \"" + pathInfo + "\" expected: \"/some/path\"", "/some/path", pathInfo);
+            assertEquals("/db/test/requestwithpath.xq", servletPath, "XQuery servletPath is: \"" + servletPath + "\" expected: \"/db/test/requestwithpath.xq\"");
+            assertEquals("/some/path", pathInfo, "XQuery pathInfo is: \"" + pathInfo + "\" expected: \"/some/path\"");
         } finally {
             connect.disconnect();
         }
@@ -492,7 +495,7 @@ try {
                 connect.setRequestMethod("GET");
                 connect.connect();
                 final int r = connect.getResponseCode();
-                assertEquals("Server returned response code " + r, HttpStatus.NOT_FOUND_404, r);
+                assertEquals(HttpStatus.NOT_FOUND_404, r, "Server returned response code " + r);
             } finally {
                 connect.disconnect();
             }
@@ -504,7 +507,7 @@ try {
     @Test
     public void testPut() throws IOException {
         final int r = uploadData();
-        assertEquals("Server returned response code " + r, HttpStatus.CREATED_201, r);
+        assertEquals(HttpStatus.CREATED_201, r, "Server returned response code " + r);
 
         doGet();
     }
@@ -514,7 +517,7 @@ try {
         assumeThat("Requires non-Windows platform", System.getProperty("os.name").toLowerCase(), not(containsString("win")));
 
         final int r = uploadDataPlus();
-        assertEquals("Server returned response code " + r, HttpStatus.CREATED_201, r);
+        assertEquals(HttpStatus.CREATED_201, r, "Server returned response code " + r);
 
         doGetPlus();
     }
@@ -533,7 +536,7 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.BAD_REQUEST_400, r);
+            assertEquals(HttpStatus.BAD_REQUEST_400, r, "Server returned response code " + r);
         } finally {
             connect.disconnect();
         }
@@ -554,7 +557,7 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.CREATED_201, r);
+            assertEquals(HttpStatus.CREATED_201, r, "Server returned response code " + r);
 
             doGet();
         } finally {
@@ -572,9 +575,9 @@ try {
             connect.setAllowUserInteraction(false);
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.UNAUTHORIZED_401, r);
+            assertEquals(HttpStatus.UNAUTHORIZED_401, r, "Server returned response code " + r);
             final String auth = connect.getHeaderField("WWW-Authenticate");
-            assertEquals("WWW-Authenticate = " + auth, "Basic realm=\"exist\"", auth);
+            assertEquals("Basic realm=\"exist\"", auth, "WWW-Authenticate = " + auth);
         } finally {
             connect.disconnect();
         }
@@ -597,7 +600,7 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("doPut: Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "doPut: Server returned response code " + r);
 
             //get the response of the query
             final String response = readResponse(connect.getInputStream());
@@ -619,7 +622,7 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("doDelete: Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "doDelete: Server returned response code " + r);
 
             //get the response of the query
             final String response = readResponse(connect.getInputStream());
@@ -642,7 +645,7 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("doHead: Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "doHead: Server returned response code " + r);
         } finally {
             connect.disconnect();
         }
@@ -654,7 +657,7 @@ try {
         try {
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             doGet();
         } finally {
@@ -670,7 +673,7 @@ try {
         try {
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String data = readResponse(connect.getInputStream());
             final int hits = parseResponse(data);
@@ -686,7 +689,7 @@ try {
         try {
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.BAD_REQUEST_400, r);
+            assertEquals(HttpStatus.BAD_REQUEST_400, r, "Server returned response code " + r);
         } finally {
             connect.disconnect();
         }
@@ -708,7 +711,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             readResponse(connect.getInputStream());
         } finally {
@@ -730,7 +733,7 @@ try {
             connect.connect();
 
             int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.BAD_REQUEST_400, r);
+            assertEquals(HttpStatus.BAD_REQUEST_400, r, "Server returned response code " + r);
         } finally {
             connect.disconnect();
         }
@@ -745,7 +748,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream()).trim();
             assertTrue(response.endsWith(XmldbURI.ROOT_COLLECTION + "/test"));
@@ -760,7 +763,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream()).trim();
             //TODO : the server name may have been renamed by the Web server
@@ -785,13 +788,13 @@ try {
                 connect.connect();
 
                 final int iHttpResult = connect.getResponseCode();
-                assertEquals("Server returned response code " + iHttpResult, HttpStatus.OK_200, iHttpResult);
+                assertEquals(HttpStatus.OK_200, iHttpResult, "Server returned response code " + iHttpResult);
                 String contentType = connect.getContentType();
                 final int semicolon = contentType.indexOf(';');
                 if (semicolon > 0) {
                     contentType = contentType.substring(0, semicolon).trim();
                 }
-                assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+                assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
                 //get the response of the query
                 final String response = readResponse(connect.getInputStream());
@@ -800,8 +803,8 @@ try {
                 final String strXQMRequestParameter = response.substring(response.indexOf("xqm=") + "xqm=".length(), response.lastIndexOf("\r\n"));
 
                 //check the responses
-                assertEquals("XQuery Request Parameter is: \"" + strXQLRequestParameter + "\" expected: \"somedoc" + i + "\"", "somedoc" + i, strXQLRequestParameter);
-                assertEquals("XQuery Module Request Parameter is: \"" + strXQMRequestParameter + "\" expected: \"somedoc" + i + "\"", "somedoc" + i, strXQMRequestParameter);
+                assertEquals("somedoc" + i, strXQLRequestParameter, "XQuery Request Parameter is: \"" + strXQLRequestParameter + "\" expected: \"somedoc" + i + "\"");
+                assertEquals("somedoc" + i, strXQMRequestParameter, "XQuery Module Request Parameter is: \"" + strXQMRequestParameter + "\" expected: \"somedoc" + i + "\"");
             } finally {
                 connect.disconnect();
             }
@@ -837,7 +840,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.UNAUTHORIZED_401, r);
+            assertEquals(HttpStatus.UNAUTHORIZED_401, r, "Server returned response code " + r);
 
         } finally {
             connect.disconnect();
@@ -859,7 +862,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -883,7 +886,7 @@ try {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
 
         } finally {
             connect.disconnect();
@@ -906,7 +909,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -930,7 +933,7 @@ try {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
 
         } finally {
             connect.disconnect();
@@ -953,7 +956,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -977,7 +980,7 @@ try {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
 
         } finally {
             connect.disconnect();
@@ -999,7 +1002,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1029,7 +1032,7 @@ try {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
 
         } finally {
             connect.disconnect();
@@ -1052,7 +1055,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1076,7 +1079,7 @@ try {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
 
         } finally {
             connect.disconnect();
@@ -1099,7 +1102,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.UNAUTHORIZED_401, r);
+            assertEquals(HttpStatus.UNAUTHORIZED_401, r, "Server returned response code " + r);
 
         } finally {
             connect.disconnect();
@@ -1122,7 +1125,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1152,7 +1155,7 @@ try {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
 
         } finally {
             connect.disconnect();
@@ -1170,18 +1173,18 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
             //readResponse is appending \r\n to each line that's why its added the expected content
-            assertEquals("Server returned document content " + response,TEST_ENCODED_XML_DOC_CONTENT + "\r\n",response);
+            assertEquals(TEST_ENCODED_XML_DOC_CONTENT + "\r\n",response,"Server returned document content " + response);
         } finally {
             connect.disconnect();
         }
@@ -1196,7 +1199,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
         } finally {
             connect.disconnect();
         }
@@ -1219,19 +1222,19 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("doPut: Server returned response code " + r, HttpStatus.CREATED_201, r);
+            assertEquals(HttpStatus.CREATED_201, r, "doPut: Server returned response code " + r);
 
             // assert file content updated
             getConnect.setRequestMethod("GET");
             getConnect.connect();
 
             final int res_code = getConnect.getResponseCode();
-            assertEquals("Server returned response code " + res_code, HttpStatus.OK_200, res_code);
+            assertEquals(HttpStatus.OK_200, res_code, "Server returned response code " + res_code);
 
             final String response = readResponse(getConnect.getInputStream());
 
             //readResponse is appending \r\n to each line that's why its added the expected content
-            assertEquals("Server returned document content " + response,data + "\r\n",response);
+            assertEquals(data + "\r\n",response,"Server returned document content " + response);
 
         } finally {
             connect.disconnect();
@@ -1261,12 +1264,12 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("doPut: Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "doPut: Server returned response code " + r);
 
             final String response = readResponse(connect.getInputStream());
 
             //readResponse is appending \r\n to each line that's why its added the expected content
-            assertTrue("Server returned " + response,response.contains("exist:hits=\"1\""));
+            assertTrue(response.contains("exist:hits=\"1\""),"Server returned " + response);
 
         } finally {
             connect.disconnect();
@@ -1286,7 +1289,7 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("doPut: Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "doPut: Server returned response code " + r);
 
             // assert file content updated
             getConnect.setRequestMethod("GET");
@@ -1294,7 +1297,7 @@ try {
 
 
             final int res_code = getConnect.getResponseCode();
-            assertEquals("Server returned response code " + res_code, HttpStatus.NOT_FOUND_404, res_code);
+            assertEquals(HttpStatus.NOT_FOUND_404, res_code, "Server returned response code " + res_code);
 
         }finally {
             connect.disconnect();
@@ -1326,14 +1329,14 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/json", contentType);
+            assertEquals("application/json", contentType, "Server returned content type " + contentType);
         } finally {
             connect.disconnect();
         }
@@ -1364,14 +1367,14 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/vnd.api+json", contentType);
+            assertEquals("application/vnd.api+json", contentType, "Server returned content type " + contentType);
         } finally {
             connect.disconnect();
         }
@@ -1403,9 +1406,9 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             final String response = readResponse(connect.getInputStream());
-            assertTrue("Expected application/json in: " + response, response.contains("application/json"));
+            assertTrue(response.contains("application/json"), "Expected application/json in: " + response);
         } finally {
             connect.disconnect();
         }
@@ -1437,10 +1440,10 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             final String response = readResponse(connect.getInputStream());
-            assertTrue("Expected text/html in: " + response, response.contains("text/html"));
-            assertTrue("Expected application/json in: " + response, response.contains("application/json"));
+            assertTrue(response.contains("text/html"), "Expected text/html in: " + response);
+            assertTrue(response.contains("application/json"), "Expected application/json in: " + response);
         } finally {
             connect.disconnect();
         }
@@ -1457,13 +1460,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1483,13 +1486,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1508,13 +1511,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1536,7 +1539,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
@@ -1544,7 +1547,7 @@ try {
             }
 
             // NOTE(AR) At present the RESTServer will force XHTML with text/html mimetype and indenting if an xsl-pi is used... this should probably be improved in future!
-            assertEquals("Server returned content type " + contentType, "text/html", contentType);
+            assertEquals("text/html", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1561,7 +1564,7 @@ try {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
 
         } finally {
             connect.disconnect();
@@ -1583,13 +1586,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1608,13 +1611,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1634,13 +1637,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             final String response = readResponse(connect.getInputStream());
 
@@ -1662,7 +1665,7 @@ try {
             connect.connect();
 
             final int responseCode = connect.getResponseCode();
-            assertEquals("Server returned response code " + responseCode, HttpStatus.OK_200, responseCode);
+            assertEquals(HttpStatus.OK_200, responseCode, "Server returned response code " + responseCode);
         } finally {
             connect.disconnect();
         }
@@ -1681,7 +1684,7 @@ try {
 
             connect.connect();
             final int r = connect.getResponseCode();
-            assertEquals("doPut: Server returned response code " + r, responseCode, r);
+            assertEquals(responseCode, r, "doPut: Server returned response code " + r);
         } finally {
             connect.disconnect();
         }
@@ -1701,7 +1704,7 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
 
             final String cached = connect.getHeaderField("X-XQuery-Cached");
             assertNotNull(cached);
@@ -1713,18 +1716,18 @@ try {
                 contentType = contentType.substring(0, semicolon).trim();
             }
             if (wrap) {
-                assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+                assertEquals("application/xml", contentType, "Server returned content type " + contentType);
             } else {
-                assertEquals("Server returned content type " + contentType, "text/text", contentType);
+                assertEquals("text/text", contentType, "Server returned content type " + contentType);
             }
 
             final String response = readResponse(connect.getInputStream());
             if (wrap) {
-                assertTrue("Server returned response: " + response,
-                        response.startsWith("<exist:result "));
+                assertTrue(response.startsWith("<exist:result "),
+                        "Server returned response: " + response);
             } else {
-                assertTrue("Server returned response: " + response,
-                        response.startsWith("Hello World!"));
+                assertTrue(response.startsWith("Hello World!"),
+                        "Server returned response: " + response);
             }
         } finally {
             connect.disconnect();
@@ -1756,13 +1759,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             readResponse(connect.getInputStream());
         } finally {
@@ -1795,13 +1798,13 @@ try {
             connect.connect();
 
             final int r = connect.getResponseCode();
-            assertEquals("Server returned response code " + r, HttpStatus.OK_200, r);
+            assertEquals(HttpStatus.OK_200, r, "Server returned response code " + r);
             String contentType = connect.getContentType();
             final int semicolon = contentType.indexOf(';');
             if (semicolon > 0) {
                 contentType = contentType.substring(0, semicolon).trim();
             }
-            assertEquals("Server returned content type " + contentType, "application/xml", contentType);
+            assertEquals("application/xml", contentType, "Server returned content type " + contentType);
 
             readResponse(connect.getInputStream());
         } finally {

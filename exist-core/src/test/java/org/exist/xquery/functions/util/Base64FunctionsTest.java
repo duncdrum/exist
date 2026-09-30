@@ -23,13 +23,14 @@ package org.exist.xquery.functions.util;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 
-import static org.junit.Assert.*;
-
 import org.junit.ClassRule;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -37,6 +38,7 @@ import org.xmldb.api.base.XMLDBException;
  *
  * @author Andrzej Taramina (andrzej@chaeron.com)
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class Base64FunctionsTest {
 
     @ClassRule

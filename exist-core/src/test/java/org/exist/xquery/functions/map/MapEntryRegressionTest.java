@@ -23,11 +23,13 @@ package org.exist.xquery.functions.map;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Regression tests for the map:entry bugs documented in
@@ -38,6 +40,7 @@ import static org.junit.Assert.assertEquals;
  * mirroring the XQTS expectations: per XPath F&amp;O 3.1 maps can hold NaN keys,
  * and looking up NaN finds the entry (op:same-key treats NaN as equal to NaN).</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class MapEntryRegressionTest {
 
     @ClassRule

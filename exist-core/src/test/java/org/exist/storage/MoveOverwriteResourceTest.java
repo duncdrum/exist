@@ -38,7 +38,9 @@ import org.exist.xquery.NodeSelector;
 import org.exist.xquery.QueryRewriter;
 import org.exist.xquery.XQueryContext;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -48,10 +50,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-
 import static org.exist.storage.ElementValue.ELEMENT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class MoveOverwriteResourceTest {
 
     @ClassRule

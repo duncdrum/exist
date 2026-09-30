@@ -26,19 +26,22 @@ import javax.xml.transform.OutputKeys;
 import com.googlecode.junittoolbox.ParallelRunner;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for various constructed node operations (in-memory nodes)
  * @author <a href="mailto:adam.retter@devon.gov.uk">Adam Retter</a>
  * @author ljo
  */
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class ConstructedNodesTest {
 

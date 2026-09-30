@@ -24,17 +24,20 @@ package org.exist.xquery.functions.xmldb;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.concurrent.DBUtils;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Due to limitation of ExistXmldbEmbeddedServer we need to split this test to two files.
  * It's not possible to have two instances of ExistXmldbEmbeddedServer at the same time.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DbStoreTest {
 
     @ClassRule

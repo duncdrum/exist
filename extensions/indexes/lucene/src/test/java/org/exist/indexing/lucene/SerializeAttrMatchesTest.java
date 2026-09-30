@@ -46,15 +46,21 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Item;
 import org.exist.xquery.value.Sequence;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class SerializeAttrMatchesTest {
 
     @ClassRule
@@ -80,7 +86,7 @@ public class SerializeAttrMatchesTest {
 
     private Collection test = null;
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void expandAttr() throws CollectionConfigurationException, LockException, IOException, SAXException, PermissionDeniedException, EXistException, XPathException {
         configureAndStore(COLLECTION_CONFIG, XML, "test1.xml");
 
@@ -122,7 +128,7 @@ public class SerializeAttrMatchesTest {
         return docs;
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -136,7 +142,7 @@ public class SerializeAttrMatchesTest {
         }
     }
 
-    @After
+    @AfterEach
     public void cleanup() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -154,7 +160,7 @@ public class SerializeAttrMatchesTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanupDb() throws LockException, TriggerException, PermissionDeniedException, EXistException, IOException {
         TestUtils.cleanupDB();
     }

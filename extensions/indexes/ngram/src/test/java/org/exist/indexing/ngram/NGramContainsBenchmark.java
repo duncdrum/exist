@@ -41,7 +41,12 @@ import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -65,6 +70,7 @@ import java.util.Optional;
  *       -Ddependency-check.skip=true
  * </pre>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class NGramContainsBenchmark {
 
     private static final int WARMUP = 100;
@@ -114,7 +120,7 @@ public class NGramContainsBenchmark {
     public static final ExistEmbeddedServer existEmbeddedServer =
             new ExistEmbeddedServer(true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws DatabaseConfigurationException, EXistException,
             PermissionDeniedException, IOException, CollectionConfigurationException,
             LockException, TriggerException, SAXException {
@@ -136,7 +142,7 @@ public class NGramContainsBenchmark {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws EXistException, PermissionDeniedException,
             IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -155,11 +161,11 @@ public class NGramContainsBenchmark {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void benchmark() throws EXistException, PermissionDeniedException, XPathException {
-        Assume.assumeTrue(
-                "Benchmark skipped by default.  Re-run with -Dexist.run.benchmarks=true",
-                Boolean.getBoolean("exist.run.benchmarks"));
+        Assumptions.assumeTrue(
+                Boolean.getBoolean("exist.run.benchmarks"),
+                "Benchmark skipped by default.  Re-run with -Dexist.run.benchmarks=true");
 
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
 

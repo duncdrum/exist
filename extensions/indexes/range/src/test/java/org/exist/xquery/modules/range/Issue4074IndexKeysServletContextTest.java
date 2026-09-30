@@ -40,10 +40,12 @@ import org.exist.xquery.CompiledXQuery;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,8 +54,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Regression test for GitHub #4074: range:index-keys-for-field returns empty
@@ -65,6 +67,7 @@ import static org.junit.Assert.assertNotNull;
  *
  * @see <a href="https://github.com/eXist-db/exist/issues/4074">#4074</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class Issue4074IndexKeysServletContextTest {
 
     private static final String COLLECTION_NAME = "i4074-servlet-test";
@@ -98,7 +101,7 @@ public class Issue4074IndexKeysServletContextTest {
 
     private static XmldbURI collectionUri;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws EXistException, PermissionDeniedException, LockException, TriggerException, SAXException, CollectionConfigurationException, IOException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         collectionUri = XmldbURI.ROOT_COLLECTION_URI.append(COLLECTION_NAME);
@@ -107,7 +110,7 @@ public class Issue4074IndexKeysServletContextTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws EXistException, PermissionDeniedException, LockException, TriggerException, IOException {
         if (collectionUri == null) {
             return;
@@ -172,7 +175,7 @@ public class Issue4074IndexKeysServletContextTest {
     private static void assertKeys(final Sequence result, final Set<String> expectedKeys, final int expectedCount, final String message)
             throws XPathException {
         assertNotNull(result);
-        assertEquals(message, expectedCount, result.getItemCount());
+        assertEquals(expectedCount, result.getItemCount(), message);
 
         final Set<String> keys = new HashSet<>();
         for (int i = 0; i < result.getItemCount(); i++) {

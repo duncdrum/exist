@@ -28,11 +28,13 @@ import org.exist.storage.DBBroker;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for XQuery 3.1 section 3.9.1: namespace declaration attributes on a
@@ -43,6 +45,7 @@ import static org.junit.Assert.assertEquals;
  * Covers prod-DirElemContent.namespace clusters A (prefixed names in
  * enclosed exprs) and B (default-element namespace in enclosed exprs).
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DirectElementConstructorInScopeNamespaceTest {
 
     @ClassRule

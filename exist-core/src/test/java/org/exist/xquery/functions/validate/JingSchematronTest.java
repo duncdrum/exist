@@ -24,11 +24,15 @@ package org.exist.xquery.functions.validate;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
 import static org.exist.samples.Samples.SAMPLES;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 
 import java.io.IOException;
@@ -44,6 +48,7 @@ import org.xmldb.api.base.XMLDBException;
  * 
  * @author dizzzz@exist-db.org
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class JingSchematronTest {
 
     private static final String[] TEST_RESOURCES = { "Tournament-valid.xml", "Tournament-invalid.xml", "tournament-schema.sch" };
@@ -56,7 +61,7 @@ public class JingSchematronTest {
             "    <validation mode='no'/>" +
             "</collection>";
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareResources() throws Exception {
 
         // Switch off validation
@@ -76,7 +81,7 @@ public class JingSchematronTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void sch_15_stored_valid() throws XMLDBException, SAXException, XpathException, IOException {
         String query = "validation:jing-report( " +
                 "doc('/db/tournament/1.5/Tournament-valid.xml'), " +
@@ -85,7 +90,7 @@ public class JingSchematronTest {
         executeAndEvaluate(query,"valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void sch_15_stored_valid_boolean() throws XMLDBException {
         final String query = "validation:jing( " +
                 "doc('/db/tournament/1.5/Tournament-valid.xml'), " +
@@ -98,7 +103,7 @@ public class JingSchematronTest {
         assertEquals("true", r);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
 
     public void sch_15_stored_invalid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jing-report( " +
@@ -107,7 +112,7 @@ public class JingSchematronTest {
         executeAndEvaluate(query,"invalid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void sch_15_anyuri_valid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jing-report( " +
                 "xs:anyURI('xmldb:exist:///db/tournament/1.5/Tournament-valid.xml'), " +
@@ -115,7 +120,7 @@ public class JingSchematronTest {
         executeAndEvaluate(query,"valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void sch_15_anyuri_invalid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jing-report( " +
                 "xs:anyURI('xmldb:exist:///db/tournament/1.5/Tournament-invalid.xml'), " +

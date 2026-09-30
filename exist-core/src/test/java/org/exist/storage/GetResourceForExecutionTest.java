@@ -43,9 +43,11 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.util.SyntaxException;
 import org.exist.xmldb.XmldbURI;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -53,11 +55,11 @@ import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * {@link DBBroker#getResourceForExecution(XmldbURI)} is the single boundary at which a
@@ -69,6 +71,7 @@ import static org.junit.Assert.fail;
  * reports whether the caller may also read the source (which decides how much of a failure may be
  * disclosed to them). The READ-gated getters must be unaffected.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class GetResourceForExecutionTest {
 
     private static final String TEST_USER = "executeWithoutReadTestUser";
@@ -91,7 +94,7 @@ public class GetResourceForExecutionTest {
     @ClassRule
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, PermissionDeniedException, SyntaxException, IOException, SAXException, LockException, TriggerException {
         final BrokerPool pool = server.getBrokerPool();
         final SecurityManager securityManager = pool.getSecurityManager();
@@ -119,10 +122,10 @@ public class GetResourceForExecutionTest {
         try (final DBBroker broker = testUserBroker();
              final ExecutableResource resource = broker.getResourceForExecution(EXECUTE_ONLY)) {
 
-            assertNotNull("EXECUTE alone must be enough to resolve a query for execution", resource);
+            assertNotNull(resource, "EXECUTE alone must be enough to resolve a query for execution");
             assertNotNull(resource.document().getDocument());
-            assertFalse("the caller may execute but not read, so failures must not be disclosed to them",
-                    resource.callerCanRead());
+            assertFalse(resource.callerCanRead(),
+                    "the caller may execute but not read, so failures must not be disclosed to them");
         }
     }
 
@@ -132,8 +135,8 @@ public class GetResourceForExecutionTest {
              final ExecutableResource resource = broker.getResourceForExecution(EXECUTE_AND_READ)) {
 
             assertNotNull(resource);
-            assertTrue("the caller may read the source, so failures may be disclosed in full",
-                    resource.callerCanRead());
+            assertTrue(resource.callerCanRead(),
+                    "the caller may read the source, so failures may be disclosed in full");
         }
     }
 
@@ -161,7 +164,7 @@ public class GetResourceForExecutionTest {
              final ExecutableResource resource = broker.getResourceForExecution(EXECUTE_ONLY)) {
 
             assertNotNull(resource);
-            assertTrue("a DBA is never read-blind", resource.callerCanRead());
+            assertTrue(resource.callerCanRead(), "a DBA is never read-blind");
         }
     }
 
@@ -195,7 +198,7 @@ public class GetResourceForExecutionTest {
             }
 
             try (final LockedDocument lockedDocument = collection.getDocumentWithLock(broker, EXECUTE_ONLY.lastSegment(), LockMode.READ_LOCK, Permission.EXECUTE)) {
-                assertNotNull("the same document is reachable when EXECUTE is the required mode", lockedDocument);
+                assertNotNull(lockedDocument, "the same document is reachable when EXECUTE is the required mode");
             }
         }
     }

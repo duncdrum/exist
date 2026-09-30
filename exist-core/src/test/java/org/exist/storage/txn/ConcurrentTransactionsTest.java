@@ -46,7 +46,11 @@ import org.exist.util.InputStreamSupplierInputSource;
 import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.xmldb.XmldbURI;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -60,9 +64,9 @@ import static org.exist.test.TransactionTestDSL.STD_OUT_SCHEDULE_LISTENER;
 import static org.exist.test.TransactionTestDSL.TransactionOperation.*;
 import static org.exist.test.TransactionTestDSL.TransactionScheduleBuilder.biSchedule;
 import static org.exist.test.TestConstants.TEST_COLLECTION_URI;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.exist.samples.Samples.SAMPLES;
 
 /**
@@ -73,6 +77,7 @@ import static org.exist.samples.Samples.SAMPLES;
  *
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ConcurrentTransactionsTest {
 
     @ClassRule
@@ -82,7 +87,7 @@ public class ConcurrentTransactionsTest {
     private static final boolean DEBUG_TRACING = false;
     private static final ExecutionListener EXECUTION_LISTENER = DEBUG_TRACING ? STD_OUT_SCHEDULE_LISTENER : NULL_SCHEDULE_LISTENER;
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void getDocuments() throws ExecutionException, InterruptedException {
         final String documentUri = "/db/test/hamlet.xml";
 
@@ -102,7 +107,7 @@ public class ConcurrentTransactionsTest {
         assertEquals(documentUri, result._2.getURI().getCollectionPath());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void getDeleteUpdate() throws ExecutionException, InterruptedException {
         final String documentUri = "/db/test/hamlet.xml";
 
@@ -118,7 +123,7 @@ public class ConcurrentTransactionsTest {
             .execute(existEmbeddedServer.getBrokerPool(), EXECUTION_LISTENER);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void delete_read() throws ExecutionException, InterruptedException {
         final String documentUri = "/db/test/hamlet.xml";
 
@@ -135,7 +140,7 @@ public class ConcurrentTransactionsTest {
         assertNull(null, result._2);  // should be null as document was deleted!
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void delete_commit_read() throws ExecutionException, InterruptedException {
         final String documentUri = "/db/test/hamlet.xml";
 
@@ -155,7 +160,7 @@ public class ConcurrentTransactionsTest {
      * NOTE: Aborting a transaction in eXist-db does not rollback the changes
      * made by the transaction.
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void delete_abort_read() throws ExecutionException, InterruptedException {
         final String documentUri = "/db/test/hamlet.xml";
 
@@ -173,7 +178,7 @@ public class ConcurrentTransactionsTest {
 //        assertEquals(documentUri, result._2.getURI().getCollectionPath());  // should not be null as transaction T1 was aborted!
     }
 
-    @Before
+    @BeforeEach
     public void setupDocs() throws EXistException, PermissionDeniedException, IOException, SAXException, LockException, URISyntaxException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -190,7 +195,7 @@ public class ConcurrentTransactionsTest {
         }
     }
 
-    @After
+    @AfterEach
     public void removeDocs() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();

@@ -24,10 +24,13 @@ package org.exist.config;
 
 import org.exist.test.ExistEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class SaxonConfigTest {
 
   @ClassRule

@@ -44,7 +44,6 @@ import org.exist.test.ExistWebServer;
 import org.exist.test.TestConstants;
 import org.exist.util.LockException;
 import org.exist.xmldb.XmldbURI;
-import org.junit.*;
 
 /**
  * @author <a href="mailto:shabanovd@gmail.com">Dmitriy Shabanov</a>

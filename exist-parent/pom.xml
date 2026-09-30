@@ -625,21 +625,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junit.version}</version>
-                <!-- scope>test</scope -->
-                <!-- not just test scope, as needed for org.exist.test -->
-                <exclusions>
-                    <exclusion>
-                        <!-- we ourselves have a test scoped dependency on a newer hamcrest... see below! -->
-                        <groupId>org.hamcrest</groupId>
-                        <artifactId>hamcrest-core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>
@@ -710,6 +695,20 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-junit</artifactId>
+            <version>2.0.0.0</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
 
     <repositories>
         <!-- Order: releases=central,proxy,exist-db,evolved-binary; snapshots=github,exist-db,evolved-binary. Central direct first to reduce Nexus traffic; proxy as fallback. -->

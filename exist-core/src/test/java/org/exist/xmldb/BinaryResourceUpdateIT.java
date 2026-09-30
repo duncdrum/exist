@@ -22,10 +22,12 @@
 package org.exist.xmldb;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.XMLDBException;
@@ -34,16 +36,17 @@ import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 
 import java.net.URISyntaxException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.net.URL;
 import java.nio.file.Path;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Integration test: replacing a binary resource with an XML resource using the same document name.
  * This scenario exhibits platform-specific behaviour (notably on Windows) and is run in Failsafe
  * alongside other integration tests.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class BinaryResourceUpdateIT {
 
     @ClassRule
@@ -56,7 +59,7 @@ public class BinaryResourceUpdateIT {
     private URL binFile;
     private URL xmlFile;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final CollectionManagementService service = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         testCollection = service.createCollection(TEST_COLLECTION);
@@ -67,7 +70,7 @@ public class BinaryResourceUpdateIT {
         assertNotNull(xmlFile);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XMLDBException {
         final CollectionManagementService service = testCollection.getParentCollection().getService(CollectionManagementService.class);
         service.removeCollection(TEST_COLLECTION);

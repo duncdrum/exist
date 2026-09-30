@@ -39,18 +39,27 @@ import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.Iterator;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-
+@ExtendWith(ExternalResourceSupport.class)
 public class HistoryTriggerTest {
 
     @ClassRule
@@ -67,7 +76,7 @@ public class HistoryTriggerTest {
                 </triggers>
             </collection>""";
 
-    @Before
+    @BeforeEach
     public void setup() throws EXistException, PermissionDeniedException, IOException, SAXException, LockException {
         final BrokerPool brokerPool = existEmbeddedServer.getBrokerPool();
         try(final DBBroker broker = brokerPool.get(Optional.of(brokerPool.getSecurityManager().getSystemSubject()));
@@ -86,7 +95,7 @@ public class HistoryTriggerTest {
         }
     }
 
-    @After
+    @AfterEach
     public void cleanup() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool brokerPool = existEmbeddedServer.getBrokerPool();
         try(final DBBroker broker = brokerPool.get(Optional.of(brokerPool.getSecurityManager().getSystemSubject()));
@@ -112,7 +121,7 @@ public class HistoryTriggerTest {
      *
      * @see <a href="https://github.com/eXist-db/exist/issues/139">History trigger fails #139</a>
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void storeAndOverwriteByCopy() throws EXistException, PermissionDeniedException, LockException, SAXException, IOException {
         final XmldbURI testDoc1Name = XmldbURI.create("test_store-and-overwrite-by-copy.xml");
         final String testDoc1Content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -155,7 +164,7 @@ public class HistoryTriggerTest {
         checkHistoryOfOriginal(brokerPool, testDoc1Name, testDoc1Content);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void storeAndOverwrite() throws EXistException, PermissionDeniedException, LockException, SAXException, IOException {
         final XmldbURI testDocName = XmldbURI.create("test_store-and-overwrite.xml");
         final String testDocContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -207,7 +216,7 @@ public class HistoryTriggerTest {
                 final Diff diff = DiffBuilder.compare(Input.from(orginalDocContent))
                         .withTest(Input.from(doc))
                         .build();
-                assertFalse(diff.toString(), diff.hasDifferences());
+                assertFalse(diff.hasDifferences(), diff.toString());
 
                 assertFalse(it.hasNext());
 

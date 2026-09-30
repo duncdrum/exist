@@ -26,10 +26,12 @@ import org.exist.test.ExistWebServer;
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.UserManagementService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
@@ -45,12 +47,13 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 import static java.net.HttpURLConnection.HTTP_OK;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Integration test: requires ExistWebServer (Jetty) with XML-RPC and REST.
  * Runs in Failsafe phase.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class LoginModuleIT {
 
     private static String XQUERY = "import module namespace login=\"http://exist-db.org/xquery/login\" " +
@@ -66,7 +69,7 @@ public class LoginModuleIT {
     private static Collection root;
     private static HttpClient client;
 
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() throws XMLDBException {
         final int port = existWebServer.getPort();
         final String uri = "xmldb:exist://localhost:" + port + "/xmlrpc" + XmldbURI.ROOT_COLLECTION;
@@ -106,7 +109,7 @@ public class LoginModuleIT {
                 .build();
     }
 
-    @AfterClass
+    @AfterAll
     public static void afterClass() throws Exception {
         if (root != null) {
             final org.xmldb.api.base.Resource res = root.getResource(XQUERY_FILENAME);
@@ -143,7 +146,7 @@ public class LoginModuleIT {
             throw new IOException("Interrupted while awaiting HTTP response", e);
         }
         final String responseBody = response.body();
-        assertEquals(responseBody, HTTP_OK, response.statusCode());
+        assertEquals(HTTP_OK, response.statusCode(), responseBody);
         assertEquals(expected, responseBody);
     }
 

@@ -26,22 +26,27 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.ResourceSet;
 
 import org.exist.xquery.ErrorCodes;
 import org.exist.xquery.XPathException;
-import org.junit.Test;
 import org.xmldb.api.base.XMLDBException;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author wessels
  */
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class TryCatchTest {
 
@@ -144,17 +149,19 @@ public class TryCatchTest {
         assertEquals("2", r);
     }
 
-    @Test(expected = XMLDBException.class)
-    public void catchWithErrorNoMatches() throws XMLDBException {
-        final String query = "xquery version '3.0';"
-                + "try { a + 7 } "
-                + "catch err:XPDY0001 { 1 }"
-                + "catch err:XPDY0002 { a }"
-                + "catch err:XPDY0003 { 3 }";
+    @Test
+    public void catchWithErrorNoMatches() {
+        assertThrows(XMLDBException.class, () -> {
+            final String query = "xquery version '3.0';"
+                    + "try { a + 7 } "
+                    + "catch err:XPDY0001 { 1 }"
+                    + "catch err:XPDY0002 { a }"
+                    + "catch err:XPDY0003 { 3 }";
 
-        final ResourceSet results = existEmbeddedServer.executeQuery(query);
-        final String r = (String) results.getResource(0).getContent();
-        assertEquals("2", r);
+            final ResourceSet results = existEmbeddedServer.executeQuery(query);
+            final String r = (String) results.getResource(0).getContent();
+            assertEquals("2", r);
+        });
     }
 
     @Test

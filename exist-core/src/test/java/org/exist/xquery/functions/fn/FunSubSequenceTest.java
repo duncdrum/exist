@@ -25,10 +25,12 @@ package org.exist.xquery.functions.fn;
 import com.googlecode.junittoolbox.ParallelRunner;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.test.TestConstants;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
@@ -37,8 +39,9 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class FunSubSequenceTest {
 
@@ -187,7 +190,7 @@ public class FunSubSequenceTest {
         assertEquals("(2,3)", asSequenceStr(result));
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws XMLDBException {
         test = existEmbeddedServer.createCollection(existEmbeddedServer.getRoot(), TestConstants.TEST_COLLECTION_URI.lastSegment().toString());
         final Resource resource = test.createResource(SIMPLE_XML_FILENAME, XMLResource.class);
@@ -195,7 +198,7 @@ public class FunSubSequenceTest {
         test.storeResource(resource);
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws XMLDBException {
         final CollectionManagementService collectionManagementService = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         collectionManagementService.removeCollection(test.getName());

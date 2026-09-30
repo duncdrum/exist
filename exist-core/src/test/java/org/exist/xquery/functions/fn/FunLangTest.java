@@ -26,12 +26,15 @@ import org.exist.TestUtils;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.runner.RunWith;
 import org.xmldb.api.DatabaseManager;
@@ -45,6 +48,7 @@ import org.xmldb.api.modules.CollectionManagementService;
  *
  * @author ljo
  */
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class FunLangTest {
 
@@ -64,13 +68,13 @@ public class FunLangTest {
         };
         """;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws XMLDBException {
         final Collection testCollection = createCollection(TEST_COLLECTION);
         writeModule(testCollection, "mod.xqm", MODULE);
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws XMLDBException {
         final Collection root = DatabaseManager.getCollection(XmldbURI.LOCAL_DB, TestUtils.ADMIN_DB_USER, TestUtils.ADMIN_DB_PWD);
         final CollectionManagementService cmService = root.getService(CollectionManagementService.class);

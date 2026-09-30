@@ -25,20 +25,23 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.Configuration;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Tests for various standard XQuery functions
  *
  * @author jens
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class JavaFunctionsTest {
 
     private static final Logger LOG = LogManager.getLogger(JavaFunctionsTest.class);
@@ -73,7 +76,7 @@ public class JavaFunctionsTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         //Check the configuration file to see if Java binding is enabled
         //if it is not enabled then we expect an exception when trying to

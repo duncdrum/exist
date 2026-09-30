@@ -32,7 +32,9 @@ import org.exist.xquery.XQuery;
 import org.exist.xquery.value.IntegerValue;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -41,10 +43,11 @@ import org.xmlunit.diff.Diff;
 import javax.xml.transform.Source;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class ExampleModuleTest {
 
     @ClassRule
@@ -68,7 +71,7 @@ public class ExampleModuleTest {
                 .checkForSimilar()
                 .build();
 
-        assertFalse(diff.toString(), diff.hasDifferences());
+        assertFalse(diff.hasDifferences(), diff.toString());
     }
 
     @Test
@@ -89,7 +92,7 @@ public class ExampleModuleTest {
                 .checkForSimilar()
                 .build();
 
-        assertFalse(diff.toString(), diff.hasDifferences());
+        assertFalse(diff.hasDifferences(), diff.toString());
     }
 
     @Test
@@ -110,7 +113,7 @@ public class ExampleModuleTest {
                 .checkForSimilar()
                 .build();
 
-        assertFalse(diff.toString(), diff.hasDifferences());
+        assertFalse(diff.hasDifferences(), diff.toString());
     }
 
     @Test

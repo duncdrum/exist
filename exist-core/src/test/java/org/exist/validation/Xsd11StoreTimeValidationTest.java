@@ -32,10 +32,12 @@ import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.XMLReaderObjectFactory;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -53,10 +55,10 @@ import static org.exist.TestUtils.ADMIN_DB_PWD;
 import static org.exist.TestUtils.ADMIN_DB_USER;
 import static org.exist.TestUtils.GUEST_DB_USER;
 import static org.exist.util.PropertiesBuilder.propertiesBuilder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * At-store-time validation (the path {@code org.exist.collections.MutableCollection} drives for
@@ -87,6 +89,7 @@ import static org.junit.Assert.fail;
  *
  * @see <a href="https://github.com/eXist-db/exist/issues/5541">#5541</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class Xsd11StoreTimeValidationTest {
 
     @ClassRule
@@ -138,7 +141,7 @@ public class Xsd11StoreTimeValidationTest {
             </collection>
             """;
 
-    @BeforeClass
+    @BeforeAll
     public static void createTestCollection() throws Exception {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -164,7 +167,7 @@ public class Xsd11StoreTimeValidationTest {
                 "xmldb:exist:///db/system/config" + TEST_COLLECTION_URI + "/collection.xconf");
     }
 
-    @AfterClass
+    @AfterAll
     public static void removeTestCollection() throws Exception {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -225,21 +228,21 @@ public class Xsd11StoreTimeValidationTest {
             try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().authenticate(ADMIN_DB_USER, ADMIN_DB_PWD)));
                  final LockedDocument lockedDocument = broker.getXMLResource(
                          XmldbURI.create(TEST_COLLECTION_URI + "/instance-lexical.xml"), Lock.LockMode.READ_LOCK)) {
-                assertNotNull("stored document should be retrievable", lockedDocument);
+                assertNotNull(lockedDocument, "stored document should be retrievable");
 
                 final Document document = lockedDocument.getDocument();
                 final Element root = document.getDocumentElement();
                 final NodeList rootChildren = root.getChildNodes();
 
                 final Node commentNode = rootChildren.item(0);
-                assertEquals("comment should survive store-time XSD 1.1 validation",
-                        Node.COMMENT_NODE, commentNode.getNodeType());
+                assertEquals(Node.COMMENT_NODE,
+                        commentNode.getNodeType(), "comment should survive store-time XSD 1.1 validation");
                 assertEquals(COMMENT_TEXT, commentNode.getNodeValue());
 
                 final Node value1 = rootChildren.item(1);
                 final Node value1Child = value1.getFirstChild();
-                assertEquals("CDATA section should survive store-time XSD 1.1 validation as a CDATASection node, not plain text",
-                        Node.CDATA_SECTION_NODE, value1Child.getNodeType());
+                assertEquals(Node.CDATA_SECTION_NODE,
+                        value1Child.getNodeType(), "CDATA section should survive store-time XSD 1.1 validation as a CDATASection node, not plain text");
                 assertEquals("1", ((CDATASection) value1Child).getData());
             }
         } finally {
@@ -260,8 +263,8 @@ public class Xsd11StoreTimeValidationTest {
                 fail("should have failed: value2 is not greater than value1");
             } catch (final IOException ex) {
                 final String msg = ex.getCause() != null ? ex.getCause().getMessage() : ex.getMessage();
-                assertTrue("expected an xs:assert violation message, got: " + msg,
-                        msg.contains("cvc-assertion") || msg.contains("value2 gt value1"));
+                assertTrue(msg.contains("cvc-assertion") || msg.contains("value2 gt value1"),
+                        "expected an xs:assert violation message, got: " + msg);
             }
         } finally {
             Files.deleteIfExists(schema);

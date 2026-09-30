@@ -32,16 +32,19 @@ import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.DatabaseConfigurationException;
 import org.exist.xmldb.XmldbURI;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
-import static junit.framework.TestCase.assertNotNull;
-
+@ExtendWith(ExternalResourceSupport.class)
 public class OpenCollectionTest {
 
     @ClassRule
@@ -49,7 +52,7 @@ public class OpenCollectionTest {
 
     private static XmldbURI TEST_COLLECTION = XmldbURI.ROOT_COLLECTION_URI.append("testCollection");
 
-    @BeforeClass
+    @BeforeAll
     public static void init() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()));

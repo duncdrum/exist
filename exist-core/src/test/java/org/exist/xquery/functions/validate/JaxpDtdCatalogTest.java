@@ -24,12 +24,17 @@ package org.exist.xquery.functions.validate;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
-import static org.junit.Assert.*;
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 import static org.exist.samples.Samples.SAMPLES;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +49,7 @@ import org.xmldb.api.base.XMLDBException;
  * 
  * @author dizzzz@exist-db.org
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class JaxpDtdCatalogTest {
 
     @ClassRule
@@ -54,7 +60,7 @@ public class JaxpDtdCatalogTest {
             "    <validation mode='no'/>" +
             "</collection>";
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareResources() throws Exception {
 
         // Switch off validation
@@ -92,7 +98,7 @@ public class JaxpDtdCatalogTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void clearGrammarCache() throws XMLDBException {
         final ResourceSet results = existEmbeddedServer.executeQuery("validation:clear-grammar-cache()");
         results.getResource(0).getContent();
@@ -101,7 +107,7 @@ public class JaxpDtdCatalogTest {
     /*
      * ***********************************************************************************
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void dtd_stored_catalog_valid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/parse/instance/valid-dtd.xml'), false()," +
@@ -109,7 +115,7 @@ public class JaxpDtdCatalogTest {
         executeAndEvaluate(query,"valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void dtd_stored_catalog_invalid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/parse/instance/invalid-dtd.xml'), false()," +
@@ -117,7 +123,7 @@ public class JaxpDtdCatalogTest {
         executeAndEvaluate(query,"invalid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void dtd_anyURI_catalog_valid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/parse/instance/valid-dtd.xml'), false()," +
@@ -125,7 +131,7 @@ public class JaxpDtdCatalogTest {
         executeAndEvaluate(query,"valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void dtd_anyURI_catalog_invalid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/parse/instance/invalid-dtd.xml'), false()," +
@@ -139,7 +145,7 @@ public class JaxpDtdCatalogTest {
      * DIZZZZ: doc('/db/parse/instance/valid-dtd.xml') does not work xs:anyURI does
      *
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void dtd_searched_valid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/parse/instance/valid-dtd.xml'), false()," +
@@ -147,7 +153,7 @@ public class JaxpDtdCatalogTest {
         executeAndEvaluate(query,"valid");
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void dtd_searched_invalid() throws XMLDBException, SAXException, XpathException, IOException {
         final String query = "validation:jaxp-report( " +
                 "xs:anyURI('/db/parse/instance/invalid-dtd.xml'), false()," +

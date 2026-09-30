@@ -22,13 +22,17 @@
 package org.exist.xquery.functions.fn;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Performance benchmark for fn:not() predicate evaluation.
@@ -44,6 +48,7 @@ import static org.junit.Assume.assumeTrue;
  *     -Dexist.run.benchmarks=true -Ddependency-check.skip=true
  * </pre>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class FunNotBenchmark {
 
     private static final String COLLECTION_NAME = "bench-fn-not";
@@ -55,10 +60,10 @@ public class FunNotBenchmark {
     public static final ExistXmldbEmbeddedServer server =
             new ExistXmldbEmbeddedServer(false, true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws XMLDBException {
-        assumeTrue("Benchmark skipped (pass -Dexist.run.benchmarks=true to enable)",
-                Boolean.getBoolean("exist.run.benchmarks"));
+        assumeTrue(Boolean.getBoolean("exist.run.benchmarks"),
+                "Benchmark skipped (pass -Dexist.run.benchmarks=true to enable)");
 
         final CollectionManagementService cms =
                 server.getRoot().getService(CollectionManagementService.class);
@@ -89,7 +94,7 @@ public class FunNotBenchmark {
         col.close();
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() throws XMLDBException {
         try {
             final CollectionManagementService cms =
@@ -103,35 +108,35 @@ public class FunNotBenchmark {
     // --- Benchmark queries ---
 
     /** Set-difference optimization: child axis */
-    @Test
+    @org.junit.jupiter.api.Test
     public void notChild() throws XMLDBException {
         runBenchmark("not(child)",
                 DOC + "//item[not(child)]");
     }
 
     /** Set-difference optimization: attribute axis */
-    @Test
+    @org.junit.jupiter.api.Test
     public void notAttribute() throws XMLDBException {
         runBenchmark("not(@attr)",
                 DOC + "//item[not(@attr)]");
     }
 
     /** Set-difference optimization: descendant axis */
-    @Test
+    @org.junit.jupiter.api.Test
     public void notDescendant() throws XMLDBException {
         runBenchmark("not(descendant::x)",
                 DOC + "//item[not(descendant::x)]");
     }
 
     /** Boolean fallback: general comparison inside not() */
-    @Test
+    @org.junit.jupiter.api.Test
     public void notComparison() throws XMLDBException {
         runBenchmark("not(@id > 100)",
                 DOC + "//item[not(@id > 100)]");
     }
 
     /** Boolean fallback: not(.) on in-memory nodes */
-    @Test
+    @org.junit.jupiter.api.Test
     public void notDotOnNodes() throws XMLDBException {
         runBenchmark("not(.) on nodes",
                 DOC + "//item[not(.)]");

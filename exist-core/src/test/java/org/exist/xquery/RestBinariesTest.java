@@ -31,11 +31,11 @@ import org.exist.http.jaxb.Result;
 import org.exist.test.ExistWebServer;
 import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
 import org.exist.xmldb.XmldbURI;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
-
-
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -51,13 +51,14 @@ import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.exist.TestUtils.ADMIN_DB_PWD;
 import static org.exist.TestUtils.ADMIN_DB_USER;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class RestBinariesTest extends AbstractBinariesTest<Result, Result.Value, Exception> {
 
     @ClassRule
@@ -65,7 +66,7 @@ public class RestBinariesTest extends AbstractBinariesTest<Result, Result.Value,
 
     private static HttpClient client = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupExecutor() {
         client = AbstractHttpTest.newHttpClient();
     }
@@ -127,7 +128,7 @@ public class RestBinariesTest extends AbstractBinariesTest<Result, Result.Value,
         final HttpResponse<byte[]> response = postXquery(query);
 
         final String contentDisposition = response.headers().firstValue("Content-Disposition").orElse(null);
-        assertNotNull("Content-Disposition header should be sent for the 3-arg form", contentDisposition);
+        assertNotNull(contentDisposition, "Content-Disposition header should be sent for the 3-arg form");
         assertEquals("inline; filename=\"download.bin\"", contentDisposition);
 
         assertArrayEquals(BIN1_CONTENT, response.body());

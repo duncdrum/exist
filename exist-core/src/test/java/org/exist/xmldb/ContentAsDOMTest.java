@@ -33,10 +33,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Node;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
@@ -56,6 +57,7 @@ import static org.exist.TestUtils.*;
  * 
  * @author wolf
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ContentAsDOMTest {
 
     @ClassRule
@@ -94,7 +96,7 @@ public class ContentAsDOMTest {
     }
 
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         CollectionManagementService service = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         Collection testCollection = service.createCollection(TEST_COLLECTION);
@@ -110,7 +112,7 @@ public class ContentAsDOMTest {
         ums.chown(resource, guest, GUEST_DB_USER); //change resource ownership to guest
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XMLDBException {
         //delete the test collection
         Collection root = DatabaseManager.getCollection(XmldbURI.LOCAL_DB, ADMIN_DB_USER, ADMIN_DB_PWD);

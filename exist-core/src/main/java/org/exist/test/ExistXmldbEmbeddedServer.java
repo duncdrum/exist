@@ -49,8 +49,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Exist embedded XML:DB Server Rule for JUnit.

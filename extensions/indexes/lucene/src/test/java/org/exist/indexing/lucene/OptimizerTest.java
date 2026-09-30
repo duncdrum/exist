@@ -27,7 +27,11 @@ import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.IndexQueryService;
 import org.exist.xquery.FunctionFactory;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
@@ -41,12 +45,13 @@ import java.io.InputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.exist.util.PropertiesBuilder.propertiesBuilder;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.exist.samples.Samples.SAMPLES;
 
 /**
  *
  */
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class OptimizerTest {
 
@@ -80,7 +85,7 @@ public class OptimizerTest {
                     "</collection>";
     private static Collection testCollection;
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void simplePredicates() throws XMLDBException {
         long r = execute("//SPEECH[ft:query(LINE, 'king')]", false);
         execute("//SPEECH[ft:query(LINE, 'king')]", true, MSG_OPT_ERROR, r);
@@ -116,7 +121,7 @@ public class OptimizerTest {
         execute("//*[SPEAKER = 'HAMLET']", true, MSG_OPT_ERROR, r);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void twoPredicates() throws XMLDBException {
         long r = execute("//SPEECH[ft:query(LINE, 'king')][SPEAKER='HAMLET']", false);
         execute("//SPEECH[ft:query(LINE, 'king')][SPEAKER='HAMLET']", true, MSG_OPT_ERROR, r);
@@ -124,7 +129,7 @@ public class OptimizerTest {
         execute("//SPEECH[SPEAKER='HAMLET'][ft:query(LINE, 'king')]", true, MSG_OPT_ERROR, r);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void booleanOperator() throws XMLDBException {
         long r = execute("//SPEECH[ft:query(LINE, 'king')][SPEAKER='HAMLET']", false);
         execute("//SPEECH[ft:query(LINE, 'king') and SPEAKER='HAMLET']", false, MSG_OPT_ERROR, r);
@@ -163,7 +168,7 @@ public class OptimizerTest {
             query = NAMESPACES + NO_OPTIMIZE + query;
         }
         ResourceSet result = service.query(query);
-        assertEquals(message, expected, result.getSize());
+        assertEquals(expected, result.getSize(), message);
     }
 
     @ClassRule
@@ -174,11 +179,11 @@ public class OptimizerTest {
             true,
             true);
 
-    @BeforeClass
+    @BeforeAll
     public static void initDatabase() throws XMLDBException, IOException {
         CollectionManagementService service = server.getRoot().getService(CollectionManagementService.class);
         testCollection = service.createCollection("test");
-        Assert.assertNotNull(testCollection);
+        Assertions.assertNotNull(testCollection);
 
         IndexQueryService idxConf = testCollection.getService(IndexQueryService.class);
         idxConf.configureCollection(COLLECTION_CONFIG);

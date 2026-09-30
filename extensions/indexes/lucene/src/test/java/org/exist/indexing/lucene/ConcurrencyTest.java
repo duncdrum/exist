@@ -22,9 +22,9 @@
 package org.exist.indexing.lucene;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,10 +44,12 @@ import org.exist.util.LockException;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.EXistXQueryService;
 import org.exist.xmldb.IndexQueryService;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
@@ -57,6 +59,7 @@ import org.xmldb.api.modules.XUpdateQueryService;
 
 import static org.exist.samples.Samples.SAMPLES;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class ConcurrencyTest {
 
     private static final long TIMEOUT_TERMINATION = 1000 * 60 * 3; // 3 minutes (in milliseconds)
@@ -207,12 +210,12 @@ public class ConcurrencyTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void initDB() throws ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
         test = existEmbeddedServer.createCollection(existEmbeddedServer.getRoot(), "test");
     }
 
-    @AfterClass
+    @AfterAll
     public static void closeDB() throws XMLDBException, LockException, TriggerException, PermissionDeniedException, EXistException, IOException {
         test.close();
         TestUtils.cleanupDB();

@@ -23,16 +23,18 @@ package org.exist.xquery.functions.util;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author ljo
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class BaseConverterTest {
 
     @ClassRule

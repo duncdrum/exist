@@ -23,10 +23,12 @@ package org.exist.xmldb;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.test.TestConstants;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Service;
 import org.xmldb.api.base.ServiceProviderCache;
@@ -48,13 +50,14 @@ import static org.easymock.EasyMock.notNull;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class LocalCollectionTest {
     static Collection testCollection;
 
     @ClassRule
     public static final ExistXmldbEmbeddedServer existEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws XMLDBException {
         final CollectionManagementService cms = existEmbeddedServer
                 .getRoot()
@@ -63,7 +66,7 @@ public class LocalCollectionTest {
         testCollection = cms.createCollection(TestConstants.TEST_COLLECTION_URI.lastSegment().toString());
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws XMLDBException {
         final CollectionManagementService cms = existEmbeddedServer
                 .getRoot()

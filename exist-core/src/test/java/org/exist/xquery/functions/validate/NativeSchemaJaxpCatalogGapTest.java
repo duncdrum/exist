@@ -23,10 +23,12 @@ package org.exist.xquery.functions.validate;
 
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
@@ -38,8 +40,8 @@ import java.nio.file.Path;
 
 import static org.custommonkey.xmlunit.XMLAssert.assertXpathEvaluatesTo;
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Closes the integration gap left by <a href="https://github.com/eXist-db/exist/pull/6528">#6528</a>:
@@ -67,6 +69,7 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="https://github.com/eXist-db/exist/issues/6686">#6686</a>
  * @see <a href="https://github.com/eXist-db/eXide/issues/842">eXide#842</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class NativeSchemaJaxpCatalogGapTest {
 
     private static final String COLLECTION_CONFIG_NS = "http://exist-db.org/collection-config/1.0";
@@ -96,14 +99,14 @@ public class NativeSchemaJaxpCatalogGapTest {
     private static Path nativeSchemaPath;
     private static String nativeSchemaFileUri;
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareResources() throws XMLDBException, IOException {
         nativeSchemaPath = resolveSchemaPath();
-        assertTrue("""
+        assertTrue(Files.exists(nativeSchemaPath),
+                """
                 Native schema not found at %s \
                 (run from repo root: mvn test -pl exist-core -Dtest=NativeSchemaJaxpCatalogGapTest)
-                """.formatted(nativeSchemaPath).strip(),
-                Files.exists(nativeSchemaPath));
+                """.formatted(nativeSchemaPath).strip());
         nativeSchemaFileUri = nativeSchemaPath.toAbsolutePath().toUri().toString();
 
         try (Collection conf = existEmbeddedServer.createCollection(existEmbeddedServer.getRoot(),
@@ -128,7 +131,7 @@ public class NativeSchemaJaxpCatalogGapTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void clearGrammarCache() throws XMLDBException {
         final ResourceSet results = existEmbeddedServer.executeQuery("validation:clear-grammar-cache()");
         results.getResource(0).getContent();
@@ -155,8 +158,8 @@ public class NativeSchemaJaxpCatalogGapTest {
                 """.formatted(nativeSchemaFileUri, XSD_1_1);
         final String report = executeOne(query);
         assertXpathEvaluatesTo("invalid", "//status/text()", report);
-        assertTrue("expected xs:assert failure, got: " + report,
-                report.contains("cvc-assertion") || report.contains("count(*)"));
+        assertTrue(report.contains("cvc-assertion") || report.contains("count(*)"),
+                "expected xs:assert failure, got: " + report);
     }
 
     /**

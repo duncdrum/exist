@@ -31,10 +31,12 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.XMLReaderObjectFactory;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,6 +53,7 @@ import static org.exist.util.PropertiesBuilder.propertiesBuilder;
  *
  * @author Dannes Wessels (dizzzz@exist-db.org)
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DatabaseInsertResourcesWithValidationTest {
 
     @ClassRule
@@ -63,12 +66,12 @@ public class DatabaseInsertResourcesWithValidationTest {
     private final static String TEST_COLLECTION = "testValidationInsert";
     private final static String VALIDATION_HOME_COLLECTION_URI = "/db/" + TEST_COLLECTION + "/" + TestTools.VALIDATION_HOME_COLLECTION;
 
-    @BeforeClass
+    @BeforeAll
     public static void startup() throws Exception {
         createTestCollections();
     }
 
-    @AfterClass
+    @AfterAll
     public static void shutdown() throws Exception {
         removeTestCollections();
     }

@@ -23,12 +23,14 @@ package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * A function argument with the wrong cardinality is a type error, XPTY0004.
@@ -38,6 +40,7 @@ import static org.junit.Assert.assertEquals;
  * err:XPTY0004} clause could not catch it, and 30 XQTS tests that assert the code failed for that
  * reason alone. These tests assert the code the way a query would: by catching it.</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DynamicCardinalityCheckErrorCodeTest {
 
     @ClassRule

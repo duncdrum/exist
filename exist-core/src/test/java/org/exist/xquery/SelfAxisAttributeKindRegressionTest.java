@@ -22,15 +22,17 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Regression test for issue #6689. A named attribute kind test on the self axis,
@@ -46,6 +48,7 @@ import static org.junit.Assert.assertEquals;
  * <p>Each check is paired with the in-memory result for the same expression, since the in-memory
  * path was always correct and defines the expected answer.</p>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class SelfAxisAttributeKindRegressionTest {
 
     @ClassRule
@@ -59,7 +62,7 @@ public class SelfAxisAttributeKindRegressionTest {
     private static final String IN_MEMORY =
             "let $n := (<t:root xmlns:t=\"urn:example\"><t:target id=\"1\" t:qualified=\"2\"/></t:root>)/t:target ";
 
-    @BeforeClass
+    @BeforeAll
     public static void storeTestDocument() throws XMLDBException {
         query("""
                 xmldb:store('/db', 'i6689.xml',
@@ -67,7 +70,7 @@ public class SelfAxisAttributeKindRegressionTest {
                 """);
     }
 
-    @AfterClass
+    @AfterAll
     public static void removeTestDocument() throws XMLDBException {
         query("xmldb:remove('/db', 'i6689.xml')");
     }

@@ -48,11 +48,14 @@ import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceIterator;
 
 import static org.exist.util.PropertiesBuilder.propertiesBuilder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.BeforeClass;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 /**
@@ -60,6 +63,7 @@ import org.xml.sax.SAXException;
  *
  * @author ljo
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class Indexer2Test {
 
     private final static String XML =
@@ -154,7 +158,7 @@ public class Indexer2Test {
             true,
             false);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws DatabaseConfigurationException, EXistException, PermissionDeniedException, IOException, SAXException, LockException, AuthenticationException {
         storeDoc();
     }

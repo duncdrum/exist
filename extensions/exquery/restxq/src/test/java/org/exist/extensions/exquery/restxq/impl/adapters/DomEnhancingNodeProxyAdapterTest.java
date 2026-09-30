@@ -42,20 +42,26 @@ import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:adam.retter@googlemail.com">Adam Retter</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DomEnhancingNodeProxyAdapterTest {
 
     @ClassRule
@@ -72,7 +78,7 @@ public class DomEnhancingNodeProxyAdapterTest {
                 <?test-pi pi1?>
             </test-doc>""";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, PermissionDeniedException, IOException, SAXException, LockException {
         final BrokerPool brokerPool = existEmbeddedServer.getBrokerPool();
         try (final DBBroker broker = brokerPool.get(Optional.of(brokerPool.getSecurityManager().getSystemSubject()));
@@ -175,21 +181,21 @@ public class DomEnhancingNodeProxyAdapterTest {
         nodeProxy.getNode();  // NOTE(AR) causes type of the node proxy to be set
 
         // check type of original
-        assertTrue("Expected instanceof NodeProxy", nodeProxy instanceof NodeProxy);
-        assertFalse("Expected not(instanceof " + domInterfaceType.getSimpleName() + ")", domInterfaceType.isInstance(nodeProxy));
+        assertTrue(nodeProxy instanceof NodeProxy, "Expected instanceof NodeProxy");
+        assertFalse(domInterfaceType.isInstance(nodeProxy), "Expected not(instanceof " + domInterfaceType.getSimpleName() + ")");
 
         // the function under test
         final NodeProxy nodeProxyProxy = DomEnhancingNodeProxyAdapter.create(nodeProxy);
 
         // check type of proxy
-        assertTrue("Expected instanceof NodeProxy", nodeProxyProxy instanceof NodeProxy);
-        assertTrue("Expected instanceof " + domInterfaceType.getSimpleName() + "; W3C Node type was: " + nodeProxyProxy.getNodeType(), domInterfaceType.isInstance(nodeProxyProxy));
+        assertTrue(nodeProxyProxy instanceof NodeProxy, "Expected instanceof NodeProxy");
+        assertTrue(domInterfaceType.isInstance(nodeProxyProxy), "Expected instanceof " + domInterfaceType.getSimpleName() + "; W3C Node type was: " + nodeProxyProxy.getNodeType());
 
         // check W3C DOM Interface methods of proxy
         proxiedDomTypeAssertions.accept((DT) nodeProxyProxy);
 
         // check eXist-db NodeProxy methods of proxy
         assertEquals(nodeId, nodeProxyProxy.getNodeId());
-        assertTrue("Expected instanceof " + existDomImplementationType.getSimpleName(), existDomImplementationType.isInstance(nodeProxyProxy.getNode()));
+        assertTrue(existDomImplementationType.isInstance(nodeProxyProxy.getNode()), "Expected instanceof " + existDomImplementationType.getSimpleName());
     }
 }

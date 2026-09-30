@@ -22,9 +22,11 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.Assume;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.XMLDBException;
 
 import java.util.Arrays;
@@ -46,6 +48,7 @@ import java.util.Map;
  *       -Dexist.run.benchmarks=true -Ddependency-check.skip=true
  * </pre>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class OrderByClauseMemoryBenchmark {
 
     @ClassRule
@@ -89,9 +92,9 @@ public class OrderByClauseMemoryBenchmark {
 
     @Test
     public void memoryBenchmark() throws XMLDBException {
-        Assume.assumeTrue(
-                "Benchmark skipped by default. Re-run with -Dexist.run.benchmarks=true",
-                Boolean.getBoolean("exist.run.benchmarks"));
+        Assumptions.assumeTrue(
+                Boolean.getBoolean("exist.run.benchmarks"),
+                "Benchmark skipped by default. Re-run with -Dexist.run.benchmarks=true");
 
         // Query matrix: label -> { query template (use %d for N), expected V, expected K }
         final Map<String, Object[]> queryMatrix = new LinkedHashMap<>();

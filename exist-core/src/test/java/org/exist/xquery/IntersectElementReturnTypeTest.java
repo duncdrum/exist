@@ -22,14 +22,16 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Regression tests for issue #4255 — DynamicTypeCheck was comparing a DOM
@@ -39,19 +41,20 @@ import static org.junit.Assert.assertEquals;
  * That surfaced through {@code intersect} on persistent node sets when the
  * result was assigned to a function declared {@code as element()}.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class IntersectElementReturnTypeTest {
 
     @ClassRule
     public static final ExistXmldbEmbeddedServer embedded =
             new ExistXmldbEmbeddedServer(false, true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void store() throws XMLDBException {
         embedded.executeQuery(
                 "xmldb:store('/db', 'issue4255.xml', <root><x/><y/><z/></root>)");
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws XMLDBException {
         try {
             embedded.executeQuery("xmldb:remove('/db', 'issue4255.xml')");

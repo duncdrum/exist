@@ -23,11 +23,13 @@ package org.exist.xquery.functions.fn;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Regression tests for {@link FunXmlToJson} when the input is an element node
@@ -37,6 +39,7 @@ import static org.junit.Assert.assertEquals;
  * document root, so traversal visited ancestor elements (e.g. xsl:stylesheet)
  * and raised FOJS0006 against those rather than the JSON wrapper element.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class FunXmlToJsonTest {
 
     @ClassRule

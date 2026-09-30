@@ -31,13 +31,16 @@ import org.exist.xquery.ErrorCodes;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.net.URISyntaxException;
+
+import static org.junit.jupiter.api.Assertions.*;
 import java.nio.file.Path;
 
-import static org.junit.Assert.*;
-
+@ExtendWith(ExternalResourceSupport.class)
 public class NonLazyCacheTest {
 
     private static Path getLazyConfig() {
@@ -58,7 +61,7 @@ public class NonLazyCacheTest {
             fail("Should not be able to lazily create a cache when lazy creation is disabled");
         } catch (final XPathException e) {
             final ErrorCodes.ErrorCode errorCode = e.getErrorCode();
-            assertEquals("Expected lazy creation disabled error", CacheModule.LAZY_CREATION_DISABLED, errorCode);
+            assertEquals(CacheModule.LAZY_CREATION_DISABLED, errorCode, "Expected lazy creation disabled error");
         }
     }
 

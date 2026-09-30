@@ -24,7 +24,11 @@ package org.exist.xmldb;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.concurrent.DBUtils;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
@@ -34,8 +38,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.exist.samples.Samples.SAMPLES;
 
 /**
@@ -45,6 +49,7 @@ import static org.exist.samples.Samples.SAMPLES;
  *
  * @author wolf
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ShutdownIT {
 
 	private final static int ITERATIONS = 50;
@@ -72,7 +77,7 @@ public class ShutdownIT {
     @ClassRule
     public static final ExistXmldbEmbeddedServer existXmldbEmbeddedServer = new ExistXmldbEmbeddedServer(false, true, true);
 
-    @Before
+    @BeforeEach
     public void setUp() throws XMLDBException, IOException {
         final Collection rootCol = existXmldbEmbeddedServer.getRoot();
         Collection testCol = rootCol.getChildCollection("C1");
@@ -91,7 +96,7 @@ public class ShutdownIT {
         DBUtils.addXMLResource(testCol, "R1.xml", xml);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         Collection rootCol = existXmldbEmbeddedServer.getRoot();
         DBUtils.removeCollection(rootCol, "C1");
@@ -99,7 +104,7 @@ public class ShutdownIT {
         rootCol.removeResource(res);
     }
 
-	@Test
+	@org.junit.jupiter.api.Test
 	public void shutdown() throws Exception {
 		for (int i = 0; i < ITERATIONS; i++) {
 			existXmldbEmbeddedServer.restart();

@@ -27,22 +27,25 @@ import org.exist.security.Permission;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.UserManagementService;
 import org.exist.xmldb.XmldbURI;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created collections needed for validation tests.
  *
  * @author Dannes Wessels (dizzzz@exist-db.org)
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DatabaseCollectionTest {
 
     @ClassRule
@@ -51,7 +54,7 @@ public class DatabaseCollectionTest {
     private final static String ROOT_URI = XmldbURI.LOCAL_DB;
     private final static String TEST_COLLECTION = "testValidationDatabaseCollection";
 
-    @Before
+    @BeforeEach
     public void setUp() throws XMLDBException {
         final CollectionManagementService cms = existServer.getRoot().getService(CollectionManagementService.class);
         final Collection test = cms.createCollection(TEST_COLLECTION);
@@ -63,7 +66,7 @@ public class DatabaseCollectionTest {
         ums.chmod(Permission.DEFAULT_COLLECTION_PERM);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XMLDBException {
         //delete the test collection
         final CollectionManagementService cms = existServer.getRoot().getService(CollectionManagementService.class);

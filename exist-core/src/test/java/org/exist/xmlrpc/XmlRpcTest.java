@@ -44,7 +44,10 @@ import static org.exist.xmldb.RemoteCollection.MAX_UPLOAD_CHUNK;
 import static org.exist.xmlrpc.RpcConnection.MAX_DOWNLOAD_CHUNK_SIZE;
 
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -66,7 +69,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.junit.After;
 import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -79,6 +81,7 @@ import org.xmlunit.diff.Diff;
  * @author <a href="mailto:pierrick.brihaye@free.fr">Pierrick Brihaye</a>
  * @author ljo
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class XmlRpcTest {
 
     @ClassRule
@@ -125,7 +128,7 @@ public class XmlRpcTest {
         return "http://localhost:" + existWebServer.getPort() + "/xmlrpc";
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XmlRpcException, MalformedURLException {
         final XmlRpcClient xmlrpc = getClient();
         assertThat(xmlrpc.execute("removeCollection", List.of(TARGET_COLLECTION.toString()))).isInstanceOf(Boolean.class);

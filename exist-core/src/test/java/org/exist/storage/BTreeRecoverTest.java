@@ -38,9 +38,11 @@ import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.DatabaseConfigurationException;
 import org.exist.xquery.TerminatedException;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests transaction management and basic recovery for the BTree base class.
@@ -48,6 +50,7 @@ import static org.junit.Assert.assertEquals;
  * @author wolf
  *
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class BTreeRecoverTest {
 
     @ClassRule

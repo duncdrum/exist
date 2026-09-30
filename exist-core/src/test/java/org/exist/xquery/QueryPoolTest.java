@@ -24,17 +24,20 @@ package org.exist.xquery;
 import org.exist.source.StringSource;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.EXistXQueryService;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class QueryPoolTest {
 
     @ClassRule
@@ -61,7 +64,7 @@ public class QueryPoolTest {
         assertNotNull(res);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
         final CollectionManagementService service =
                 existEmbeddedServer.getRoot().getService(
@@ -74,7 +77,7 @@ public class QueryPoolTest {
         testCollection.storeResource(doc);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         final CollectionManagementService service = testCollection.getService(CollectionManagementService.class);
         service.removeCollection("/db/test-pool");

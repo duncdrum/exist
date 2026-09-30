@@ -23,12 +23,14 @@ package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests for duplicate node elimination in path expressions.
@@ -40,6 +42,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @see <a href="https://www.w3.org/TR/xpath-31/#id-path-operator">XPath 3.1 §3.3.1.1</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class PathExprDedupTest {
 
     @ClassRule

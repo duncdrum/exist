@@ -31,14 +31,16 @@ import org.exist.xquery.XQuery;
 import org.exist.xquery.value.DoubleValue;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit tests for {@link org.exist.xquery.modules.spatial.FunSpatialDistance}.
@@ -50,6 +52,7 @@ import static org.junit.Assert.fail;
  * {@code getGeometryForNode}, exercising the in-memory branch of
  * {@link org.exist.xquery.modules.spatial.FunSpatialDistance#resolveGeometry}.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class FunSpatialDistanceTest {
 
     @ClassRule
@@ -159,8 +162,8 @@ public class FunSpatialDistanceTest {
             runQuery("spatial:distance(%s, %s, 'furlong')".formatted(POINT_NYC, POINT_LA));
             fail("Expected XPathException for unsupported unit");
         } catch (final XPathException e) {
-            assertTrue("Expected mention of the unsupported unit in the error message",
-                    e.getMessage().contains("furlong"));
+            assertTrue(e.getMessage().contains("furlong"),
+                    "Expected mention of the unsupported unit in the error message");
         }
     }
 

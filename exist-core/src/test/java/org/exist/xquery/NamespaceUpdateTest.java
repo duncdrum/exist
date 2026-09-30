@@ -22,10 +22,12 @@
 package org.exist.xquery;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
@@ -33,9 +35,10 @@ import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class NamespaceUpdateTest {
 
 	@ClassRule
@@ -73,7 +76,7 @@ public class NamespaceUpdateTest {
 		assertEquals("myid", result.getResource(0).getContent().toString());
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() throws ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
 		// initialize driver
 		final CollectionManagementService service =
@@ -87,7 +90,7 @@ public class NamespaceUpdateTest {
 		testCollection.storeResource(doc);
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 		final CollectionManagementService service =
 				existEmbeddedServer.getRoot().getService(

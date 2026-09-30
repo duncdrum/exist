@@ -34,13 +34,15 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.value.Sequence;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * Embedding test with ONNX model. Skips when model is not available (e.g. CI).
@@ -49,6 +51,7 @@ import static org.junit.Assume.assumeTrue;
  * Run with model: mvn test -Dtest=VectorSearchEmbeddingTest -pl extensions/indexes/lucene -Ponnx-model
  * (profile sets exist.home to project.basedir and downloads model to target/onnx-models/all-MiniLM-L6-v2).
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class VectorSearchEmbeddingTest {
 
     @ClassRule
@@ -63,8 +66,8 @@ public class VectorSearchEmbeddingTest {
 
     @Test
     public void embeddingLocalIndexedAndQueried() throws XPathException, PermissionDeniedException, EXistException {
-        assumeTrue("ONNX model not found: skipping embedding test. Download to target/onnx-models/all-MiniLM-L6-v2, run with -Dexist.home=<repo-root>",
-            hasEmbeddingModel());
+        assumeTrue(hasEmbeddingModel(),
+            "ONNX model not found: skipping embedding test. Download to target/onnx-models/all-MiniLM-L6-v2, run with -Dexist.home=<repo-root>");
 
         final String dataEsc = DATA.replace("'", "''");
         final String xconfEsc = XCONF.replace("'", "''");

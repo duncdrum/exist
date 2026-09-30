@@ -28,7 +28,10 @@ import org.exist.collections.triggers.TriggerException;
 import org.exist.security.PermissionDeniedException;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.util.*;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.exist.dom.persistent.BinaryDocument;
 import org.exist.EXistException;
 import org.exist.xmldb.XmldbURI;
@@ -39,15 +42,17 @@ import org.exist.storage.txn.Txn;
 import org.xml.sax.SAXException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
  * @author aretter
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class StoreBinaryTest {
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void check_MimeType_is_preserved() throws EXistException, PermissionDeniedException, LockException, IOException, SAXException, DatabaseConfigurationException {
 
         final String xqueryMimeType = "application/xquery";
@@ -76,7 +81,7 @@ public class StoreBinaryTest {
     @ClassRule
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
-    @After
+    @AfterEach
     public void removeTestResources() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();

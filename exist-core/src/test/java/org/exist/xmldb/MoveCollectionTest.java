@@ -23,12 +23,13 @@ package org.exist.xmldb;
 
 import org.exist.TestUtils;
 import org.exist.test.ExistWebServer;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.XMLDBException;
@@ -36,27 +37,22 @@ import org.xmldb.api.modules.CollectionManagementService;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(Parameterized.class)
+@ExtendWith(ExternalResourceSupport.class)
 public class MoveCollectionTest {
 
     @ClassRule
     public static final ExistWebServer existWebServer = new ExistWebServer(true, false, true, true);
     private static final String PORT_PLACEHOLDER = "${PORT}";
 
-    @Parameterized.Parameters(name = "{0}")
     public static java.util.Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 { "local", "xmldb:exist://" },
                 { "remote", "xmldb:exist://localhost:" + PORT_PLACEHOLDER + "/xmlrpc" }
         });
     }
-
-    @Parameterized.Parameter
     public String apiName;
-
-    @Parameterized.Parameter(value = 1)
     public String baseUri;
 
     private static final String TEST_COLLECTION_NAME = "testMove";
@@ -70,8 +66,9 @@ public class MoveCollectionTest {
         return baseUri.replace(PORT_PLACEHOLDER, Integer.toString(existWebServer.getPort()));
     }
 
-    @Test
-    public void move() throws XMLDBException {
+    @MethodSource("data") @ParameterizedTest(name = "{0}")
+    public void move(String apiName, String baseUri) throws XMLDBException {
+        initMoveCollectionTest(apiName, baseUri);
         /*
          * Create the collections:
          *
@@ -100,7 +97,7 @@ public class MoveCollectionTest {
         service.move(XmldbURI.create(X_COLLECTION_NAME), XmldbURI.create(oneCollection.getName()), null);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws XMLDBException {
         final Collection root = DatabaseManager.getCollection(getBaseUri() + "/db", TestUtils.ADMIN_DB_USER, TestUtils.ADMIN_DB_PWD);
         final CollectionManagementService service = root.getService(CollectionManagementService.class);
@@ -108,11 +105,16 @@ public class MoveCollectionTest {
         assertNotNull(testCollection);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XMLDBException {
         final Collection root = DatabaseManager.getCollection(getBaseUri() + "/db", TestUtils.ADMIN_DB_USER, TestUtils.ADMIN_DB_PWD);
         final CollectionManagementService service = root.getService(CollectionManagementService.class);
         service.removeCollection(TEST_COLLECTION_NAME);
         testCollection = null;
+    }
+
+    public void initMoveCollectionTest(String apiName, String baseUri) {
+        this.apiName = apiName;
+        this.baseUri = baseUri;
     }
 }

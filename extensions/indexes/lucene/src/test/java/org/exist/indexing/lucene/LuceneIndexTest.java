@@ -22,8 +22,8 @@
 package org.exist.indexing.lucene;
 
 import static org.exist.util.PropertiesBuilder.propertiesBuilder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -62,13 +62,18 @@ import org.exist.xquery.value.Sequence;
 import org.exist.xupdate.Modification;
 import org.exist.xupdate.XUpdateProcessor;
 
-import org.junit.*;
-
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import static org.exist.samples.Samples.SAMPLES;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class LuceneIndexTest {
 
     protected static String XUPDATE_START =
@@ -265,7 +270,7 @@ public class LuceneIndexTest {
             true,
             true);
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void simpleQueries() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG1, XML1, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -306,7 +311,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void moreElaborateQueries() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, QName.IllegalQNameException {
         final String XML10 =
                 "<TEI>\n" +  // xmlns=\"http://www.tei-c.org/ns/1.0\">\n" +
@@ -395,13 +400,13 @@ public class LuceneIndexTest {
                     Sequence seq = xquery.execute(broker, query, null);
                     assertNotNull(seq);
                     int expected = resultCount[ri % resultCount.length];
-                    assertEquals(query, expected, seq.getItemCount());
+                    assertEquals(expected, seq.getItemCount(), query);
                 }
             }
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void configuration() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG4, XML4, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -426,7 +431,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void inlineAndIgnore() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG5, XML5, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -504,7 +509,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void attributeMatch() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, TriggerException, LockException, IOException, XPathException, ParserConfigurationException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG7, XML8, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -575,7 +580,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void boosts() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, TriggerException, LockException, IOException, XPathException {
         configureAndStore(COLLECTION_CONFIG6, XML6, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -591,7 +596,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void queryTranslation() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, TriggerException, LockException, IOException, XPathException {
         configureAndStore(COLLECTION_CONFIG1, XML7, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -721,7 +726,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void analyzers() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG3, XML3, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -746,7 +751,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void MultiTermQueryRewriteMethod() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, TriggerException, LockException, IOException, XPathException {
         configureAndStore(COLLECTION_CONFIG8, XML9, "test.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -774,7 +779,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void dropSingleDoc() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, TriggerException, LockException, IOException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG1, XML1, "dropDocument.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -789,7 +794,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void dropDocuments() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, TriggerException, LockException, IOException, XPathException {
         configureAndStore(COLLECTION_CONFIG1, SAMPLES.getShakespeareXmlSampleNames());
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -822,7 +827,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void removeCollection() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, TriggerException, LockException, IOException, XPathException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG1, SAMPLES.getShakespeareXmlSampleNames());
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -850,7 +855,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void reindex() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG1, XML1, "dropDocument.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -878,7 +883,7 @@ public class LuceneIndexTest {
      * Remove nodes from different levels of the tree and check if the index is
      * correctly updated.
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void xupdateRemove() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, ParserConfigurationException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG2, XML2, "xupdate.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -957,7 +962,7 @@ public class LuceneIndexTest {
      * Remove nodes from different levels of the tree and check if the index is
      * correctly updated.
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void xupdateInsert() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, ParserConfigurationException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG2, XML2, "xupdate.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -1122,7 +1127,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xupdateUpdate() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, ParserConfigurationException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG2, XML2, "xupdate.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -1200,7 +1205,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void xupdateReplace() throws EXistException, CollectionConfigurationException, PermissionDeniedException, SAXException, LockException, IOException, XPathException, ParserConfigurationException, QName.IllegalQNameException {
         final DocumentSet docs = configureAndStore(COLLECTION_CONFIG2, XML2, "xupdate.xml");
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
@@ -1339,7 +1344,7 @@ public class LuceneIndexTest {
         return occur;
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -1358,7 +1363,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @After
+    @AfterEach
     public void cleanup() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final TransactionManager transact = pool.getTransactionManager();
@@ -1381,7 +1386,7 @@ public class LuceneIndexTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanupDb() throws LockException, TriggerException, PermissionDeniedException, EXistException, IOException {
         TestUtils.cleanupDB();
     }

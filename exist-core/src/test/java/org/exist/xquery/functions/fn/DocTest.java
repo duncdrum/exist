@@ -34,10 +34,17 @@ import org.exist.util.ExistSAXParserFactory;
 import org.exist.xquery.*;
 import org.exist.xquery.value.AnyURIValue;
 import org.exist.xquery.value.Sequence;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static com.evolvedbinary.j8fu.Either.Left;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.LocalXMLResource;
@@ -73,6 +80,7 @@ import java.net.URISyntaxException;
  * @author <a href="mailto:shabanovd@gmail.com">Dmitriy Shabanov</a>
  * @author Adam Retter
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DocTest {
 
     @ClassRule
@@ -82,9 +90,10 @@ public class DocTest {
     static {
         saxParserFactory.setNamespaceAware(true);
     }
+
     private Collection test = null;
 
-    @Before
+    @BeforeEach
     public void setUp() throws XMLDBException {
         final CollectionManagementService cms = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         //Creates the 'test' collection
@@ -100,7 +109,7 @@ public class DocTest {
 
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XMLDBException {
         final CollectionManagementService cms = existEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         //Creates the 'test' collection
@@ -121,7 +130,7 @@ public class DocTest {
     	col.storeResource(res);
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void testURIResolveWithEval() throws XMLDBException {
         String query = "util:eval(xs:anyURI('/db/test/test.xq'), false(), ())";
         ResourceSet result = existEmbeddedServer.executeQuery(query);
@@ -148,7 +157,7 @@ public class DocTest {
         assertEquals("x", n.getLocalName());
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void doc_dynamicallyAvailableDocument_absoluteUri() throws XPathException, EXistException, PermissionDeniedException {
         final BrokerPool pool = BrokerPool.getInstance();
 
@@ -176,11 +185,11 @@ public class DocTest {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void doc_dynamicallyAvailableDocument_relativeUri() throws XPathException, EXistException, PermissionDeniedException, URISyntaxException {
         final BrokerPool pool = BrokerPool.getInstance();
 
@@ -210,11 +219,11 @@ public class DocTest {
                     .checkForSimilar()
                     .build();
 
-            assertFalse(diff.toString(), diff.hasDifferences());
+            assertFalse(diff.hasDifferences(), diff.toString());
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void docAvailable_dynamicallyAvailableDocument_absoluteUri() throws XPathException, EXistException, PermissionDeniedException {
         final BrokerPool pool = BrokerPool.getInstance();
 
@@ -236,7 +245,7 @@ public class DocTest {
         }
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void docAvailable_dynamicallyAvailableDocument_relativeUri() throws XPathException, EXistException, PermissionDeniedException, URISyntaxException {
         final BrokerPool pool = BrokerPool.getInstance();
 

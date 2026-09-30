@@ -36,10 +36,13 @@ import org.exist.test.ExistWebServer;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -54,10 +57,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The document READ_LOCK taken on a stored XQuery to resolve and compile it must be released at
@@ -74,6 +77,7 @@ import static org.junit.Assert.assertTrue;
  *
  * See https://github.com/eXist-db/exist/issues/6593
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class StoredQueryLockReleaseTest {
 
     @ClassRule
@@ -116,7 +120,7 @@ public class StoredQueryLockReleaseTest {
                 .formatted(releaseUri, startedUri.removeLastSegment(), startedUri.lastSegment());
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws Exception {
         executor = Executors.newCachedThreadPool();
         credentials = Base64.encodeBase64String("admin:".getBytes(UTF_8));
@@ -133,12 +137,12 @@ public class StoredQueryLockReleaseTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         executor.shutdownNow();
     }
 
-    @Test(timeout = 60_000)
+    @Test @Timeout(value = 60_000, unit = TimeUnit.MILLISECONDS, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     public void restSaveDuringExecutionCompletes() throws Exception {
         store(REST_QUERY, awaitQuery(REST_STARTED, REST_RELEASE), MimeType.XQUERY_TYPE);
 
@@ -157,7 +161,7 @@ public class StoredQueryLockReleaseTest {
                 return null;
             });
             save.get(10, TimeUnit.SECONDS);
-            assertFalse("the save must not have waited for the execution to finish", running.isDone());
+            assertFalse(running.isDone(), "the save must not have waited for the execution to finish");
         } finally {
             // whatever happened above, un-park the executing query
             store(REST_RELEASE, "<release/>", MimeType.XML_TYPE);
@@ -165,16 +169,16 @@ public class StoredQueryLockReleaseTest {
 
         final Response response = running.get(30, TimeUnit.SECONDS);
         assertEquals(200, response.status);
-        assertTrue("the in-flight execution finishes on the old source: " + response.body,
-                response.body.contains("old"));
+        assertTrue(response.body.contains("old"),
+                "the in-flight execution finishes on the old source: " + response.body);
 
         final Response after = get(REST_QUERY);
         assertEquals(200, after.status);
-        assertTrue("the next execution runs the newly stored version: " + after.body,
-                after.body.contains("new"));
+        assertTrue(after.body.contains("new"),
+                "the next execution runs the newly stored version: " + after.body);
     }
 
-    @Test(timeout = 60_000)
+    @Test @Timeout(value = 60_000, unit = TimeUnit.MILLISECONDS, threadMode = Timeout.ThreadMode.SEPARATE_THREAD)
     public void xmlRpcSaveDuringExecutionCompletes() throws Exception {
         store(RPC_QUERY, awaitQuery(RPC_STARTED, RPC_RELEASE), MimeType.XQUERY_TYPE);
 
@@ -189,19 +193,19 @@ public class StoredQueryLockReleaseTest {
                 return null;
             });
             save.get(10, TimeUnit.SECONDS);
-            assertFalse("the save must not have waited for the execution to finish", running.isDone());
+            assertFalse(running.isDone(), "the save must not have waited for the execution to finish");
         } finally {
             store(RPC_RELEASE, "<release/>", MimeType.XML_TYPE);
         }
 
         final Map<String, Object> response = running.get(30, TimeUnit.SECONDS);
-        assertNull("the in-flight execution succeeds: " + response, response.get("error"));
-        assertEquals("the in-flight execution finishes on the old source: " + response,
-                "old", singleTypedResult(response));
+        assertNull(response.get("error"), "the in-flight execution succeeds: " + response);
+        assertEquals("old",
+                singleTypedResult(response), "the in-flight execution finishes on the old source: " + response);
 
         final Map<String, Object> after = executeStoredQuery(RPC_QUERY);
-        assertEquals("the next execution runs the newly stored version: " + after,
-                "new", singleTypedResult(after));
+        assertEquals("new",
+                singleTypedResult(after), "the next execution runs the newly stored version: " + after);
     }
 
     /**
@@ -211,8 +215,8 @@ public class StoredQueryLockReleaseTest {
      */
     private static void assertNoLockHeldOn(final XmldbURI uri) {
         final LockTable lockTable = existEmbeddedServer.getBrokerPool().getLockManager().getLockTable();
-        assertFalse("no lock on " + uri + " may outlive the compilation of the query",
-                lockTable.getAcquired().containsKey(uri.toString()));
+        assertFalse(lockTable.getAcquired().containsKey(uri.toString()),
+                "no lock on " + uri + " may outlive the compilation of the query");
     }
 
     private static void awaitDocumentExists(final XmldbURI uri) throws Exception {
@@ -249,7 +253,7 @@ public class StoredQueryLockReleaseTest {
      */
     private static String singleTypedResult(final Map<String, Object> response) {
         final Object[] results = (Object[]) response.get("results");
-        assertEquals("expected a single result item: " + response, 1, results.length);
+        assertEquals(1, results.length, "expected a single result item: " + response);
         @SuppressWarnings("unchecked")
         final Map<String, String> item = (Map<String, String>) results[0];
         return item.get("value");

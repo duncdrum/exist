@@ -29,10 +29,12 @@ import org.exist.xmldb.EXistResource;
 import org.exist.xmldb.ExtendedResource;
 import org.exist.xmldb.LocalBinaryResource;
 import org.exist.xquery.value.BinaryValue;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
@@ -42,9 +44,9 @@ import org.xmldb.api.modules.CollectionManagementService;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class FilterInputStreamCacheMonitorTest {
 
     @ClassRule
@@ -54,7 +56,7 @@ public class FilterInputStreamCacheMonitorTest {
 
     private static String TEST_COLLECTION_NAME = "testFilterInputStreamCacheMonitor";
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws XMLDBException, URISyntaxException {
         final FilterInputStreamCacheMonitor monitor = FilterInputStreamCacheMonitor.getInstance();
         int activeCount = monitor.getActive().size();
@@ -73,7 +75,7 @@ public class FilterInputStreamCacheMonitorTest {
         testCollection.close();
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws XMLDBException {
         final CollectionManagementService cms = existXmldbEmbeddedServer.getRoot().getService(CollectionManagementService.class);
         cms.removeCollection(TEST_COLLECTION_NAME);

@@ -24,6 +24,8 @@ package org.exist.security;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.ErrorCodes;
 import org.xmldb.api.base.XMLDBException;
@@ -35,6 +37,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:adam@exist-db.org">Adam Retter</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class LocalSecurityManagerRoundtripTest extends AbstractSecurityManagerRoundtripTest {
 
     @ClassRule

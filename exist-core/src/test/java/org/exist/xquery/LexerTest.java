@@ -47,11 +47,14 @@ import org.exist.xquery.value.Sequence;
 
 import antlr.collections.AST;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class LexerTest {
 
 	private static final String xml =

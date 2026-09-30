@@ -33,7 +33,9 @@ import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.xmldb.EXistRestoreService;
 import org.exist.xmldb.NullRestoreServiceTaskListener;
 import org.exist.xmldb.UserManagementService;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import org.xmldb.api.DatabaseManager;
@@ -46,11 +48,12 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.assertEquals;
-
+@ExtendWith(ExternalResourceSupport.class)
 public class BackupRestoreSecurityPrincipalsTest {
 
     private final static String BACKUP_FILE_PREFIX = "exist.BackupRestoreSecurityPrincipalsTest";
@@ -91,7 +94,7 @@ public class BackupRestoreSecurityPrincipalsTest {
      * that they have distinct and expected user ids and that any resources
      * that were owned by them are still correctly owner by them (and not some other user).
      */
-    @Test
+    @org.junit.jupiter.api.Test
     public void restoreConflictingUsername() throws PermissionDeniedException, EXistException, SAXException, IOException, XMLDBException, ReflectiveOperationException {
         // creates a database with new users: 'frank(id=11)', 'joe(id=12)', and 'jack(id=13)'
         createInitialUsers(FRANK_USER, JOE_USER, JACK_USER);

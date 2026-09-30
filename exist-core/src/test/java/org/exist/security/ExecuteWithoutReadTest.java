@@ -47,20 +47,22 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQuery;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.Sequence;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Executing a stored query requires EXECUTE, and a caller which may execute but not read it must
@@ -73,6 +75,7 @@ import static org.junit.Assert.fail;
  * what those loaders will do: resolve the query on EXECUTE, take the disclosure level from the
  * resolved handle, compile, execute, and filter any failure through {@link ErrorDisclosure}.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ExecuteWithoutReadTest {
 
     private static final String TEST_USER = "executeWithoutReadUser";
@@ -99,7 +102,7 @@ public class ExecuteWithoutReadTest {
     @ClassRule
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(true, true);
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, PermissionDeniedException, LockException, SAXException, IOException, TriggerException {
         final BrokerPool pool = server.getBrokerPool();
         final SecurityManager securityManager = pool.getSecurityManager();
@@ -146,9 +149,9 @@ public class ExecuteWithoutReadTest {
             executeStoredQuery(broker, SYNTAX_ERROR_QUERY, true);
             fail("the query does not compile, so it must fail");
         } catch (final XPathException e) {
-            assertEquals("a read-capable caller sees the real error", ErrorCodes.XPST0003, e.getErrorCode());
-            assertFalse("a read-capable caller is not fobbed off with the generic error",
-                    e.getMessage().contains("Query execution failed"));
+            assertEquals(ErrorCodes.XPST0003, e.getErrorCode(), "a read-capable caller sees the real error");
+            assertFalse(e.getMessage().contains("Query execution failed"),
+                    "a read-capable caller is not fobbed off with the generic error");
         }
     }
 
@@ -160,7 +163,7 @@ public class ExecuteWithoutReadTest {
             executeStoredQuery(broker, RUNTIME_ERROR_QUERY, true);
             fail("the query divides by zero, so it must fail");
         } catch (final XPathException e) {
-            assertEquals("a read-capable caller sees the real error", ErrorCodes.FOAR0001, e.getErrorCode());
+            assertEquals(ErrorCodes.FOAR0001, e.getErrorCode(), "a read-capable caller sees the real error");
         }
     }
 
@@ -173,8 +176,8 @@ public class ExecuteWithoutReadTest {
         try (final DBBroker broker = testUserBroker()) {
             final Sequence result = executeStoredQuery(broker, VALID_QUERY, true);
 
-            assertEquals("a query which succeeds returns its results, being unreadable changes nothing",
-                    1, result.getItemCount());
+            assertEquals(1,
+                    result.getItemCount(), "a query which succeeds returns its results, being unreadable changes nothing");
             assertEquals("6", result.itemAt(0).getStringValue());
         }
     }
@@ -236,9 +239,9 @@ public class ExecuteWithoutReadTest {
             executeStoredQuery(broker, SYNTAX_ERROR_QUERY, false);
             fail("the query does not compile, so it must fail");
         } catch (final XPathException e) {
-            assertEquals("compile errors bypass XQuery.execute entirely, so the loader has to set the"
-                            + " disclosure level itself before compiling",
-                    ErrorCodes.XPST0003, e.getErrorCode());
+            assertEquals(ErrorCodes.XPST0003,
+                    e.getErrorCode(), "compile errors bypass XQuery.execute entirely, so the loader has to set the"
+                            + " disclosure level itself before compiling");
         }
     }
 
@@ -254,7 +257,7 @@ public class ExecuteWithoutReadTest {
         final BrokerPool pool = broker.getBrokerPool();
 
         try (final ExecutableResource resource = broker.getResourceForExecution(uri)) {
-            assertNotNull("the caller holds EXECUTE, so the query must resolve", resource);
+            assertNotNull(resource, "the caller holds EXECUTE, so the query must resolve");
 
             final XQueryContext context = new XQueryContext(pool);
             if (loaderSetsDisclosure) {
@@ -273,16 +276,16 @@ public class ExecuteWithoutReadTest {
     }
 
     private static void assertGeneric(final XPathException e) {
-        assertEquals("a read-blind caller learns only that the execution failed",
-                ErrorCodes.EXXQDY0010, e.getErrorCode());
+        assertEquals(ErrorCodes.EXXQDY0010,
+                e.getErrorCode(), "a read-blind caller learns only that the execution failed");
 
         final String message = e.getMessage();
-        assertTrue("the caller is given a correlation id to quote to the owner/DBA",
-                message.matches(".*\\(ref [0-9a-f-]+\\)\\.?$"));
-        assertFalse("the source must not leak", message.contains("$secret"));
-        assertFalse("the spec error code must not leak", message.contains("XPST0003"));
-        assertFalse("the spec error code must not leak", message.contains("FOAR0001"));
-        assertFalse("the location must not leak", message.contains("at line"));
+        assertTrue(message.matches(".*\\(ref [0-9a-f-]+\\)\\.?$"),
+                "the caller is given a correlation id to quote to the owner/DBA");
+        assertFalse(message.contains("$secret"), "the source must not leak");
+        assertFalse(message.contains("XPST0003"), "the spec error code must not leak");
+        assertFalse(message.contains("FOAR0001"), "the spec error code must not leak");
+        assertFalse(message.contains("at line"), "the location must not leak");
     }
 
     private static void chmodAll(final String modeStr) throws EXistException, PermissionDeniedException {

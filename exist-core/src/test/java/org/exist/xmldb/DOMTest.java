@@ -37,7 +37,9 @@ import org.apache.logging.log4j.Logger;
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.apache.commons.io.input.UnsynchronizedByteArrayInputStream;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,6 +58,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * @author jmv
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class DOMTest {
 
 	private static final Logger LOG =  LogManager.getLogger(DOMTest.class);

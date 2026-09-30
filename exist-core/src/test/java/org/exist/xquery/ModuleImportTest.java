@@ -32,7 +32,9 @@ import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.StringValue;
 
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -50,6 +52,7 @@ import static org.hamcrest.Matchers.equalTo;
  *
  * @author <a href="mailto:juri@existsolutions.com">Juri Leino</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class ModuleImportTest {
     @ClassRule
     public static final ExistEmbeddedServer server = new ExistEmbeddedServer(null, getConfigFile(), null, false, true);

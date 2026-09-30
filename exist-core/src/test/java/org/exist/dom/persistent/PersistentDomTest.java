@@ -41,10 +41,12 @@ import org.exist.util.StringInputSource;
 import org.exist.util.serializer.SAXSerializer;
 import org.exist.util.serializer.SerializerPool;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -64,8 +66,12 @@ import java.util.Optional;
 import java.util.Properties;
 
 import static com.evolvedbinary.j8fu.tuple.Tuple.Tuple;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+@ExtendWith(ExternalResourceSupport.class)
 public class PersistentDomTest {
 
     @ClassRule
@@ -413,7 +419,7 @@ public class PersistentDomTest {
                 .checkForIdentical()
                 .build();
 
-        assertFalse(diff.toString(), diff.hasDifferences());
+        assertFalse(diff.hasDifferences(), diff.toString());
     }
 
     private static String serialize(final DBBroker broker, final Node node) throws IOException, SAXException {
@@ -451,7 +457,7 @@ public class PersistentDomTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, LockException, SAXException, PermissionDeniedException, IOException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()));
@@ -472,7 +478,7 @@ public class PersistentDomTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() throws EXistException, PermissionDeniedException, IOException, TriggerException {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         try(final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()));

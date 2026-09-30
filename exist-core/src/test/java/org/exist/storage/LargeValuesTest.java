@@ -37,22 +37,26 @@ import org.exist.util.*;
 import org.exist.xmldb.XmldbURI;
 import org.exist.TestUtils;
 
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Random;
 
-import static org.junit.Assert.*;
-
 /**
  * Test indexing and recovery of large string sequences.
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class LargeValuesTest {
 
     private String CONFIG_QNAME =
@@ -69,7 +73,7 @@ public class LargeValuesTest {
     @ClassRule
     public static final ExistEmbeddedServer existEmbeddedServer = new ExistEmbeddedServer(true, true);
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void storeAndRecover() throws PermissionDeniedException, DatabaseConfigurationException, IOException, LockException, CollectionConfigurationException, SAXException, EXistException {
         storeDocuments();
         restart();
@@ -198,7 +202,7 @@ public class LargeValuesTest {
         return file;
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanupDb() throws LockException, TriggerException, PermissionDeniedException, EXistException, IOException {
         TestUtils.cleanupDB();
     }

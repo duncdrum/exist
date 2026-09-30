@@ -34,14 +34,16 @@ import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.LockException;
 import org.exist.xmldb.XmldbURI;
 import org.exist.xmldb.concurrent.DBUtils;
-import org.junit.After;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
@@ -54,6 +56,7 @@ import org.xmldb.api.modules.XUpdateQueryService;
 /**
  * @author wolf
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class StressTest {
 
     private static final String XML = "<root><a/><b/><c/></root>";
@@ -138,7 +141,7 @@ public class StressTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws XMLDBException {
         final Collection rootCol = existXmldbEmbeddedServer.getRoot();
         testCol = rootCol.getChildCollection(XmldbURI.ROOT_COLLECTION + "/test");
@@ -158,7 +161,7 @@ public class StressTest {
         DBUtils.addXMLResource(testCol, "test.xml", XML);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws XMLDBException, LockException, TriggerException, PermissionDeniedException, EXistException, IOException {
         TestUtils.cleanupDB();
     }

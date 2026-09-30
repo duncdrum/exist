@@ -23,11 +23,16 @@ package org.exist.xquery.functions.validate;
 
 import org.exist.test.ExistXmldbEmbeddedServer;
 import org.exist.util.io.InputStreamUtil;
-import org.junit.*;
+import org.junit.ClassRule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
-import static org.junit.Assert.*;
 import static org.exist.samples.Samples.SAMPLES;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +49,7 @@ import org.xmldb.api.base.XMLDBException;
  * 
  * @author dizzzz@exist-db.org
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class JaxpParseTest {
 
     private static final String[] TEST_RESOURCES = { "defaultValue.xml", "defaultValue.xsd" };
@@ -56,7 +62,7 @@ public class JaxpParseTest {
             "    <validation mode='no'/>" +
             "</collection>";
 
-    @BeforeClass
+    @BeforeAll
     public static void prepareResources() throws Exception {
 
         // Switch off validation
@@ -76,13 +82,13 @@ public class JaxpParseTest {
 
     }
 
-    @Before
+    @BeforeEach
     public void clearGrammarCache() throws XMLDBException {
         final ResourceSet results = existEmbeddedServer.executeQuery("validation:clear-grammar-cache()");
         results.getResource(0).getContent();
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     public void parse_and_fill_defaults() throws XMLDBException, IOException, SAXException {
         String query = "validation:pre-parse-grammar(xs:anyURI('/db/parse_validate/defaultValue.xsd'))";
         String result = execute(query);

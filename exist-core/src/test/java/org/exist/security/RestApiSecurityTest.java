@@ -32,6 +32,8 @@ import org.exist.http.AbstractHttpTest;
 import org.exist.http.AbstractHttpTest.HttpResponseResult;
 import org.exist.test.ExistWebServer;
 import org.junit.ClassRule;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 
 import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -40,6 +42,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
  *
  * @author <a href="mailto:adam.retter@googlemail.com">Adam Retter</a>
  */
+@ExtendWith(ExternalResourceSupport.class)
 public class RestApiSecurityTest extends AbstractApiSecurityTest {
 
     @ClassRule

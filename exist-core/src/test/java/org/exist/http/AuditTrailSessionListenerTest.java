@@ -37,10 +37,12 @@ import org.exist.util.LockException;
 import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
 
@@ -52,8 +54,9 @@ import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
+@ExtendWith(ExternalResourceSupport.class)
 @RunWith(ParallelRunner.class)
 public class AuditTrailSessionListenerTest {
 
@@ -124,7 +127,7 @@ public class AuditTrailSessionListenerTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws EXistException, LockException, SAXException, PermissionDeniedException, IOException {
         storeScripts();
         System.setProperty(AuditTrailSessionListener.REGISTER_CREATE_XQUERY_SCRIPT_PROPERTY, CREATE_SCRIPT_PATH);
@@ -143,7 +146,7 @@ public class AuditTrailSessionListenerTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void teardown() throws TriggerException, PermissionDeniedException, EXistException, IOException {
         System.clearProperty(AuditTrailSessionListener.REGISTER_CREATE_XQUERY_SCRIPT_PROPERTY);
         System.clearProperty(AuditTrailSessionListener.REGISTER_DESTROY_XQUERY_SCRIPT_PROPERTY);
