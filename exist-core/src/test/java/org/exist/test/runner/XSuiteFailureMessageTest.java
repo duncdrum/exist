@@ -48,7 +48,7 @@ class XSuiteFailureMessageTest {
     void nodeResultIsNotEscapedIntoTheFailureMessage() {
         final AssertionFailedError failure = runSuiteAndGetComparisonFailure();
 
-        assertEquals("<doc a=\"1\">text</doc>", failure.getActual(),
+        assertEquals("<doc a=\"1\">text</doc>", failure.getActual().getValue(),
             "a node-valued result should reach the failure message as markup, not XML-escaped");
     }
 

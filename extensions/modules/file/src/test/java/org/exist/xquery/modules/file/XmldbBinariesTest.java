@@ -33,6 +33,9 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.exist.TestUtils.ADMIN_DB_PWD;
 import static org.exist.TestUtils.ADMIN_DB_USER;
@@ -41,6 +44,8 @@ import static org.xmldb.api.base.ResourceType.BINARY_RESOURCE;
 /**
  * @author <a href="mailto:adam@evolvedbinary.com">Adam Retter</a>
  */
+@ParameterizedClass(name = "{0}")
+@MethodSource("data")
 public class XmldbBinariesTest extends AbstractBinariesTest<ResourceSet, Resource, XMLDBException> {
 
     @RegisterExtension
@@ -53,7 +58,9 @@ public class XmldbBinariesTest extends AbstractBinariesTest<ResourceSet, Resourc
                 { "remote", "xmldb:exist://localhost:" + PORT_PLACEHOLDER + "/xmlrpc" }
         });
     }
+    @Parameter(0)
     public String apiName;
+    @Parameter(1)
     public String baseUri;
 
     private final String getBaseUri() {
@@ -182,10 +189,5 @@ public class XmldbBinariesTest extends AbstractBinariesTest<ResourceSet, Resourc
     @Override
     protected boolean getBoolean(final Resource item) throws XMLDBException {
         return Boolean.parseBoolean(item.getContent().toString());
-    }
-
-    public void initXmldbBinariesTest(String apiName, String baseUri) {
-        this.apiName = apiName;
-        this.baseUri = baseUri;
     }
 }

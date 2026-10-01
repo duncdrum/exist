@@ -26,6 +26,7 @@ import org.exist.xmldb.XmldbURI;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.io.TempDirDeletionStrategy;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public abstract class AbstractBinariesTest<T, U, E extends Exception> {
     protected static final String BIN1_FILENAME = "1.bin";
     protected static final byte[] BIN1_CONTENT = "1234567890".getBytes(UTF_8);
 
-    @TempDir
+    @TempDir(deletionStrategy = TempDirDeletionStrategy.IgnoreFailures.class)
     public static File temporaryFolder;
 
     @BeforeEach

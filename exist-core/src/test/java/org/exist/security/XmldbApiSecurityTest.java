@@ -38,11 +38,16 @@ import org.xmldb.api.modules.BinaryResource;
 import org.xmldb.api.modules.CollectionManagementService;
 import org.xmldb.api.modules.XMLResource;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  *
  * @author <a href="mailto:adam.retter@googlemail.com">Adam Retter</a>
  */
+@ParameterizedClass(name = "{0}")
+@MethodSource("data")
 public class XmldbApiSecurityTest extends AbstractApiSecurityTest {
 
     @RegisterExtension
@@ -55,7 +60,9 @@ public class XmldbApiSecurityTest extends AbstractApiSecurityTest {
             { "remote", "xmldb:exist://localhost:" + PORT_PLACEHOLDER + "/xmlrpc" }
         });
     }
+    @Parameter(0)
     public String apiName;
+    @Parameter(1)
     public String baseUri;
 
     private final String getBaseUri() {
@@ -396,10 +403,5 @@ public class XmldbApiSecurityTest extends AbstractApiSecurityTest {
                 }
             }
         }
-    }
-
-    public void initXmldbApiSecurityTest(String apiName, String baseUri) {
-        this.apiName = apiName;
-        this.baseUri = baseUri;
     }
 }
