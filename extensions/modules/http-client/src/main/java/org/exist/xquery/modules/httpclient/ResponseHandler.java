@@ -41,6 +41,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -215,6 +216,14 @@ public class ResponseHandler {
             factory.setNamespaceAware(true);
             final SAXParser saxParser = factory.newSAXParser();
             final XMLReader reader = saxParser.getXMLReader();
+
+            // The body comes from a remote server, so never resolve external entities or DTDs.
+            // This deliberately does not use the pooled parsers, whose hardening depends on the
+            // optional conf.xml <xml><features> block and whose state is shared with other callers.
+            reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            reader.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 
             final SAXAdapter adapter = new SAXAdapter(callerFunc);
             reader.setContentHandler(adapter);

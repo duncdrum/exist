@@ -67,9 +67,13 @@ public class SendRequestFunctionTest {
 
     private static HttpServer httpServer;
     private static int port;
+    private static java.nio.file.Path xxeSecretFile;
+    private static final String XXE_SECRET = "top-secret-xxe-marker";
 
     @BeforeClass
     public static void startHttpServer() throws IOException {
+        xxeSecretFile = java.nio.file.Files.createTempFile("xxe-secret", ".txt");
+        java.nio.file.Files.writeString(xxeSecretFile, XXE_SECRET, StandardCharsets.UTF_8);
         httpServer = HttpServer.create(new InetSocketAddress(0), 0);
         port = httpServer.getAddress().getPort();
 
@@ -112,6 +116,19 @@ public class SendRequestFunctionTest {
         httpServer.createContext("/xml-subtype", exchange -> {
             sendResponse(exchange, 200, "application/atom+xml",
                     "<feed xmlns=\"http://www.w3.org/2005/Atom\"><title>Test</title></feed>");
+        });
+
+        // XML response declaring an external entity that points at a local file (XXE attempt)
+        httpServer.createContext("/xxe", exchange -> {
+            sendResponse(exchange, 200, "application/xml",
+                    "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY xxe SYSTEM \""
+                            + xxeSecretFile.toUri() + "\">]><root>&xxe;</root>");
+        });
+
+        // XML response using only an internal entity: must still be expanded
+        httpServer.createContext("/xml-internal-entity", exchange -> {
+            sendResponse(exchange, 200, "application/xml",
+                    "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY e \"inline\">]><root>&e;</root>");
         });
 
         // HTML endpoint
@@ -309,6 +326,13 @@ public class SendRequestFunctionTest {
 
     @AfterClass
     public static void stopHttpServer() {
+        if (xxeSecretFile != null) {
+            try {
+                java.nio.file.Files.deleteIfExists(xxeSecretFile);
+            } catch (final IOException ignored) {
+                // best effort cleanup of the temp file
+            }
+        }
         if (httpServer != null) {
             httpServer.stop(0);
         }
@@ -495,6 +519,29 @@ public class SendRequestFunctionTest {
         assertEquals("Response element should be in EXPath HTTP namespace",
                 "http://expath.org/ns/http-client",
                 result.getResource(0).getContent().toString());
+    }
+
+    @Test
+    public void xmlResponseExternalEntitiesAreNotResolved() throws XMLDBException {
+        final ResourceSet result = existEmbeddedServer.executeQuery(
+                HTTP_NS +
+                "let $response := http:send-request(" +
+                "  <http:request method='GET' href='" + baseUrl() + "/xxe'/>" +
+                ")\n" +
+                "return string-join(for $r in subsequence($response, 2) return string($r), '')");
+        assertFalse("External entity content must not leak into the parsed response",
+                result.getSize() > 0 && result.getResource(0).getContent().toString().contains(XXE_SECRET));
+    }
+
+    @Test
+    public void xmlResponseInternalEntitiesAreStillExpanded() throws XMLDBException {
+        final ResourceSet result = existEmbeddedServer.executeQuery(
+                HTTP_NS +
+                "let $response := http:send-request(" +
+                "  <http:request method='GET' href='" + baseUrl() + "/xml-internal-entity'/>" +
+                ")\n" +
+                "return string($response[2]/root)");
+        assertEquals("inline", result.getResource(0).getContent().toString());
     }
 
     @Test
