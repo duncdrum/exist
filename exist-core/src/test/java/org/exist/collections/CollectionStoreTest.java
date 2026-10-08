@@ -43,13 +43,17 @@ import org.exist.xmldb.XmldbURI;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.xml.sax.SAXException;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.Diff;
 
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Source;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.file.Files;
 import java.util.Optional;
 
@@ -96,6 +100,32 @@ public class CollectionStoreTest {
 
                         assertFalse(diff.toString(), diff.hasDifferences());
                     }
+                }
+            }
+
+            transaction.commit();
+        }
+    }
+
+    @Test
+    public void storeDocumentFromNode() throws Exception {
+        final XmldbURI docUri = XmldbURI.create("test-node.xml");
+        final Node node = DocumentBuilderFactory.newDefaultInstance().newDocumentBuilder()
+                .parse(new InputSource(new StringReader(TEST_XML_DOC)));
+
+        final BrokerPool pool = existEmbeddedServer.getBrokerPool();
+        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()));
+                final Txn transaction = pool.getTransactionManager().beginTransaction()) {
+            try (final Collection col = broker.getOrCreateCollection(transaction, TestConstants.TEST_COLLECTION_URI)) {
+                // used to recurse infinitely (StackOverflowError)
+                col.storeDocument(transaction, broker, docUri, node, MimeType.XML_TYPE);
+                broker.saveCollection(transaction, col);
+            }
+
+            try (final Collection col = broker.openCollection(TestConstants.TEST_COLLECTION_URI, LockMode.READ_LOCK)) {
+                try (final LockedDocument lockedDoc = col.getDocumentWithLock(broker, docUri, LockMode.READ_LOCK)) {
+                    col.close();
+                    assertNotNull(lockedDoc);
                 }
             }
 

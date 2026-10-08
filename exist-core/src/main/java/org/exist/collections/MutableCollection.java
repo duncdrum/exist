@@ -1188,7 +1188,7 @@ public class MutableCollection implements Collection {
 
     @Override
     public void storeDocument(final Txn transaction, final DBBroker broker, final XmldbURI name, final Node node, @Nullable MimeType mimeType) throws EXistException, PermissionDeniedException, SAXException, LockException, IOException {
-        storeDocument(transaction, broker, name, node, mimeType);
+        storeDocument(transaction, broker, name, node, mimeType, null, null, null, null, null);
     }
 
     @Override
