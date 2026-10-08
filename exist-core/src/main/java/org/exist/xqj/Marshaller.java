@@ -151,18 +151,14 @@ public class Marshaller {
     }
 
     public static Sequence demarshall(DBBroker broker, Reader reader) throws XMLStreamException, XPathException {
-        final XMLInputFactory factory = XMLInputFactory.newInstance();
-        factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
-        factory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+        final XMLInputFactory factory = newXMLInputFactory();
         final XMLStreamReader parser = factory.createXMLStreamReader(reader);
         return demarshall(broker, parser);
     }
     
     public static Sequence demarshall(DBBroker broker,Node n) throws XMLStreamException, XPathException {
     	final DOMSource source = new DOMSource(n, null);
-    	final XMLInputFactory factory = XMLInputFactory.newInstance();
-        factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
-        factory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+    	final XMLInputFactory factory = newXMLInputFactory();
         
         final XMLStreamReader parser = factory.createXMLStreamReader(source);
     	return demarshall(broker,parser);    	
@@ -344,9 +340,7 @@ public class Marshaller {
      * @throws XQException if any other error occurs.
      */
     public static Item streamToDOM(Reader reader, XQItemType type) throws XMLStreamException, XQException {
-    	final XMLInputFactory factory = XMLInputFactory.newInstance();
-        factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
-        factory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+    	final XMLInputFactory factory = newXMLInputFactory();
         final XMLStreamReader parser = factory.createXMLStreamReader(reader);
         
         return streamToDOM(parser, type);
@@ -391,9 +385,7 @@ public class Marshaller {
      * @throws XMLStreamException if an error occurs during streaming.
      */
     public static Node streamToNode(Reader reader, final Expression expression) throws XMLStreamException {
-    	final XMLInputFactory factory = XMLInputFactory.newInstance();
-        factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
-        factory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+    	final XMLInputFactory factory = newXMLInputFactory();
         final XMLStreamReader parser = factory.createXMLStreamReader(reader);
         final MemTreeBuilder builder = new MemTreeBuilder(expression);
         builder.startDocument();
@@ -428,6 +420,19 @@ public class Marshaller {
         builder.endDocument();
         return builder.getDocument().getDocumentElement();
     }
+
+    /**
+     * Creates a namespace aware, non-validating StAX factory that does not support DTDs or
+     * external entities, as the marshalled XML may originate from an untrusted source.
+     *
+     * @return the XML input factory
+     */
+    private static XMLInputFactory newXMLInputFactory() {
+        final XMLInputFactory factory = XMLInputFactory.newInstance();
+        factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
+        factory.setProperty(XMLInputFactory.IS_VALIDATING, Boolean.FALSE);
+        factory.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.FALSE);
+        factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
+        return factory;
+    }
 }
-
-

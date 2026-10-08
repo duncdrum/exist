@@ -137,6 +137,27 @@ public class MarshallerTest {
     }
     
     @Test
+    public void streamToNodeDoesNotResolveExternalEntities() throws Exception {
+        final java.nio.file.Path secret = java.nio.file.Files.createTempFile("xxe-secret", ".txt");
+        try {
+            java.nio.file.Files.writeString(secret, "top-secret-xxe-marker", java.nio.charset.StandardCharsets.UTF_8);
+            final String xml = "<?xml version=\"1.0\"?><!DOCTYPE test [<!ENTITY xxe SYSTEM \""
+                    + secret.toUri() + "\">]><test>&xxe;</test>";
+            String text = null;
+            try {
+                final Node n = Marshaller.streamToNode(xml);
+                text = n.getTextContent();
+            } catch (final XMLStreamException expected) {
+                // rejecting the document is an acceptable outcome too
+            }
+            assertTrue("External entity content must not be resolved",
+                    text == null || !text.contains("top-secret-xxe-marker"));
+        } finally {
+            java.nio.file.Files.deleteIfExists(secret);
+        }
+    }
+
+    @Test
     public void streamToNodeTest() throws XMLStreamException {
         Node n = Marshaller.streamToNode(TEST_DOC);
         StringWriter writer = new StringWriter();
