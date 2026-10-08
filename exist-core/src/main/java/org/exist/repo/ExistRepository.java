@@ -370,6 +370,11 @@ public class ExistRepository extends Observable implements BrokerPoolService {
         try {
             final javax.xml.parsers.DocumentBuilderFactory dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();
             dbf.setNamespaceAware(true);
+            // the descriptor originates from a (possibly untrusted) XAR archive
+            dbf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            dbf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            dbf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            dbf.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
             final Document doc = dbf.newDocumentBuilder().parse(pkgDescriptor.toFile());
             final org.w3c.dom.NodeList xqueryElements = doc.getElementsByTagNameNS(PKG_NAMESPACE, "xquery");
             for (int i = 0; i < xqueryElements.getLength(); i++) {

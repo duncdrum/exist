@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.Nullable;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.IOException;
@@ -502,9 +503,14 @@ public class PackageService {
         }
     }
 
-    private Document parseXml(final Path file) throws Exception {
+    static Document parseXml(final Path file) throws Exception {
+        // package descriptors originate from (possibly untrusted) XAR archives
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
+        factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+        factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+        factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         final DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse(file.toFile());
     }
