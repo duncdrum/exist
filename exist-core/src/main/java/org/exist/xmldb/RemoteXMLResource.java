@@ -208,6 +208,11 @@ public class RemoteXMLResource
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(false);
+            // the content is received from the server: never resolve external entities or DTDs
+            factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+            factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            factory.setFeature(FEATURE_SECURE_PROCESSING, true);
             final DocumentBuilder builder = factory.newDocumentBuilder();
             final Document doc = builder.parse(is);
 
@@ -250,6 +255,10 @@ public class RemoteXMLResource
                 saxFactory.setValidating(false);
                 final SAXParser sax = saxFactory.newSAXParser();
                 reader = sax.getXMLReader();
+                // the content is received from the server: never resolve external entities or DTDs
+                reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
                 reader.setFeature(FEATURE_SECURE_PROCESSING, true);
             }
 
