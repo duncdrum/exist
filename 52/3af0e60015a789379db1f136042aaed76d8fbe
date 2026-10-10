@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/storage/index/CollectionStore.java
+  s_f4f5d6f61da5e0::t_63ef985153b17d 103-105,107-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "523af0e60015a789379db1f136042aaed76d8fbe",
+  "prompts": {},
+  "sessions": {
+    "s_f4f5d6f61da5e0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dddb36eb-82b5-4ef6-b32a-f002081beb36",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
