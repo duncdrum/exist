@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/storage/btree/Paged.java
+  s_f4f5d6f61da5e0::t_0e24df288c5b6b 271-304,344-351,476-483
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_f4f5d6f61da5e0::t_0f2120146cad51 224,246-250,299,3264-3271
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4cd5f6c3adcce1f310c938aa5d917524bf891a34",
+  "prompts": {},
+  "sessions": {
+    "s_f4f5d6f61da5e0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dddb36eb-82b5-4ef6-b32a-f002081beb36",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
