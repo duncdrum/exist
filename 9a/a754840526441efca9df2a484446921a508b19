@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_f4f5d6f61da5e0::t_c3439b4a916681 3254,3279
+exist-core/src/main/java/org/exist/storage/ProbeE.java
+  s_f4f5d6f61da5e0::t_a72b74f3bd1459 1-51
+exist-core/src/main/java/org/exist/storage/index/CollectionStore.java
+  s_f4f5d6f61da5e0::t_7992c2ce9bb7ec 99
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndex.java
+  s_f4f5d6f61da5e0::t_6674ca8c59c860 260
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndexWorker.java
+  s_f4f5d6f61da5e0::t_805bf9579b3184 173,375,483,580,1194,2153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9aa754840526441efca9df2a484446921a508b19",
+  "prompts": {},
+  "sessions": {
+    "s_f4f5d6f61da5e0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dddb36eb-82b5-4ef6-b32a-f002081beb36",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
