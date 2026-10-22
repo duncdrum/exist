@@ -29,14 +29,25 @@ import org.exist.util.Configuration;
 import org.exist.xquery.XQueryContext;
 
 import javax.annotation.Nullable;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
- * Opens connections to URLs with bounded connect and read timeouts, so that a slow or silent
- * remote host cannot block the calling thread, which usually holds a broker, indefinitely.
+ * Opens HTTP connections with bounded connect and read timeouts using {@link HttpClient},
+ * so that a slow or silent remote host cannot block the calling thread, which usually holds a broker, indefinitely.
  * See <a href="https://github.com/eXist-db/exist/issues/6898">#6898</a> and
  * <a href="https://github.com/eXist-db/exist/issues/6902">#6902</a>.
  */
@@ -52,6 +63,8 @@ public final class UrlConnections {
      * Default read timeout in milliseconds.
      */
     public static final int DEFAULT_READ_TIMEOUT = 30_000;
+
+    private static final ConcurrentMap<Integer, HttpClient> CLIENT_CACHE = new ConcurrentHashMap<>();
 
     private UrlConnections() {
     }
@@ -102,33 +115,151 @@ public final class UrlConnections {
     }
 
     /**
-     * Open a connection to the URL with the timeouts applied.
+     * Gets a cached {@link HttpClient} configured with the specified connect timeout in milliseconds
+     * and normal redirect following policy.
      *
-     * @param url the URL
-     * @param timeouts the timeouts to apply
+     * @param connectTimeoutMs the connect timeout in milliseconds, or 0 for no timeout
      *
-     * @return the configured, not yet connected, connection
-     *
-     * @throws IOException if the connection cannot be opened
+     * @return the HTTP client instance
      */
-    public static URLConnection open(final URL url, final Timeouts timeouts) throws IOException {
-        final URLConnection connection = url.openConnection();
-        connection.setConnectTimeout(timeouts.connect());
-        connection.setReadTimeout(timeouts.read());
-        return connection;
+    public static HttpClient getClient(final int connectTimeoutMs) {
+        return CLIENT_CACHE.computeIfAbsent(connectTimeoutMs, timeout -> {
+            final HttpClient.Builder builder = HttpClient.newBuilder()
+                    .followRedirects(HttpClient.Redirect.NORMAL);
+            if (timeout > 0) {
+                builder.connectTimeout(Duration.ofMillis(timeout));
+            }
+            return builder.build();
+        });
     }
 
     /**
-     * Open a stream to the URL with the timeouts applied, in place of {@link URL#openStream()}.
+     * Gets a cached {@link HttpClient} configured with the connect timeout specified in {@link Timeouts}.
      *
-     * @param url the URL
-     * @param timeouts the timeouts to apply
+     * @param timeouts the timeouts containing the connect timeout to apply
      *
-     * @return the stream
+     * @return the HTTP client instance
+     */
+    public static HttpClient getClient(final Timeouts timeouts) {
+        return getClient(timeouts.connect());
+    }
+
+    /**
+     * Creates a new {@link HttpRequest.Builder} for a GET request to the given URI, configured with
+     * the read timeout from {@link Timeouts}.
      *
-     * @throws IOException if the URL cannot be read
+     * @param uri the URI of the target resource
+     * @param timeouts the timeouts containing the read timeout to apply
+     *
+     * @return the configured request builder
+     */
+    public static HttpRequest.Builder newRequestBuilder(final URI uri, final Timeouts timeouts) {
+        final HttpRequest.Builder builder = HttpRequest.newBuilder(uri).GET();
+        if (timeouts.read() > 0) {
+            builder.timeout(Duration.ofMillis(timeouts.read()));
+        }
+        return builder;
+    }
+
+    /**
+     * Performs an HTTP GET request to the specified URI with the given timeouts applied.
+     *
+     * @param uri the URI to send the GET request to
+     * @param timeouts the connect and read timeouts to apply
+     *
+     * @return the HTTP response with the body as an {@link InputStream}
+     *
+     * @throws IOException if an I/O error occurs or the request is interrupted
+     */
+    public static HttpResponse<InputStream> get(final URI uri, final Timeouts timeouts) throws IOException {
+        final HttpClient client = getClient(timeouts);
+        final HttpRequest request = newRequestBuilder(uri, timeouts).build();
+        try {
+            return client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("HTTP request to " + uri + " was interrupted", e);
+        }
+    }
+
+    /**
+     * Performs an HTTP GET request to the specified URL with the given timeouts applied.
+     *
+     * @param url the URL to send the GET request to
+     * @param timeouts the connect and read timeouts to apply
+     *
+     * @return the HTTP response with the body as an {@link InputStream}
+     *
+     * @throws IOException if an I/O error occurs or the request is interrupted
+     */
+    public static HttpResponse<InputStream> get(final URL url, final Timeouts timeouts) throws IOException {
+        return get(toUri(url), timeouts);
+    }
+
+    /**
+     * Opens an input stream to read the resource at the specified URI with timeouts applied,
+     * verifying a successful response status code.
+     *
+     * @param uri the URI to read from
+     * @param timeouts the connect and read timeouts to apply
+     *
+     * @return the response body input stream
+     *
+     * @throws FileNotFoundException if the server returns a 404 Not Found response
+     * @throws IOException if the server returns an HTTP error status code (400 or greater) or an I/O error occurs
+     */
+    public static InputStream openStream(final URI uri, final Timeouts timeouts) throws IOException {
+        final HttpResponse<InputStream> response = get(uri, timeouts);
+        final int statusCode = response.statusCode();
+        if (statusCode == 404) {
+            throw new FileNotFoundException("HTTP request to " + uri + " returned 404 Not Found");
+        }
+        if (statusCode >= 400) {
+            throw new IOException("HTTP request to " + uri + " returned status code " + statusCode);
+        }
+        return response.body();
+    }
+
+    /**
+     * Opens an input stream to read the resource at the specified URL with timeouts applied,
+     * in place of {@link URL#openStream()}.
+     *
+     * @param url the URL to read from
+     * @param timeouts the connect and read timeouts to apply
+     *
+     * @return the response body input stream
+     *
+     * @throws FileNotFoundException if the server returns a 404 Not Found response
+     * @throws IOException if the server returns an HTTP error status code (400 or greater) or an I/O error occurs
      */
     public static InputStream openStream(final URL url, final Timeouts timeouts) throws IOException {
-        return open(url, timeouts).getInputStream();
+        return openStream(toUri(url), timeouts);
+    }
+
+    /**
+     * Extracts the {@code Last-Modified} timestamp in milliseconds since epoch from the HTTP response headers.
+     *
+     * @param response the HTTP response to inspect
+     *
+     * @return the last modified timestamp in milliseconds since epoch, or 0 if absent or unparseable
+     */
+    public static long getLastModified(final HttpResponse<?> response) {
+        return response.headers().firstValue("Last-Modified")
+                .map(value -> {
+                    try {
+                        return ZonedDateTime.parse(value, DateTimeFormatter.RFC_1123_DATE_TIME).toInstant().toEpochMilli();
+                    } catch (final DateTimeParseException e) {
+                        return 0L;
+                    }
+                })
+                .orElse(0L);
+    }
+
+    private static URI toUri(final URL url) throws IOException {
+        try {
+            return url.toURI();
+        } catch (final URISyntaxException e) {
+            throw new IOException("Invalid URL: " + url, e);
+        }
     }
 }

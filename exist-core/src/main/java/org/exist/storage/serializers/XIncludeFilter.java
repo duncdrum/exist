@@ -67,8 +67,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -1122,8 +1122,7 @@ public class XIncludeFilter implements Receiver {
                                                   final java.nio.charset.Charset charset) {
         try {
             final URI externalUri = new URI(href);
-            final URLConnection con = UrlConnections.open(externalUri.toURL(), Timeouts.from(serializer.broker.getConfiguration()));
-            try (final InputStream is = con.getInputStream()) {
+            try (final InputStream is = UrlConnections.openStream(externalUri, Timeouts.from(serializer.broker.getConfiguration()))) {
                 return new String(is.readAllBytes(), charset);
             }
         } catch (final Exception e) {
@@ -1134,15 +1133,15 @@ public class XIncludeFilter implements Receiver {
 
     private Either<ResourceError, org.exist.dom.memtree.DocumentImpl> parseExternal(final URI externalUri) throws ParserConfigurationException, SAXException {
         try {
-            final URLConnection con = UrlConnections.open(externalUri.toURL(), Timeouts.from(serializer.broker.getConfiguration()));
-            if (con instanceof HttpURLConnection httpConnection && httpConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return Either.Left(new ResourceError("XInclude: unable to retrieve from URI: " + externalUri + ", server returned response code: " + httpConnection.getResponseCode()));
+            final HttpResponse<InputStream> response = UrlConnections.get(externalUri, Timeouts.from(serializer.broker.getConfiguration()));
+            if (response.statusCode() != HttpURLConnection.HTTP_OK) {
+                return Either.Left(new ResourceError("XInclude: unable to retrieve from URI: " + externalUri + ", server returned response code: " + response.statusCode()));
             }
 
             // we use eXist's in-memory DOM implementation
             final XMLReaderPool parserPool = serializer.broker.getBrokerPool().getParserPool();
             XMLReader reader = null;
-            try (final InputStream is = con.getInputStream()) {
+            try (final InputStream is = response.body()) {
                 final InputSource src = new InputSource(is);
 
                 reader = parserPool.borrowXMLReader();

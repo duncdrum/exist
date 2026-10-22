@@ -23,8 +23,8 @@ package org.exist.xslt;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.URI;
+import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.Properties;
 import javax.xml.transform.Templates;
@@ -62,7 +62,7 @@ import static org.exist.xslt.XsltURIResolverHelper.getXsltURIResolver;
 @ThreadSafe
 public class StylesheetResolverAndCompiler implements Stylesheet {
 
-  protected final static Logger LOG = LogManager.getLogger(StylesheetResolverAndCompiler.class);
+  protected static final Logger LOG = LogManager.getLogger(StylesheetResolverAndCompiler.class);
 
   SAXTransformerFactory factory;
 
@@ -111,14 +111,17 @@ public class StylesheetResolverAndCompiler implements Stylesheet {
       }
 
     } else {
-      final URL url = new URL(uri);
-      final URLConnection connection = UrlConnections.open(url, Timeouts.from(broker.getConfiguration()));
-      long modified = connection.getLastModified();
+      final URI stylesheetUri = URI.create(uri);
+      final HttpResponse<InputStream> response = UrlConnections.get(stylesheetUri, Timeouts.from(broker.getConfiguration()));
+      if (response.statusCode() != 200) {
+        throw new IOException("Failed to fetch stylesheet from " + uri + ", HTTP status " + response.statusCode());
+      }
+      long modified = UrlConnections.getLastModified(response);
       if (templates == null || modified > lastModified || modified == 0) {
         if (LOG.isDebugEnabled()) {
-          LOG.debug("compiling stylesheet {}", url);
+          LOG.debug("compiling stylesheet {}", uri);
         }
-        try (final InputStream is = connection.getInputStream()) {
+        try (final InputStream is = response.body()) {
           templates = factory(broker.getBrokerPool(), errorListener).newTemplates(new StreamSource(is));
         }
       }

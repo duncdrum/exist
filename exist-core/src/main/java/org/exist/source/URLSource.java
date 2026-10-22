@@ -96,7 +96,9 @@ public class URLSource extends AbstractSource {
     }
 
     private URLConnection openConnection() throws IOException {
-        final URLConnection conn = UrlConnections.open(url, timeouts);
+        final URLConnection conn = url.openConnection();
+        conn.setConnectTimeout(timeouts.connect());
+        conn.setReadTimeout(timeouts.read());
         if (conn instanceof HttpURLConnection httpConnection) {
             httpConnection.setRequestProperty("Accept", ACCEPT_HEADER);
         }
