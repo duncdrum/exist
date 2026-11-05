@@ -34,6 +34,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static org.exist.xquery.ExpressionUnwrap.simplifyPath;
+import static org.exist.xquery.ExpressionUnwrap.unwrapOperand;
 
 /**
  * Analyzes the query and marks optimizable expressions for the query engine.
@@ -794,40 +796,6 @@ public class Optimizer extends DefaultExpressionVisitor {
         return true;
     }
 
-    private static Expression simplifyPath(final Expression expression) {
-        if (!(expression instanceof final PathExpr path)) {
-            return expression;
-        }
-
-        if (path.getLength() != 1) {
-            return path;
-        }
-
-        return path.getExpression(0);
-    }
-
-    /**
-     * Strips the wrappers the parser puts around an operand: any number of single-step
-     * {@link PathExpr}s (see {@link #simplifyPath}), and the {@link InternalFunctionCall} that every
-     * built-in function call is wrapped in.
-     *
-     * @param expression the operand
-     * @return the expression underneath the wrappers, or null if {@code expression} is null
-     */
-    public static @Nullable Expression unwrapOperand(@Nullable final Expression expression) {
-        if (expression == null) {
-            return null;
-        }
-        final Expression simplified = simplifyPath(expression);
-        if (simplified != expression) {
-            return unwrapOperand(simplified);
-        }
-        if (expression instanceof final InternalFunctionCall call) {
-            return unwrapOperand(call.getFunction());
-        }
-        return expression;
-    }
-
     /**
      * Try to find an expression object implementing interface Optimizable.
      */
@@ -924,7 +892,7 @@ public class Optimizer extends DefaultExpressionVisitor {
 
         /**
          * Strips the checks the compiler wraps around a function argument to enforce its declared
-         * type, along with the wrappers {@link #unwrapOperand} removes.
+         * type, along with the wrappers {@link ExpressionUnwrap#unwrapOperand} removes.
          */
         private static @Nullable Expression unwrapArgumentChecks(final Expression argument) {
             Expression current = unwrapOperand(argument);
