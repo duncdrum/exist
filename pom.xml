@@ -49,6 +49,7 @@
         <module>exist-services</module>
         <module>exist-start</module>
         <module>extensions</module>
+        <module>exist-architecture-tests</module>
         <module>exist-xqts</module>
     </modules>
 
