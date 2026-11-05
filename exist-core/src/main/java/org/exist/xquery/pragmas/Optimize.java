@@ -88,8 +88,8 @@ public class Optimize extends AbstractPragma {
      * larger satisfies clauses and patterns that depend on the bound variable.
      */
     private static Optional<BoundSequenceOptimizable> approvedQuantifiedMatch(final Expression expression) {
-        if (Optimizer.unwrapOperand(expression) instanceof final QuantifiedExpression quantified
-                && Optimizer.unwrapOperand(quantified.getReturnExpression()) instanceof final BoundSequenceOptimizable optimizable
+        if (ExpressionUnwrap.unwrapOperand(expression) instanceof final QuantifiedExpression quantified
+                && ExpressionUnwrap.unwrapOperand(quantified.getReturnExpression()) instanceof final BoundSequenceOptimizable optimizable
                 && optimizable.isOptimizedOverBoundSequence()) {
             return Optional.of(optimizable);
         }
