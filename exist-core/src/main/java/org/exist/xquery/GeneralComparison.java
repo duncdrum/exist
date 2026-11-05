@@ -282,6 +282,9 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
     private Sequence compareLeftNodes(final Sequence contextSequence) throws XPathException {
         final Sequence nodes = getLeft().eval(contextSequence, null);
         if (!nodes.isPersistentSet()) {
+            // Evaluates the left operand again, on purpose: a value comparison overrides this method to raise XPTY0004 for an
+            // operand with several items, and the method that takes the evaluated operand is not overridden. Only a left
+            // operand over in-memory nodes gets here; it used to fail with a ClassCastException.
             return genericCompare(contextSequence, null);
         }
         return nodeSetCompare(nodes.toNodeSet(), contextSequence);
@@ -533,8 +536,7 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
                         if( ( !Dependency.dependsOn( rightOpDeps, Dependency.CONTEXT_ITEM ) ) ) {
                             result = compareInPredicate( contextSequence );
                         } else {
-                            final NodeSet nodes = ( NodeSet )getLeft().eval(contextSequence, null);
-                            result = nodeSetCompare( nodes, contextSequence );
+                            result = compareLeftNodes( contextSequence );
                         }
                     } else {
                         result = genericCompare( contextSequence, contextItem );
