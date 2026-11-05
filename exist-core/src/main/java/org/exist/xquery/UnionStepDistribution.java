@@ -171,7 +171,7 @@ final class UnionStepDistribution {
         // function called by a higher-level query), `this.context` is the
         // caller's context and lacks the namespace declarations needed to
         // resolve the prefixed names baked into the inner steps. Re-analysis
-        // after the rewrite then raises a spurious XPST0081. See bug #TBD.
+        // after the rewrite then raises a spurious XPST0081. See #6385.
         final Union result = new Union(outer.getContext(), distributedLeft, distributedRight);
         result.setLocation(innerUnion.getLine(), innerUnion.getColumn());
         return result;
