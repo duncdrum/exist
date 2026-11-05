@@ -23,7 +23,6 @@ package org.exist.xquery;
 
 import org.exist.dom.QName;
 import org.exist.storage.DBBroker;
-import org.exist.xquery.functions.array.ArrayConstructor;
 import org.exist.xquery.pragmas.Optimize;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +31,6 @@ import org.exist.xquery.util.ExpressionDumper;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 import static org.exist.xquery.ConstantFalsePredicate.hasConstantFalsePredicate;
 import static org.exist.xquery.ExpressionUnwrap.simplifyPath;
 import static org.exist.xquery.ExpressionUnwrap.unwrapOperand;
@@ -575,44 +573,13 @@ public class Optimizer extends DefaultExpressionVisitor {
     }
 
     /**
-     * Check if a global variable can be inlined, usually if it
-     * references a literal value or sequence thereof.
+     * Inlines a global variable where {@link GlobalVariableInliner} allows it.
      *
      * @param ref the variable reference
      */
     @Override
     public void visitVariableReference(final VariableReference ref) {
-        final String ns = ref.getName().getNamespaceURI();
-        if (ns != null && !ns.isEmpty()) {
-
-            final Module[] modules = context.getModules(ns);
-            if (isNotEmpty(modules)) {
-                for (final Module module : modules) {
-                    if (module != null && !module.isInternalModule()) {
-                        final Collection<VariableDeclaration> vars = ((ExternalModule) module).getVariableDeclarations();
-                        for (final VariableDeclaration declaration : vars) {
-                            if (declaration.getName().equals(ref.getName()) && declaration.getExpression().isPresent()) {
-                                declaration.getExpression().get().accept(this);
-                                final Expression expression = simplifyPath(declaration.getExpression().get());
-                                final InlineableVisitor visitor = new InlineableVisitor();
-                                expression.accept(visitor);
-                                if (visitor.isInlineable()) {
-                                    final Expression parent = ref.getParent();
-                                    if (parent instanceof final RewritableExpression parentRewritableExpression) {
-                                        if (LOG.isDebugEnabled()) {
-                                            LOG.debug("{} line {}: inlining variable {}", ref.getSource(), ref.getLine(), ref.getName());
-                                        }
-                                        parentRewritableExpression.replace(ref, expression);
-                                    }
-                                }
-
-                                return;  // exit function!
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        GlobalVariableInliner.inline(context, ref, this);
     }
 
     private boolean canOptimize(@Nullable final Optimizable[] list) {
@@ -788,172 +755,4 @@ public class Optimizer extends DefaultExpressionVisitor {
         }
     }
 
-    /**
-     * Traverses an expression subtree to check if it could be inlined.
-     */
-    static class InlineableVisitor extends DefaultExpressionVisitor {
-
-        private boolean inlineable = true;
-
-        public boolean isInlineable() {
-            return inlineable;
-        }
-
-        @Override
-        public void visit(final Expression expr) {
-            if (expr instanceof LiteralValue) {
-                return;
-            }
-
-            if (expr instanceof Atomize ||
-                    expr instanceof DynamicCardinalityCheck ||
-                    expr instanceof DynamicNameCheck ||
-                    expr instanceof DynamicTypeCheck ||
-                    expr instanceof UntypedValueCheck ||
-                    expr instanceof ConcatExpr ||
-                    expr instanceof ArrayConstructor) {
-                expr.accept(this);
-            } else {
-                inlineable = false;
-            }
-        }
-
-        @Override
-        public void visitPathExpr(final PathExpr expr) {
-            // continue to check for numeric operators and other simple constructs,
-            // abort for all other path expressions with length > 1
-            if (expr instanceof OpNumeric ||
-                    expr instanceof SequenceConstructor ||
-                    expr.getLength() == 1) {
-                super.visitPathExpr(expr);
-            } else {
-                inlineable = false;
-            }
-        }
-
-        @Override
-        public void visitUserFunction(final UserDefinedFunction function) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitBuiltinFunction(final Function function) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitFunctionCall(final FunctionCall call) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitForExpression(final ForExpr forExpr) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitLetExpression(final LetExpr letExpr) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitOrderByClause(final OrderByClause orderBy) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitGroupByClause(final GroupByClause groupBy) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitWhereClause(final WhereClause where) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitConditional(final ConditionalExpression conditional) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitLocationStep(final LocationStep locationStep) {
-            // unlike the default, does not visit the step's predicates: a step alone does not prevent inlining
-        }
-
-        @Override
-        public void visitDocumentConstructor(final DocumentConstructor constructor) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitElementConstructor(final ElementConstructor constructor) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitTextConstructor(final DynamicTextConstructor constructor) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitAttribConstructor(final AttributeConstructor constructor) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitAttribConstructor(final DynamicAttributeConstructor constructor) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitUnionExpr(final Union union) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitIntersectionExpr(final Intersect intersect) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitVariableDeclaration(final VariableDeclaration decl) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitTryCatch(final TryCatchExpression tryCatch) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitCastExpr(final CastExpression expression) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitGeneralComparison(GeneralComparison comparison) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitAndExpr(final OpAnd and) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitOrExpr(final OpOr or) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitFilteredExpr(final FilteredExpression filtered) {
-            inlineable = false;
-        }
-
-        @Override
-        public void visitVariableReference(final VariableReference ref) {
-            inlineable = false;
-        }
-    }
 }
