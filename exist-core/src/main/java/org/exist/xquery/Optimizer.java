@@ -282,11 +282,8 @@ public class Optimizer extends DefaultExpressionVisitor {
      * over a union remains valid.
      */
     private boolean isStepLikeNodeExpr(final Expression e) {
-        if (e instanceof LocationStep) {
-            return true;
-        }
-        return e instanceof final ExtensionExpression ext
-                && ext.getExpression() instanceof LocationStep;
+        return e instanceof LocationStep
+                || e instanceof final ExtensionExpression ext && ext.getExpression() instanceof LocationStep;
     }
 
     /**
@@ -728,20 +725,6 @@ public class Optimizer extends DefaultExpressionVisitor {
 
     @Override
     public void visitGeneralComparison(final GeneralComparison comparison) {
-        // Check if the left operand is a path expression ending in a
-        // text() step. This step is unnecessary and makes it hard
-        // to further optimize the expression. We thus try to remove
-        // the extra text() step automatically.
-        // TODO should insert a pragma instead of removing the step
-        // we don't know at this point if there's an index to use
-//        Expression expr = comparison.getLeft();
-//        if (expr instanceof PathExpr) {
-//            PathExpr pathExpr = (PathExpr) expr;
-//            Expression last = pathExpr.getLastExpression();
-//            if (pathExpr.getLength() > 1 && last instanceof Step && ((Step)last).getTest().getType() == Type.TEXT) {
-//                pathExpr.remove(last);
-//            }
-//        }
         comparison.getLeft().accept(this);
         comparison.getRight().accept(this);
     }
@@ -769,17 +752,17 @@ public class Optimizer extends DefaultExpressionVisitor {
                 for (final Module module : modules) {
                     if (module != null && !module.isInternalModule()) {
                         final Collection<VariableDeclaration> vars = ((ExternalModule) module).getVariableDeclarations();
-                        for (final VariableDeclaration var: vars) {
-                            if (var.getName().equals(ref.getName()) && var.getExpression().isPresent()) {
-                                var.getExpression().get().accept(this);
-                                final Expression expression = simplifyPath(var.getExpression().get());
+                        for (final VariableDeclaration declaration : vars) {
+                            if (declaration.getName().equals(ref.getName()) && declaration.getExpression().isPresent()) {
+                                declaration.getExpression().get().accept(this);
+                                final Expression expression = simplifyPath(declaration.getExpression().get());
                                 final InlineableVisitor visitor = new InlineableVisitor();
                                 expression.accept(visitor);
                                 if (visitor.isInlineable()) {
                                     final Expression parent = ref.getParent();
                                     if (parent instanceof final RewritableExpression parentRewritableExpression) {
                                         if (LOG.isDebugEnabled()) {
-                                            LOG.debug("{} line {}: inlining variable {}", ref.getSource().toString(), ref.getLine(), ref.getName());
+                                            LOG.debug("{} line {}: inlining variable {}", ref.getSource(), ref.getLine(), ref.getName());
                                         }
                                         parentRewritableExpression.replace(ref, expression);
                                     }
@@ -809,15 +792,6 @@ public class Optimizer extends DefaultExpressionVisitor {
             }
         }
         return true;
-    }
-
-    private int reverseAxis(final int axis) {
-        return switch (axis) {
-            case Constants.CHILD_AXIS -> Constants.PARENT_AXIS;
-            case Constants.DESCENDANT_AXIS -> Constants.ANCESTOR_AXIS;
-            case Constants.DESCENDANT_SELF_AXIS -> Constants.ANCESTOR_SELF_AXIS;
-            default -> Constants.UNKNOWN_AXIS;
-        };
     }
 
     private static Expression simplifyPath(final Expression expression) {
@@ -1100,11 +1074,7 @@ public class Optimizer extends DefaultExpressionVisitor {
 
         @Override
         public void visitLocationStep(final LocationStep locationStep) {
-        }
-
-        @Override
-        public void visitPredicate(final Predicate predicate) {
-            super.visitPredicate(predicate);
+            // unlike the default, does not visit the step's predicates: a step alone does not prevent inlining
         }
 
         @Override
