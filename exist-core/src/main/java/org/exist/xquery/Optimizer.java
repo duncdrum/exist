@@ -544,47 +544,9 @@ public class Optimizer extends DefaultExpressionVisitor {
     @Override
     public void visitAndExpr(final OpAnd and) {
         if (predicates > 0) {
-            // inside a filter expression, we can often replace a logical and with
-            // a chain of filters, which can then be further optimized
-            Expression parent = and.getParent();
-            if (!(parent instanceof PathExpr)) {
-                if (LOG.isTraceEnabled()) {
-                    LOG.trace("Parent expression of boolean operator is not a PathExpr: {}", parent);
-                }
-                return;
+            if (AndPredicateSplitter.split(context, and)) {
+                hasOptimized = true;
             }
-
-            final PathExpr path;
-            final Predicate predicate;
-            if (parent instanceof Predicate predicate1) {
-                predicate = predicate1;
-                path = predicate;
-            } else {
-                path = (PathExpr) parent;
-                parent = path.getParent();
-                if (!(parent instanceof Predicate) || path.getLength() > 1) {
-                    LOG.debug("Boolean operator is not a top-level expression in the predicate: {}", parent == null ? "?" : parent.getClass().getName());
-                    return;
-                }
-                predicate = (Predicate) parent;
-            }
-
-            // The predicate splitting optimization only applies when the
-            // predicate belongs to a LocationStep — not a FilteredExpression
-            // or other expression type that also carries predicates.
-            if (!(predicate.getParent() instanceof LocationStep)) {
-                return;
-            }
-
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("Rewriting boolean expression: {}", ExpressionDumper.dump(and));
-            }
-            hasOptimized = true;
-            final LocationStep step = (LocationStep) predicate.getParent();
-            final Predicate newPred = new Predicate(context);
-            newPred.add(simplifyPath(and.getRight()));
-            step.insertPredicate(predicate, newPred);
-            path.replace(and, simplifyPath(and.getLeft()));
         } else if (and.isRewritable()) {
         	and.getLeft().accept(this);
 			and.getRight().accept(this);
