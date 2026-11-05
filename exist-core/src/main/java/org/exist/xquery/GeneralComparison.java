@@ -51,6 +51,7 @@ import org.exist.xquery.value.Type;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -160,6 +161,7 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
      */
     public void analyze( AnalyzeContextInfo contextInfo ) throws XPathException
     {
+        movePathLeft();
         contextInfo.addFlag( NEED_INDEX_INFO );
         contextInfo.setParent( this );
         super.analyze( contextInfo );
@@ -1307,6 +1309,32 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
         setLeft(right);
     }
 
+
+    /**
+     * Moves a path on the right-hand side to the left, inverting an ordering relation: {@code 'x' = @a} becomes
+     * {@code @a = 'x'} and {@code 15 < @n} becomes {@code @n > 15}. The index lookups read only the left operand, so
+     * without this the mirrored spelling used no index. Not when both operands have steps, and not where
+     * {@link #mayMovePathLeft()} says no.
+     */
+    private void movePathLeft() {
+        if (mayMovePathLeft() && !hasLocationStep(getLeft()) && hasLocationStep(getRight())) {
+            switchOperands();
+        }
+    }
+
+    /**
+     * Whether the operands may swap to put a path on the left. Not with truncation, where the order is part of the
+     * meaning: {@code starts-with('abc', @a)} asks whether {@code @a} is a prefix of 'abc'.
+     *
+     * @return true if swapping the operands keeps the comparison's meaning and its errors
+     */
+    protected boolean mayMovePathLeft() {
+        return truncation == StringTruncationOperator.NONE;
+    }
+
+    private static boolean hasLocationStep(final Expression operand) {
+        return BasicExpressionVisitor.findLocationSteps(operand).stream().anyMatch(Objects::nonNull);
+    }
 
     /**
      * Possibly switch operands to simplify execution.

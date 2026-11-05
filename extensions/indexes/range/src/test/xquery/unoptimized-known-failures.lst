@@ -79,6 +79,10 @@ optimizer.xql: optimize-starts-with-field
 optimizer.xql: optimize-starts-with-string
 prefixed-conditions.xql: optimize-ncname-attribute
 prefixed-conditions.xql: optimize-prefixed-attribute
+rhs-path.xqm: attribute-range-uses-index
+rhs-path.xqm: element-range-uses-index
+rhs-path.xqm: less-than-legacy-uses-index
+rhs-path.xqm: less-than-range-uses-index
 types.xql: eq-date-field-optimize
 types.xql: eq-date-field-type-conversion-optimize
 types.xql: eq-date-optimize
