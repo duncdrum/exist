@@ -39,4 +39,7 @@ public class ArchitectureTest {
 
     @ArchTest
     static final ArchTests OPTIMIZER = ArchTests.in(OptimizerRules.class);
+
+    @ArchTest
+    static final ArchTests LOCALE = ArchTests.in(LocaleRules.class);
 }
