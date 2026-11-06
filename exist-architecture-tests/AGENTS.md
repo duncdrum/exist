@@ -7,8 +7,8 @@ not published. Its test classpath holds all modules under the rules, so a rule c
 ## Layout
 
 - `ArchitectureTest` imports the classes once (`@AnalyzeClasses`) and includes each rule set with `ArchTests.in(...)`.
-- One class per rule set, e.g. `OptimizerRules`. Add a set by writing a class of `@ArchTest` fields and including it in
-  `ArchitectureTest`.
+- One class per rule set, e.g. `OptimizerRules` (optimizer invariants) and `LocaleRules` (no JVM default locale in production code).
+  Add a set by writing a class of `@ArchTest` fields and including it in `ArchitectureTest`.
 - To put another module's classes under the rules, add it as a `test` dependency in `pom.xml`, and to
   `ignoredUnusedDeclaredDependencies` if no rule references its classes by name.
 
