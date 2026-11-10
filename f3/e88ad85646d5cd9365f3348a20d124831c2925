@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_14610e7a010aa6::t_5173ff5f462542 1290-1300,1302-1342,1344-1359,1361-1362,1364-1365,1367-1369,1372-1374,1378-1384,1387-1394
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f3e88ad85646d5cd9365f3348a20d124831c2925",
+  "prompts": {},
+  "sessions": {
+    "s_14610e7a010aa6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4cad6ae-04b3-4758-9320-0ed360dca998",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
