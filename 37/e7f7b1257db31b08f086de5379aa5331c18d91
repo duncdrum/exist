@@ -1,0 +1,14 @@
+scratch/stack-lab-1.txt
+  h_ff0005bef58c9d 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "37e7f7b1257db31b08f086de5379aa5331c18d91",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
