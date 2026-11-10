@@ -1,0 +1,19 @@
+extensions/indexes/lucene/src/test/xquery/lucene/field-expression-deep.xqm
+  s_14610e7a010aa6::t_b586ea2875105f 48,133,135-140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4ee929e0efabca4b574331be01bee9a64f6308ab",
+  "prompts": {},
+  "sessions": {
+    "s_14610e7a010aa6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4cad6ae-04b3-4758-9320-0ed360dca998",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
