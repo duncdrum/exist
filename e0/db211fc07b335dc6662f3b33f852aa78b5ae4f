@@ -1,0 +1,29 @@
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  s_14610e7a010aa6::t_431c8ff4f7ec2e 42,60,76,378
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_14610e7a010aa6::t_f10352b88b9509 53,200,242-244,246,579-588,3503,3505-3506,4473-4474
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_14610e7a010aa6::t_5173ff5f462542 1290-1300,1302-1342,1344-1359,1361-1362,1364-1365,1367-1369,1372-1374,1378-1384,1387-1394
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  s_14610e7a010aa6::t_03db413458283b 1-91
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  s_14610e7a010aa6::t_384d021da0f17b 1-223
+exist-core/src/test/java/org/exist/storage/dom/EntryPolicyTest.java
+  s_14610e7a010aa6::t_7a6ba6605b5494 1-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e0db211fc07b335dc6662f3b33f852aa78b5ae4f",
+  "prompts": {},
+  "sessions": {
+    "s_14610e7a010aa6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4cad6ae-04b3-4758-9320-0ed360dca998",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
