@@ -1,0 +1,23 @@
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_14610e7a010aa6::t_5173ff5f462542 1290-1300,1302-1342,1344-1359,1361-1362,1364-1365,1367-1369,1372-1374,1378-1384,1387-1394
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  s_14610e7a010aa6::t_0b4b310ca50289 378
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_14610e7a010aa6::t_911a24ae8df4a3 578-584
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d0842e1809b02aeb403753735624c06fb445d502",
+  "prompts": {},
+  "sessions": {
+    "s_14610e7a010aa6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4cad6ae-04b3-4758-9320-0ed360dca998",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
