@@ -1,0 +1,24 @@
+extensions/indexes/lucene/src/test/xquery/lucene/field-expression-deep.xqm
+  s_14610e7a010aa6::t_b05d59cebfbcdb 1-47,49-132,134,141-143
+  s_14610e7a010aa6::t_b586ea2875105f 48,133,135-140
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndexWorker.java
+  s_14610e7a010aa6::t_0102828c991941 2355,2361-2362,2372,2378-2379,2391-2396,2429,2620,2626,2649,2667,2718
+exist-indexes-jmh/src/main/java/org/exist/indexing/jmh/FieldContextNodeBenchmark.java
+  s_14610e7a010aa6::t_6f61d6c61de58a 1-118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "09b5cf24ac56707a44f77e5ebda20d736a52934a",
+  "prompts": {},
+  "sessions": {
+    "s_14610e7a010aa6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4cad6ae-04b3-4758-9320-0ed360dca998",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
