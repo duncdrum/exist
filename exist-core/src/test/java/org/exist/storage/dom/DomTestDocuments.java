@@ -45,6 +45,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -289,5 +294,37 @@ final class DomTestDocuments {
     /** The number of entries of a document, found by its id. */
     static int entriesOfDocument(final DBBroker broker, final int docId) throws Exception {
         return ((NativeBroker) broker).getDOMFile().findKeys(new IndexQuery(IndexQuery.TRUNC_RIGHT, new NativeBroker.NodeRef(docId))).size();
+    }
+
+    /**
+     * Looks up every {@code x} element of a collection by its node id and counts those that do not come back as themselves.
+     * While other threads update or defragment the same documents this count is not reliable, because the nodes the query
+     * starts from can be out of date by the time they are compared; it is meant to put load on the lookups, not to be asserted.
+     */
+    static long sweepByNodeId(final BrokerPool pool, final DBBroker broker, final String collection) throws Exception {
+        return Long.parseLong(pool.getXQueryService().execute(broker,
+                "count(collection('" + collection + "')//x[not(deep-equal(util:node-by-id(root(.), util:node-id(.)), .))])", null).itemAt(0).getStringValue());
+    }
+
+    /**
+     * Runs the tasks at the same time, each on its own thread.
+     *
+     * @param tasks the tasks, each returning a number of failures it saw
+     * @param minutes how long all of them may take
+     * @return the sum of what the tasks returned
+     * @throws Exception if a task failed or did not finish in time
+     */
+    static long runConcurrently(final List<Callable<Long>> tasks, final long minutes) throws Exception {
+        final ExecutorService executor = Executors.newFixedThreadPool(tasks.size());
+        long sum = 0;
+        try {
+            for (final Future<Long> future : executor.invokeAll(tasks, minutes, TimeUnit.MINUTES)) {
+                assertTrue(future.isDone() && !future.isCancelled(), "every thread finished in time");
+                sum += future.get();
+            }
+        } finally {
+            executor.shutdownNow();
+        }
+        return sum;
     }
 }
