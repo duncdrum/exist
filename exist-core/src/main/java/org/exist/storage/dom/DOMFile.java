@@ -1300,6 +1300,7 @@ public class DOMFile extends BTree implements Lockable {
         // node not found in index: read forward from the nearest entry before it
         final FromEntry fromEntry = findFromNearestEntry(broker, doc, node, nodeRef);
         if (fromEntry.outcome() != FromEntry.Outcome.UNUSABLE) {
+            lookupsFromEntry.increment();
             return fromEntry.address();
         }
         // that entry is wrong or stale: try to find the nearest available
@@ -1357,15 +1358,12 @@ public class DOMFile extends BTree implements Lockable {
                 || ByteConversion.byteToInt(floor.key().data(), floor.key().start()) != doc.getDocId()) {
             return FromEntry.UNUSABLE;
         }
-        lookupsFromEntry.increment();
         long scanned = 0;
         try {
             // an iterator looks a node up by its id when its address leads nowhere, which is this lookup again, so the
             // record is found here and the iterator starts at it
-            final RecordPos start = StorageAddress.hasAddress(floor.pointer()) ? findRecord(floor.pointer()) : null;
+            final RecordPos start = findRecordOfEntry(doc, floor.pointer());
             if (start == null) {
-                rejectedEntries.increment();
-                LOG.debug("Ignoring an entry of document {} that leads to no record", doc.getDocId());
                 return FromEntry.UNUSABLE;
             }
             // a new reader: the shared one checks its start node by its id, which is this lookup
@@ -1381,8 +1379,7 @@ public class DOMFile extends BTree implements Lockable {
                     if (first) {
                         first = false;
                         if (!Arrays.equals(floor.key().getData(), new NodeRef(doc.getDocId(), otherId).getData())) {
-                            rejectedEntries.increment();
-                            LOG.debug("Ignoring an entry that does not lead to its node in document {}", doc.getDocId());
+                            ignoreEntry(doc, "it leads to another node");
                             return FromEntry.UNUSABLE;
                         }
                     }
@@ -1398,13 +1395,32 @@ public class DOMFile extends BTree implements Lockable {
                 reader.close();
             }
         } catch (final XMLStreamException e) {
-            rejectedEntries.increment();
-            LOG.debug("Could not read from the entry before a node of document {}: {}", doc.getDocId(), e.getMessage());
+            ignoreEntry(doc, "it cannot be read: " + e.getMessage());
             return FromEntry.UNUSABLE;
         } finally {
             recordsScanned.add(scanned);
         }
         return FromEntry.ABSENT;
+    }
+
+    /**
+     * Finds the record that an entry leads to. An entry that leads to no record is ignored and counted.
+     *
+     * @param doc the document of the entry
+     * @param pointer the address stored in the entry
+     * @return the position of the record, or null if the address leads to none
+     */
+    private RecordPos findRecordOfEntry(final DocumentImpl doc, final long pointer) {
+        final RecordPos record = StorageAddress.hasAddress(pointer) ? findRecord(pointer) : null;
+        if (record == null) {
+            ignoreEntry(doc, "it leads to no record");
+        }
+        return record;
+    }
+
+    private void ignoreEntry(final DocumentImpl doc, final String reason) {
+        rejectedEntries.increment();
+        LOG.debug("Ignoring an entry of document {}: {}", doc.getDocId(), reason);
     }
 
     /**
@@ -1426,7 +1442,8 @@ public class DOMFile extends BTree implements Lockable {
     }
 
     /**
-     * Climbs from a node towards the root until it reaches an ancestor that has an entry in the B-tree.
+     * Climbs from a node towards the root until it reaches an ancestor that has an entry in the B-tree that leads to a
+     * record.
      *
      * @param doc the document of the node
      * @param node the node
@@ -1453,6 +1470,9 @@ public class DOMFile extends BTree implements Lockable {
                 parentPointer = findValue(parentRef);
             } catch (final BTreeException bte) {
                 LOG.error("report me", bte);
+            }
+            if (parentPointer != KEY_NOT_FOUND && findRecordOfEntry(doc, parentPointer) == null) {
+                parentPointer = KEY_NOT_FOUND;
             }
         } while (parentPointer == KEY_NOT_FOUND);
         return new AncestorEntry(nodeID, parentPointer);
