@@ -1,0 +1,23 @@
+exist-core/src/test/java/org/exist/storage/dom/AnchorsBackupRestoreTest.java
+  s_b8fe46c1fb9a2b::t_ab80c87b5ff1d7 1-136
+exist-core/src/test/java/org/exist/storage/dom/AnchorsRecoverTest.java
+  s_b8fe46c1fb9a2b::t_e267d006a6df55 131,135,160
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  s_b8fe46c1fb9a2b::t_11a426d2e526c3 33,288-292
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9956c85beb8ca3b36e1ae668d7a2e016b7c5f4df",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
