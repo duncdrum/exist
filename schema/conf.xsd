@@ -8,7 +8,7 @@
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1"
-           version="2.10.0">
+           version="2.11.0">
 
     <xs:include schemaLocation="schema-version-type.xsd"/>
 
@@ -736,6 +736,19 @@
                                     not be indexed in the DOM file. This has only an effect when
                                     retrieving query results or for some types of XPath subexpressions,
                                     like equality comparisons.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="index-scan-limit" type="xs:nonNegativeInteger" default="0">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    The most records a lookup of a node by its id reads from the nearest
+                                    entry in the DOM index before it. A run of more records without an
+                                    entry is cut by an extra entry, an anchor, so that finding a node
+                                    that is not indexed by index-depth does not depend on the shape of
+                                    the document. 0 means no anchors. Only newly stored documents, and
+                                    documents whose DOM index is rebuilt by a reindex that stores, get
+                                    anchors.
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>

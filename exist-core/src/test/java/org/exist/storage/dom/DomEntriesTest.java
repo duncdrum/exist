@@ -27,15 +27,12 @@ import org.exist.dom.persistent.LockedDocument;
 import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
 import org.exist.storage.NativeBroker;
-import org.exist.storage.lock.Lock.LockMode;
 import org.exist.test.ExistEmbeddedServer;
-import org.exist.xmldb.XmldbURI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.w3c.dom.Node;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -50,18 +47,14 @@ public class DomEntriesTest {
     @RegisterExtension
     static final ExistEmbeddedServer SERVER = new ExistEmbeddedServer(DomTestDocuments.configuration(), true, true);
 
-    private static void update(final BrokerPool pool, final DBBroker broker, final String query) throws Exception {
-        pool.getXQueryService().execute(broker, query, null);
-    }
-
     @Test
     void storingGivesEntriesByTheRule() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             final EntryPolicy policy = ((NativeBroker) broker).getEntryPolicy();
             assertEquals(DomTestDocuments.INDEX_DEPTH, policy.getIndexDepth(), "the configured index depth took effect");
             DomTestDocuments.store(pool, broker, "/db/entries-store");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-store/d.xml"), LockMode.READ_LOCK)) {
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-store")) {
                 final DocumentImpl doc = locked.getDocument();
                 final List<IStoredNode<?>> nodes = DomTestDocuments.nodesOf(doc);
                 assertTrue(nodes.size() > 4 * (policy.getIndexDepth() + 3), "the document has nodes of every kind: " + nodes.size());
@@ -84,12 +77,12 @@ public class DomEntriesTest {
     @Test
     void aReindexThatStoresGivesEntriesByTheRule() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             final EntryPolicy policy = ((NativeBroker) broker).getEntryPolicy();
             assertEquals(DomTestDocuments.INDEX_DEPTH, policy.getIndexDepth(), "the configured index depth took effect");
             DomTestDocuments.store(pool, broker, "/db/entries-reindex");
-            update(pool, broker, "xmldb:reindex('/db/entries-reindex')");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-reindex/d.xml"), LockMode.READ_LOCK)) {
+            DomTestDocuments.update(pool, broker, "xmldb:reindex('/db/entries-reindex')");
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-reindex")) {
                 final DocumentImpl doc = locked.getDocument();
                 int with = 0;
                 int without = 0;
@@ -111,11 +104,11 @@ public class DomEntriesTest {
     @Test
     void anUpdateGivesTheInsertedNodesEntriesByTheRule() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             final EntryPolicy policy = ((NativeBroker) broker).getEntryPolicy();
             DomTestDocuments.store(pool, broker, "/db/entries-update");
-            update(pool, broker, "update insert <added a=\"x\"><!--c-->t<?p x?><inner><!--d-->u</inner></added> into doc('/db/entries-update/d.xml')/l1");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-update/d.xml"), LockMode.READ_LOCK)) {
+            DomTestDocuments.update(pool, broker, "update insert <added a=\"x\"><!--c-->t<?p x?><inner><!--d-->u</inner></added> into doc('/db/entries-update/d.xml')/l1");
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-update")) {
                 final DocumentImpl doc = locked.getDocument();
                 boolean inserted = false;
                 int checked = 0;
