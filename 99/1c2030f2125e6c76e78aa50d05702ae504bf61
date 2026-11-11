@@ -1,0 +1,35 @@
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_b8fe46c1fb9a2b::t_58d8cc0c3e2fdc 53,136,139,153,205,251-256,3520,4491
+exist-core/src/main/java/org/exist/storage/dom/EntryPlanner.java
+  s_b8fe46c1fb9a2b::t_093ac317054a7a 1-77
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  s_b8fe46c1fb9a2b::t_1289a65ad2d2b7 35-39,46,49,54-63,65,78-87
+exist-core/src/main/java/org/exist/util/Configuration.java
+  s_b8fe46c1fb9a2b::t_30d45e94060c23 165,167,1257-1272
+exist-core/src/test/java/org/exist/storage/dom/DomAnchorsTest.java
+  s_b8fe46c1fb9a2b::t_34c93020f532a8 1-149
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  s_b8fe46c1fb9a2b::t_7a1ff662a89c3b 66-92,114-126,131
+exist-core/src/test/java/org/exist/storage/dom/EntryPlannerTest.java
+  s_b8fe46c1fb9a2b::t_12b9c58519901c 1-84
+exist-distribution/src/main/config/conf.xml
+  s_b8fe46c1fb9a2b::t_7308f58bd32405 61,535-542
+schema/conf.xsd
+  s_b8fe46c1fb9a2b::t_a9945d23491411 11,742-754
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "991c2030f2125e6c76e78aa50d05702ae504bf61",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
