@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/storage/btree/BTree.java
+  s_b8fe46c1fb9a2b::t_2cd1ef4e7d218e 350-372,1710-1786
+exist-core/src/test/java/org/exist/storage/btree/BTreeFindFloorTest.java
+  s_b8fe46c1fb9a2b::t_96d1f192faf520 1-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "47b2e270eeb4e39d999270f7d321ad6a5aa38085",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
