@@ -24,11 +24,18 @@ package org.exist.storage.dom;
 /**
  * A snapshot of the counters of the by-id lookups of nodes that have no entry in the DOM B-tree.
  *
- * @param lookupsFromEntry the lookups that read forward from the nearest entry before the node
- * @param recordsScanned the records those lookups read
- * @param rejectedEntries the entries that were ignored because they did not lead to the node they are keyed by, or
- *     could not be read
- * @param ancestorFallbacks the lookups that fell back to the nearest ancestor with an entry
+ * <p>Every such lookup ends in exactly one of two ways, so {@code lookupsFromEntry + ancestorFallbacks} is the number
+ * of lookups: it is answered from the nearest entry before the node, or, when there is none that can be used, it
+ * climbs to the nearest ancestor with an entry. {@code rejectedEntries} counts the entries that were ignored on the
+ * way, each time one is, on either path; a lookup can ignore none or several.</p>
+ *
+ * @param lookupsFromEntry the lookups that were answered by reading forward from the nearest entry before the node,
+ *     whether they found the node or that it is not in the document
+ * @param recordsScanned the records read from entries, also by reads that ended in an ignored entry
+ * @param rejectedEntries the entries that were ignored because they lead to no record, to another node, or could not
+ *     be read
+ * @param ancestorFallbacks the lookups that climbed to the nearest ancestor with an entry, because there was no entry
+ *     before the node in its document or the nearest one was ignored
  */
 public record LookupStatistics(long lookupsFromEntry, long recordsScanned, long rejectedEntries, long ancestorFallbacks) {
 
