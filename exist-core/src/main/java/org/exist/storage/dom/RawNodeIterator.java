@@ -105,6 +105,9 @@ public class RawNodeIterator implements IRawNodeIterator {
                     if (address == BTree.KEY_NOT_FOUND)
                         {throw new IOException("Node not found.");}
                     rec = db.findRecord(address);
+                    if (rec == null) {
+                        throw new IOException("Node not found: its entry leads to no record.");
+                    }
                 } catch (final BTreeException e) {
                     throw new IOException("Node not found: " + e.getMessage());
                 }
