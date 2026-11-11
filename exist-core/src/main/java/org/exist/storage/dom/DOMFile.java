@@ -28,7 +28,9 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.LongAdder;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -187,6 +189,11 @@ public class DOMFile extends BTree implements Lockable {
     private DocumentImpl currentDocument = null;
 
     private final AddValueLoggable addValueLog = new AddValueLoggable();
+
+    private final LongAdder lookupsFromEntry = new LongAdder();
+    private final LongAdder recordsScanned = new LongAdder();
+    private final LongAdder rejectedEntries = new LongAdder();
+    private final LongAdder ancestorFallbacks = new LongAdder();
 
     public DOMFile(final BrokerPool pool, final byte id, final Path dataDir, final Configuration config) throws DBException {
         super(pool, id, FILE_FORMAT_VERSION_ID, true, pool.getCacheManager());
@@ -1290,13 +1297,123 @@ public class DOMFile extends BTree implements Lockable {
         if (pointer != KEY_NOT_FOUND) {
             return pointer;
         }
-        // node not found in index: try to find the nearest available
+        // node not found in index: read forward from the nearest entry before it
+        final FromEntry fromEntry = findFromNearestEntry(broker, doc, node, nodeRef);
+        if (fromEntry.outcome() != FromEntry.Outcome.UNUSABLE) {
+            return fromEntry.address();
+        }
+        // that entry is wrong or stale: try to find the nearest available
         // ancestor and traverse it
+        ancestorFallbacks.increment();
         final AncestorEntry ancestor = findNearestAncestorEntry(doc, node);
         if (ancestor == null) {
             return KEY_NOT_FOUND;
         }
         return findInSubtree(broker, doc, ancestor, node);
+    }
+
+    /**
+     * What reading forward from the nearest entry before a node found.
+     *
+     * @param outcome whether the node was found, is not in the document, or the entry could not be used
+     * @param address the address of the node if it was found, else {@link #KEY_NOT_FOUND}
+     */
+    private record FromEntry(Outcome outcome, long address) {
+
+        enum Outcome { FOUND, ABSENT, UNUSABLE }
+
+        static final FromEntry ABSENT = new FromEntry(Outcome.ABSENT, KEY_NOT_FOUND);
+        static final FromEntry UNUSABLE = new FromEntry(Outcome.UNUSABLE, KEY_NOT_FOUND);
+
+        static FromEntry found(final long address) {
+            return new FromEntry(Outcome.FOUND, address);
+        }
+    }
+
+    /**
+     * Reads forward in document order from the nearest entry before a node, which need not be an ancestor of the node,
+     * until it reaches the node or passes its id. That entry is never before the nearest ancestor with an entry, so
+     * this reads no more than climbing to that ancestor does.
+     *
+     * <p>An entry is only a hint: it must lead to a record, and the first record read from it must carry the node id it
+     * is keyed by, else the entry is wrong or stale, and is ignored. That finds a record that moved, or an address that
+     * leads nowhere. It cannot find an entry that leads into another document at a record with the same node id: nothing
+     * in {@code dom.dbx} says which document owns a page, so an exact entry has the same trust in
+     * {@link #findValue(DBBroker, NodeProxy)}.</p>
+     *
+     * @param broker the database broker
+     * @param doc the document of the node
+     * @param node the node to find
+     * @param nodeRef the key of the node
+     * @return where the node is, that the document does not contain it, or that there is no entry to read from or it
+     *     cannot be used
+     * @throws IOException if an I/O error occurs
+     * @throws BTreeException if the tree cannot be read
+     */
+    private FromEntry findFromNearestEntry(final DBBroker broker, final DocumentImpl doc, final NodeProxy node, final NodeRef nodeRef)
+            throws IOException, BTreeException {
+        final FloorEntry floor = findFloor(nodeRef);
+        if (floor == null || floor.key().getLength() < DocumentImpl.LENGTH_DOCUMENT_ID
+                || ByteConversion.byteToInt(floor.key().data(), floor.key().start()) != doc.getDocId()) {
+            return FromEntry.UNUSABLE;
+        }
+        lookupsFromEntry.increment();
+        long scanned = 0;
+        try {
+            // an iterator looks a node up by its id when its address leads nowhere, which is this lookup again, so the
+            // record is found here and the iterator starts at it
+            final RecordPos start = StorageAddress.hasAddress(floor.pointer()) ? findRecord(floor.pointer()) : null;
+            if (start == null) {
+                rejectedEntries.increment();
+                LOG.debug("Ignoring an entry of document {} that leads to no record", doc.getDocId());
+                return FromEntry.UNUSABLE;
+            }
+            // a new reader: the shared one checks its start node by its id, which is this lookup
+            final EmbeddedXMLStreamReader reader = new EmbeddedXMLStreamReader(broker, doc, new RawNodeIterator(broker, this, start), null, true);
+            try {
+                boolean first = true;
+                while (reader.hasNext()) {
+                    if (reader.next() == XMLStreamConstants.END_ELEMENT) {
+                        continue;
+                    }
+                    scanned++;
+                    final NodeId otherId = (NodeId) reader.getProperty(ExtendedXMLStreamReader.PROPERTY_NODE_ID);
+                    if (first) {
+                        first = false;
+                        if (!Arrays.equals(floor.key().getData(), new NodeRef(doc.getDocId(), otherId).getData())) {
+                            rejectedEntries.increment();
+                            LOG.debug("Ignoring an entry that does not lead to its node in document {}", doc.getDocId());
+                            return FromEntry.UNUSABLE;
+                        }
+                    }
+                    final int order = otherId.compareTo(node.getNodeId());
+                    if (order == 0) {
+                        return FromEntry.found(reader.getCurrentPosition());
+                    }
+                    if (order > 0) {
+                        return FromEntry.ABSENT;
+                    }
+                }
+            } finally {
+                reader.close();
+            }
+        } catch (final XMLStreamException e) {
+            rejectedEntries.increment();
+            LOG.debug("Could not read from the entry before a node of document {}: {}", doc.getDocId(), e.getMessage());
+            return FromEntry.UNUSABLE;
+        } finally {
+            recordsScanned.add(scanned);
+        }
+        return FromEntry.ABSENT;
+    }
+
+    /**
+     * Returns the counters of the by-id lookups of nodes that have no entry.
+     *
+     * @return a snapshot of the counters
+     */
+    public LookupStatistics getLookupStatistics() {
+        return new LookupStatistics(lookupsFromEntry.sum(), recordsScanned.sum(), rejectedEntries.sum(), ancestorFallbacks.sum());
     }
 
     /**
