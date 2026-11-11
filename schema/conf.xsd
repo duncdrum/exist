@@ -739,7 +739,7 @@
                                 </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
-                        <xs:attribute name="index-scan-limit" type="xs:nonNegativeInteger" default="0">
+                        <xs:attribute name="index-scan-limit" type="xs:nonNegativeInteger" default="64">
                             <xs:annotation>
                                 <xs:documentation>
                                     The most records a lookup of a node by its id reads from the nearest
