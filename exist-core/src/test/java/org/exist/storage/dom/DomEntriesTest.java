@@ -42,8 +42,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Which nodes of a stored document have an entry in the DOM B-tree, after a store, after a reindex that stores and after
- * an update, as the entry rule says. The rules for a stored and a rebuilt entry differ for comments and processing
- * instructions below the root level, and the test shows it on a real document.
+ * an update, as the entry rule says. All three give the same entries: comments and processing instructions below the
+ * root level have none.
  */
 public class DomEntriesTest {
 
@@ -55,7 +55,7 @@ public class DomEntriesTest {
     }
 
     @Test
-    void storingGivesEntriesByTheStoreRule() throws Exception {
+    void storingGivesEntriesByTheRule() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
         try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
             final EntryPolicy policy = ((NativeBroker) broker).getEntryPolicy();
@@ -67,22 +67,22 @@ public class DomEntriesTest {
                 assertTrue(nodes.size() > 4 * (policy.getIndexDepth() + 3), "the document has nodes of every kind: " + nodes.size());
                 int with = 0;
                 int without = 0;
-                boolean commentBelowRootWithEntry = false;
+                boolean commentBelowRoot = false;
                 for (final IStoredNode<?> node : nodes) {
                     final boolean entry = DomTestDocuments.hasEntry(broker, doc, node);
-                    assertEquals(policy.entryOnStore(node.getNodeType(), node.getNodeId().getTreeLevel()), entry, DomTestDocuments.describe(node));
+                    assertEquals(policy.hasEntry(node.getNodeType(), node.getNodeId().getTreeLevel()), entry, DomTestDocuments.describe(node));
                     with += entry ? 1 : 0;
                     without += entry ? 0 : 1;
-                    commentBelowRootWithEntry |= entry && node.getNodeType() == Node.COMMENT_NODE && node.getNodeId().getTreeLevel() > 1;
+                    commentBelowRoot |= node.getNodeType() == Node.COMMENT_NODE && node.getNodeId().getTreeLevel() > 1 && node.getNodeId().getTreeLevel() <= policy.getIndexDepth();
                 }
                 assertTrue(with > 0 && without > 0, "some nodes have an entry and some do not: " + with + " and " + without);
-                assertTrue(commentBelowRootWithEntry, "storing gives a comment below the root level an entry");
+                assertTrue(commentBelowRoot, "the document has a comment below the root level, within the index depth, and it has no entry");
             }
         }
     }
 
     @Test
-    void aReindexThatStoresGivesEntriesByTheReindexRule() throws Exception {
+    void aReindexThatStoresGivesEntriesByTheRule() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
         try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
             final EntryPolicy policy = ((NativeBroker) broker).getEntryPolicy();
@@ -93,23 +93,23 @@ public class DomEntriesTest {
                 final DocumentImpl doc = locked.getDocument();
                 int with = 0;
                 int without = 0;
-                boolean commentBelowRootWithoutEntry = false;
+                boolean commentBelowRoot = false;
                 for (final IStoredNode<?> node : DomTestDocuments.nodesOf(doc)) {
                     final boolean entry = DomTestDocuments.hasEntry(broker, doc, node);
-                    assertEquals(policy.entryOnReindex(node.getNodeType(), node.getNodeId().getTreeLevel()), entry, DomTestDocuments.describe(node));
+                    assertEquals(policy.hasEntry(node.getNodeType(), node.getNodeId().getTreeLevel()), entry, DomTestDocuments.describe(node));
                     with += entry ? 1 : 0;
                     without += entry ? 0 : 1;
-                    commentBelowRootWithoutEntry |= !entry && node.getNodeType() == Node.COMMENT_NODE && node.getNodeId().getTreeLevel() > 1
+                    commentBelowRoot |= node.getNodeType() == Node.COMMENT_NODE && node.getNodeId().getTreeLevel() > 1
                             && node.getNodeId().getTreeLevel() <= policy.getIndexDepth();
                 }
                 assertTrue(with > 0 && without > 0, "some nodes have an entry and some do not: " + with + " and " + without);
-                assertTrue(commentBelowRootWithoutEntry, "a reindex leaves a comment below the root level, within the index depth, without an entry");
+                assertTrue(commentBelowRoot, "the document has a comment below the root level, within the index depth, and it has no entry");
             }
         }
     }
 
     @Test
-    void anUpdateGivesTheInsertedNodesEntriesByTheReindexRule() throws Exception {
+    void anUpdateGivesTheInsertedNodesEntriesByTheRule() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
         try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
             final EntryPolicy policy = ((NativeBroker) broker).getEntryPolicy();
@@ -125,7 +125,7 @@ public class DomEntriesTest {
                     }
                     // the inserted element is the last child of the root; what follows at level 1 is the comment and the instruction after the root
                     if (inserted && node.getNodeId().getTreeLevel() >= 2) {
-                        assertEquals(policy.entryOnReindex(node.getNodeType(), node.getNodeId().getTreeLevel()), DomTestDocuments.hasEntry(broker, doc, node), DomTestDocuments.describe(node));
+                        assertEquals(policy.hasEntry(node.getNodeType(), node.getNodeId().getTreeLevel()), DomTestDocuments.hasEntry(broker, doc, node), DomTestDocuments.describe(node));
                         checked++;
                     }
                 }

@@ -27,8 +27,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.w3c.dom.Node;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * The rule that decides which nodes get an entry in the DOM B-tree, as it was before it was moved into one class. The
@@ -48,37 +46,9 @@ public class EntryPolicyTest {
         };
     }
 
-    @ParameterizedTest(name = "depth {0}: a {1} at level {2} gets an entry when stored: {3}")
+    @ParameterizedTest(name = "depth {0}: a {1} at level {2} gets an entry: {3}")
     @CsvSource(textBlock = """
         # depth, type, level, entry
-        5, element,   1, true
-        5, element,   5, true
-        5, element,   6, false
-        5, element,  12, false
-        5, comment,   1, true
-        5, comment,   5, true
-        5, comment,   6, false
-        5, pi,        3, true
-        5, pi,        6, false
-        5, text,      1, false
-        5, text,      3, false
-        5, text,      8, false
-        5, attribute, 2, false
-        5, attribute, 4, false
-        5, cdata,     2, false
-        1, element,   1, true
-        1, element,   2, false
-        1, comment,   1, true
-        1, comment,   2, false
-        0, element,   1, false
-        0, comment,   1, false
-        """)
-    void entryOnStore(final int depth, final String nodeType, final int level, final boolean expected) {
-        assertEquals(expected, new EntryPolicy(depth).entryOnStore(type(nodeType), level));
-    }
-
-    @ParameterizedTest(name = "depth {0}: a {1} at level {2} gets an entry when the entries are rebuilt: {3}")
-    @CsvSource(textBlock = """
         5, element,   1, true
         5, element,   5, true
         5, element,   6, false
@@ -97,25 +67,14 @@ public class EntryPolicyTest {
         5, cdata,     2, false
         1, element,   1, true
         1, element,   2, false
-        # with depth 0 the root level still gets an entry when rebuilding, but not when storing
+        1, comment,   2, false
+        # the root level gets an entry whatever the depth
         0, element,   1, true
         0, element,   2, false
+        0, comment,   1, true
         """)
-    void entryOnReindex(final int depth, final String nodeType, final int level, final boolean expected) {
-        assertEquals(expected, new EntryPolicy(depth).entryOnReindex(type(nodeType), level));
-    }
-
-    @Test
-    void theTwoRulesDifferOnlyBelowTheRootLevelForCommentsAndProcessingInstructions() {
-        final EntryPolicy policy = new EntryPolicy(5);
-        for (final short nodeType : new short[] {Node.ELEMENT_NODE, Node.TEXT_NODE, Node.ATTRIBUTE_NODE, Node.CDATA_SECTION_NODE}) {
-            for (int level = 2; level <= 8; level++) {
-                assertEquals(policy.entryOnStore(nodeType, level), policy.entryOnReindex(nodeType, level),
-                        "type " + nodeType + " at level " + level);
-            }
-        }
-        assertTrue(policy.entryOnStore(Node.COMMENT_NODE, 3));
-        assertFalse(policy.entryOnReindex(Node.COMMENT_NODE, 3));
+    void hasEntry(final int depth, final String nodeType, final int level, final boolean expected) {
+        assertEquals(expected, new EntryPolicy(depth).hasEntry(type(nodeType), level));
     }
 
     @Test

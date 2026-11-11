@@ -375,8 +375,7 @@ public class ConsistencyCheck {
                             }
 
                             case XMLStreamReader.START_ELEMENT: {
-                                // both forms of the entry rule give every element up to the index depth an entry
-                                if (entryPolicy.entryOnStore(Node.ELEMENT_NODE, nodeId.getTreeLevel())) {
+                                if (entryPolicy.hasEntry(Node.ELEMENT_NODE, nodeId.getTreeLevel())) {
 
                                     // check dom.dbx btree, which maps the node
                                     // id to the node's storage address
