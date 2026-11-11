@@ -58,7 +58,7 @@
         - http://exist-db.org/exist/apps/doc/documentation.xml
 
 -->
-<exist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/conf.xsd" schemaVersion="2.11.0">
+<exist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/conf.xsd" schemaVersion="2.12.0">
 
     <!-- 
         Configures the database backend.
@@ -549,7 +549,7 @@
         - preserve-whitespace-mixed-content:
             preserve the white space inside a mixed content node: "yes" or "no".
     -->
-    <indexer caseSensitive="yes" index-depth="5" preserve-whitespace-mixed-content="no"
+    <indexer caseSensitive="yes" index-depth="5" index-scan-limit="64" preserve-whitespace-mixed-content="no"
         suppress-whitespace="none">
 
         <modules>

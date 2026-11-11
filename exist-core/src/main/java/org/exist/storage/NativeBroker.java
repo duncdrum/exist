@@ -149,8 +149,8 @@ public class NativeBroker implements DBBroker {
     }
 
     public static final String DEFAULT_DATA_DIR = "data";
-    public static final int DEFAULT_INDEX_DEPTH = 1;
-    public static final int DEFAULT_INDEX_SCAN_LIMIT = 0;
+    public static final int DEFAULT_INDEX_DEPTH = 5;
+    public static final int DEFAULT_INDEX_SCAN_LIMIT = 64;
 
     /** check available memory after storing DEFAULT_NODES_BEFORE_MEMORY_CHECK nodes */
     public static final int DEFAULT_NODES_BEFORE_MEMORY_CHECK = 500;
