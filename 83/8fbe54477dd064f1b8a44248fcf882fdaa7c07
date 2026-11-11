@@ -1,0 +1,32 @@
+exist-core/src/main/java/org/exist/storage/btree/BTree.java
+  s_b8fe46c1fb9a2b::t_2cd1ef4e7d218e 350-372,1710-1786
+exist-core/src/test/java/org/exist/storage/btree/BTreeFindFloorTest.java
+  s_b8fe46c1fb9a2b::t_96d1f192faf520 1-69,71-72,74,76,80-84,86-146,148-168
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_b8fe46c1fb9a2b::t_4e99a024a2376c 31,33,121-125,1300,1304-1305,1307,1333-1337,1343-1347,1350-1352,1354-1357,1359-1362,1371,1373-1384,1387-1390,1392-1393,1395-1399,1401,1404-1406,1408-1410,1412,1414,1417-1418
+  s_b8fe46c1fb9a2b::t_bb7031e5c33c81 1301-1303,1315-1332,1338-1342,1348-1349,1353,1358,1367-1370,1385-1386,1391,1394,1400,1402-1403,1407,1411,1413,1415-1416
+  s_b8fe46c1fb9a2b::t_55ba8ee7ecad8a 1363-1366,1372
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  s_b8fe46c1fb9a2b::t_c977b82e5c22a4 35-36,47,54-55,101-117,119-126,132-144,146,150-153,160-162,165-166,170-172,174,176-177,179-181,183-186,190-199
+  s_b8fe46c1fb9a2b::t_462d1dfe6818c2 28,33,118,127-131,145,147-149,154-159,163-164,167-169,173,175,178,182,187-189,200-220
+exist-core/src/main/java/org/exist/storage/dom/LookupStatistics.java
+  s_b8fe46c1fb9a2b::t_456eda652a9492 1-45
+exist-core/src/main/java/org/exist/storage/dom/RawNodeIterator.java
+  s_b8fe46c1fb9a2b::t_9623f02ccf387e 77-85,91-93,94-95,112,118-124
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "838fbe54477dd064f1b8a44248fcf882fdaa7c07",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
