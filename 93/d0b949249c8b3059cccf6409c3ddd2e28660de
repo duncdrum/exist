@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  s_b8fe46c1fb9a2b::t_40571b552fe667 378
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_b8fe46c1fb9a2b::t_784f2426bb75f4 3510,4486
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  s_b8fe46c1fb9a2b::t_bc6311153811be 31-33,35-36,61,67
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  s_b8fe46c1fb9a2b::t_f6b1aa293e5c0a 45-46,58,70,73,76,79,85,96,99,102,106,112,128
+exist-core/src/test/java/org/exist/storage/dom/EntryPolicyTest.java
+  s_b8fe46c1fb9a2b::t_306f7bf25d36f5 49,70-71,74,76-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "93d0b949249c8b3059cccf6409c3ddd2e28660de",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
