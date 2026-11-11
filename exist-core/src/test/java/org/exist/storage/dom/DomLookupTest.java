@@ -31,17 +31,14 @@ import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
 import org.exist.storage.NativeBroker;
 import org.exist.storage.StorageAddress;
-import org.exist.storage.lock.Lock.LockMode;
 import org.exist.storage.lock.ManagedLock;
 import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
-import org.exist.xmldb.XmldbURI;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.w3c.dom.Node;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.ToLongFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -63,9 +60,9 @@ public class DomLookupTest {
     @Test
     void everyNodeIsFoundByItsIdWithoutAnAddress() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             DomTestDocuments.store(pool, broker, "/db/entries-find");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-find/d.xml"), LockMode.READ_LOCK)) {
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-find")) {
                 final DocumentImpl doc = locked.getDocument();
                 final List<IStoredNode<?>> nodes = DomTestDocuments.nodesOf(doc);
                 assertTrue(nodes.size() > 4 * (DomTestDocuments.INDEX_DEPTH + 3), "the document has nodes of every kind: " + nodes.size());
@@ -83,9 +80,9 @@ public class DomLookupTest {
     @Test
     void aMissingIdIsNotFound() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             DomTestDocuments.store(pool, broker, "/db/entries-missing");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-missing/d.xml"), LockMode.READ_LOCK)) {
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-missing")) {
                 final DocumentImpl doc = locked.getDocument();
                 IStoredNode<?> deepest = null;
                 for (final IStoredNode<?> node : DomTestDocuments.nodesOf(doc)) {
@@ -109,10 +106,10 @@ public class DomLookupTest {
     @Test
     void nodesWithoutAnEntryAreFoundFromTheNearestEntry() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             final DOMFile domDb = ((NativeBroker) broker).getDOMFile();
             DomTestDocuments.store(pool, broker, "/db/entries-from-entry");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-from-entry/d.xml"), LockMode.READ_LOCK)) {
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-from-entry")) {
                 final DocumentImpl doc = locked.getDocument();
                 // walking the document resolves nodes by their id too, so list them before the counters are read
                 final List<IStoredNode<?>> nodes = DomTestDocuments.nodesOf(doc);
@@ -138,10 +135,10 @@ public class DomLookupTest {
     @Test
     void aMissingIdIsDecidedFromTheNearestEntry() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             final DOMFile domDb = ((NativeBroker) broker).getDOMFile();
             DomTestDocuments.store(pool, broker, "/db/entries-missing-entry");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-missing-entry/d.xml"), LockMode.READ_LOCK)) {
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-missing-entry")) {
                 final DocumentImpl doc = locked.getDocument();
                 final IStoredNode<?> deep = first(DomTestDocuments.nodesOf(doc), Node.ELEMENT_NODE, DomTestDocuments.INDEX_DEPTH + 2);
                 final LookupStatistics before = domDb.getLookupStatistics();
@@ -160,10 +157,10 @@ public class DomLookupTest {
     private void lookupWithWrongEntry(final String collection, final boolean ancestor, final long expectedRejections,
             final ToLongFunction<List<IStoredNode<?>>> wrongAddress) throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             final DOMFile domDb = ((NativeBroker) broker).getDOMFile();
             DomTestDocuments.store(pool, broker, collection);
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create(collection + "/d.xml"), LockMode.READ_LOCK)) {
+            try (final LockedDocument locked = DomTestDocuments.open(broker, collection)) {
                 final DocumentImpl doc = locked.getDocument();
                 final List<IStoredNode<?>> nodes = DomTestDocuments.nodesOf(doc);
                 // the entry is the nearest one before the target: that of a node that precedes it without being its ancestor
@@ -247,10 +244,10 @@ public class DomLookupTest {
     @Test
     void aNodeBeforeEveryEntryOfItsDocumentClimbsWithoutRejectingAnything() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
-        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+        try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {
             final DOMFile domDb = ((NativeBroker) broker).getDOMFile();
             DomTestDocuments.store(pool, broker, "/db/entries-before-all");
-            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-before-all/d.xml"), LockMode.READ_LOCK)) {
+            try (final LockedDocument locked = DomTestDocuments.open(broker, "/db/entries-before-all")) {
                 final DocumentImpl doc = locked.getDocument();
                 final IStoredNode<?> firstChild = (IStoredNode<?>) doc.getFirstChild();
                 final NodeId before = firstChild.getNodeId().insertBefore();
