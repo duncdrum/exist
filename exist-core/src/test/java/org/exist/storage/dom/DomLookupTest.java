@@ -25,11 +25,15 @@ import org.exist.dom.persistent.DocumentImpl;
 import org.exist.dom.persistent.IStoredNode;
 import org.exist.dom.persistent.LockedDocument;
 import org.exist.dom.persistent.NodeProxy;
+import org.exist.dom.persistent.StoredNode;
 import org.exist.numbering.NodeId;
 import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
 import org.exist.storage.NativeBroker;
+import org.exist.storage.StorageAddress;
 import org.exist.storage.lock.Lock.LockMode;
+import org.exist.storage.lock.ManagedLock;
+import org.exist.storage.txn.Txn;
 import org.exist.test.ExistEmbeddedServer;
 import org.exist.xmldb.XmldbURI;
 import org.junit.jupiter.api.Test;
@@ -40,13 +44,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Every node of a stored document is found by its id when its address is not known, and an id that does not exist is not
- * found. A node without an entry in the DOM B-tree is found by walking the document from its nearest ancestor that has one.
+ * found. A node without an entry in the DOM B-tree is found by reading the document forward from the nearest entry before
+ * it, and from its nearest ancestor that has one when that entry is wrong.
  */
 public class DomLookupTest {
 
@@ -91,5 +97,125 @@ public class DomLookupTest {
                 assertNull(broker.objectWith(new NodeProxy(null, doc, missing, Node.ELEMENT_NODE)), "a child of a leaf node does not exist");
             }
         }
+    }
+
+    private static IStoredNode<?> first(final List<IStoredNode<?>> nodes, final short nodeType, final int level) {
+        return nodes.stream()
+                .filter(n -> n.getNodeType() == nodeType && n.getNodeId().getTreeLevel() == level)
+                .findFirst().orElseThrow();
+    }
+
+    @Test
+    void nodesWithoutAnEntryAreFoundFromTheNearestEntry() throws Exception {
+        final BrokerPool pool = SERVER.getBrokerPool();
+        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+            final DOMFile domDb = ((NativeBroker) broker).getDOMFile();
+            DomTestDocuments.store(pool, broker, "/db/entries-from-entry");
+            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-from-entry/d.xml"), LockMode.READ_LOCK)) {
+                final DocumentImpl doc = locked.getDocument();
+                // walking the document resolves nodes by their id too, so list them before the counters are read
+                final List<IStoredNode<?>> nodes = DomTestDocuments.nodesOf(doc);
+                final LookupStatistics before = domDb.getLookupStatistics();
+                int withoutEntry = 0;
+                for (final IStoredNode<?> node : nodes) {
+                    if (!DomTestDocuments.hasEntry(broker, doc, node)) {
+                        withoutEntry++;
+                    }
+                    assertNotNull(broker.objectWith(new NodeProxy(null, doc, node.getNodeId(), node.getNodeType())), DomTestDocuments.describe(node));
+                }
+                assertTrue(withoutEntry > 10, "the document has nodes without an entry: " + withoutEntry);
+                final LookupStatistics counted = domDb.getLookupStatistics().since(before);
+                assertEquals(withoutEntry, counted.lookupsFromEntry(), "each of them was read from an entry, once");
+                assertTrue(counted.recordsScanned() > 0, "records were read");
+                assertEquals(0, counted.rejectedEntries(), "no entry was wrong");
+                assertEquals(0, counted.ancestorFallbacks(), "no lookup climbed to an ancestor");
+            }
+        }
+    }
+
+    @Test
+    void aMissingIdIsDecidedFromTheNearestEntry() throws Exception {
+        final BrokerPool pool = SERVER.getBrokerPool();
+        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+            final DOMFile domDb = ((NativeBroker) broker).getDOMFile();
+            DomTestDocuments.store(pool, broker, "/db/entries-missing-entry");
+            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create("/db/entries-missing-entry/d.xml"), LockMode.READ_LOCK)) {
+                final DocumentImpl doc = locked.getDocument();
+                final IStoredNode<?> deep = first(DomTestDocuments.nodesOf(doc), Node.ELEMENT_NODE, DomTestDocuments.INDEX_DEPTH + 2);
+                final LookupStatistics before = domDb.getLookupStatistics();
+                assertNull(broker.objectWith(new NodeProxy(null, doc, deep.getNodeId().newChild().newChild(), Node.ELEMENT_NODE)));
+                final LookupStatistics counted = domDb.getLookupStatistics().since(before);
+                assertEquals(1, counted.lookupsFromEntry(), "it was decided from the nearest entry");
+                assertEquals(0, counted.ancestorFallbacks(), "a node that does not exist is not looked for twice");
+            }
+        }
+    }
+
+    private static IStoredNode<?> comment(final List<IStoredNode<?>> nodes, final int level) {
+        return first(nodes, Node.COMMENT_NODE, level);
+    }
+
+    private void lookupWithWrongEntry(final String collection, final java.util.function.ToLongFunction<List<IStoredNode<?>>> wrongAddress)
+            throws Exception {
+        final BrokerPool pool = SERVER.getBrokerPool();
+        try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
+            final DOMFile domDb = ((NativeBroker) broker).getDOMFile();
+            DomTestDocuments.store(pool, broker, collection);
+            try (final LockedDocument locked = broker.getXMLResource(XmldbURI.create(collection + "/d.xml"), LockMode.READ_LOCK)) {
+                final DocumentImpl doc = locked.getDocument();
+                final List<IStoredNode<?>> nodes = DomTestDocuments.nodesOf(doc);
+                // a node that precedes the target without being its ancestor, so that the entry is the nearest one before it
+                final IStoredNode<?> keyed = comment(nodes, DomTestDocuments.INDEX_DEPTH + 2);
+                final int below = keyed.getNodeId().getTreeLevel();
+                final IStoredNode<?> target = nodes.stream()
+                        .filter(n -> n.getNodeType() == Node.TEXT_NODE && n.getNodeId().getTreeLevel() > below + 1)
+                        .findFirst().orElseThrow();
+                assertFalse(DomTestDocuments.hasEntry(broker, doc, keyed), "the comment has no entry of its own");
+                final NativeBroker.NodeRef key = new NativeBroker.NodeRef(doc.getDocId(), keyed.getNodeId());
+                final long address = wrongAddress.applyAsLong(nodes);
+                try (final Txn txn = pool.getTransactionManager().beginTransaction();
+                        final ManagedLock<?> lock = pool.getLockManager().acquireBtreeWriteLock(domDb.getLockName())) {
+                    domDb.addValue(txn, key, address);
+                    txn.commit();
+                }
+                try {
+                    final LookupStatistics before = domDb.getLookupStatistics();
+                    final IStoredNode<?> found = broker.objectWith(new NodeProxy(null, doc, target.getNodeId(), target.getNodeType()));
+                    assertNotNull(found, "the node is still found");
+                    assertEquals(target.getNodeId(), found.getNodeId());
+                    assertEquals(target.getNodeValue(), found.getNodeValue());
+                    final LookupStatistics counted = domDb.getLookupStatistics().since(before);
+                    assertEquals(1, counted.rejectedEntries(), "the wrong entry was rejected");
+                    assertEquals(1, counted.ancestorFallbacks(), "the lookup climbed to an ancestor");
+                } finally {
+                    try (final Txn txn = pool.getTransactionManager().beginTransaction();
+                            final ManagedLock<?> lock = pool.getLockManager().acquireBtreeWriteLock(domDb.getLockName())) {
+                        domDb.removeValue(txn, key);
+                        txn.commit();
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    void anEntryThatLeadsToAnotherNodeIsIgnored() throws Exception {
+        lookupWithWrongEntry("/db/entries-wrong-node", nodes -> first(nodes, Node.ELEMENT_NODE, 1).getInternalAddress());
+    }
+
+    @Test
+    void anEntryThatLeadsToAPageThatDoesNotExistIsIgnored() throws Exception {
+        lookupWithWrongEntry("/db/entries-wrong-page", nodes -> StorageAddress.createPointer(9_999_999, (short) 1));
+    }
+
+    @Test
+    void anEntryThatLeadsToNoRecordOnItsPageIsIgnored() throws Exception {
+        lookupWithWrongEntry("/db/entries-wrong-slot", nodes ->
+                StorageAddress.createPointer(StorageAddress.pageFromPointer(first(nodes, Node.ELEMENT_NODE, 1).getInternalAddress()), (short) 30000));
+    }
+
+    @Test
+    void anEntryWithoutAnAddressIsIgnored() throws Exception {
+        lookupWithWrongEntry("/db/entries-wrong-unknown", nodes -> StoredNode.UNKNOWN_NODE_IMPL_ADDRESS);
     }
 }
