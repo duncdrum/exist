@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_b8fe46c1fb9a2b::t_2303f1b1b2097f 302,306-307
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_b8fe46c1fb9a2b::t_605546b0679e55 288-291,306
+extensions/indexes/range/src/test/xquery/range/collation-default.xqm
+  s_b8fe46c1fb9a2b::t_69602e85c92f1c 58-61,99-115
+extensions/indexes/range/src/test/xquery/range/collation.xqm
+  s_b8fe46c1fb9a2b::t_aee1bfffe80053 99-106
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_b8fe46c1fb9a2b::t_8ed64884a4cd51 6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "762bd9d7b5d3477ea84f67584507bd59f8c75344",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
