@@ -1,0 +1,32 @@
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  s_14610e7a010aa6::t_384d021da0f17b 1-96,101,105,114-115,119,125-126,130
+  s_14610e7a010aa6::t_4e9e45aa5be75e 97-100,102-104,106-113,116-118,120-124,127-129,131-137
+exist-core/src/test/java/org/exist/storage/dom/EntryPolicyTest.java
+  s_14610e7a010aa6::t_7a6ba6605b5494 1-51,76-80,104-125
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  s_14610e7a010aa6::t_431c8ff4f7ec2e 42,60,76,379
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  s_14610e7a010aa6::t_03db413458283b 1-91
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_14610e7a010aa6::t_f10352b88b9509 53,200,242-244,246,586-595,3510,3512-3513,4480-4481
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  s_14610e7a010aa6::t_bd6630155d76e5 1-131
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  s_14610e7a010aa6::t_dcd7190608bb03 1-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ca760379ac436592eef3f06c1687a1592a205b1a",
+  "prompts": {},
+  "sessions": {
+    "s_14610e7a010aa6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4cad6ae-04b3-4758-9320-0ed360dca998",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
