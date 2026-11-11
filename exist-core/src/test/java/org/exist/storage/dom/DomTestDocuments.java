@@ -69,14 +69,13 @@ final class DomTestDocuments {
     }
 
     /**
-     * Returns the configuration for an embedded server that uses {@link #INDEX_DEPTH}.
+     * Returns the configuration for an embedded server that uses {@link #INDEX_DEPTH} and no anchors, so that only the
+     * entries of the head rule are in the tests of that rule.
      *
      * @return the configuration properties
      */
     static Properties configuration() {
-        final Properties configuration = new Properties();
-        configuration.put("indexer.index-depth", INDEX_DEPTH);
-        return configuration;
+        return configuration(0);
     }
 
     /**
@@ -86,7 +85,8 @@ final class DomTestDocuments {
      * @return the configuration properties
      */
     static Properties configuration(final int scanLimit) {
-        final Properties configuration = configuration();
+        final Properties configuration = new Properties();
+        configuration.put("indexer.index-depth", INDEX_DEPTH);
         configuration.put(NativeBroker.PROPERTY_INDEX_SCAN_LIMIT, scanLimit);
         return configuration;
     }

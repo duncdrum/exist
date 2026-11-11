@@ -73,13 +73,14 @@ class ConfigurationTest {
         assertThatNoException().isThrownBy(() -> new Configuration(conf.toString(), Optional.of(existHomeDir)));
     }
 
-    /** Reads conf.xml with the {@code index-scan-limit} attribute of the indexer set to a value, or left out. */
+    /** Reads conf.xml with the {@code index-scan-limit} attribute of the indexer set to a value, or removed. */
     private static int indexScanLimit(final Path existHomeDir, final String value) throws Exception {
         String xml;
         try (InputStream in = ConfigurationTest.class.getResourceAsStream("/conf.xml")) {
             xml = new String(in.readAllBytes(), StandardCharsets.UTF_8);
         }
         assertThat(xml).contains("<indexer ");
+        xml = xml.replaceAll(" index-scan-limit=\"[^\"]*\"", "");
         if (value != null) {
             xml = xml.replace("<indexer ", "<indexer index-scan-limit=\"" + value + "\" ");
         }
@@ -108,6 +109,15 @@ class ConfigurationTest {
     @Test
     void withoutAnIndexScanLimitTheBrokerUsesItsDefault(@TempDir Path existHomeDir) throws Exception {
         assertThat(indexScanLimit(existHomeDir, null)).isEqualTo(-1);
+        assertThat(NativeBroker.DEFAULT_INDEX_SCAN_LIMIT).isEqualTo(64);
+        assertThat(NativeBroker.DEFAULT_INDEX_DEPTH).isEqualTo(5);
+    }
+
+    @Test
+    void theDistributedConfigurationAsksForTheDefaultIndexScanLimit() throws Exception {
+        final Configuration config = new Configuration("conf.xml");
+        assertThat(config.getInteger(NativeBroker.PROPERTY_INDEX_SCAN_LIMIT)).isEqualTo(NativeBroker.DEFAULT_INDEX_SCAN_LIMIT);
+        assertThat(config.getInteger(NativeBroker.PROPERTY_INDEX_DEPTH)).isEqualTo(NativeBroker.DEFAULT_INDEX_DEPTH);
     }
 
     // parseBooleanAttribute — #6001: unified boolean config attribute parsing
