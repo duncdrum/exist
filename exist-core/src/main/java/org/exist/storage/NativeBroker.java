@@ -3507,7 +3507,7 @@ public class NativeBroker implements DBBroker {
             @Override
             public Object start() throws ReadOnlyException {
                 final long address;
-                if(entryPolicy.entryOnStore(nodeType, node.getNodeId().getTreeLevel())) {
+                if(entryPolicy.hasEntry(nodeType, node.getNodeId().getTreeLevel())) {
                     address = domDb.put(transaction, new NodeRef(doc.getDocId(), node.getNodeId()), data);
                 } else {
                     address = domDb.add(transaction, data);
@@ -4483,7 +4483,7 @@ public class NativeBroker implements DBBroker {
         public void store() {
             final DocumentImpl doc = node.getOwnerDocument();
             // all nodes at level 1 get an entry, and only element nodes after, see EntryPolicy
-            if(indexMode == IndexMode.STORE && entryPolicy.entryOnReindex(node.getNodeType(), level)) {
+            if(indexMode == IndexMode.STORE && entryPolicy.hasEntry(node.getNodeType(), level)) {
                 //TODO : used to be this, but NativeBroker.this avoids an owner change
                 new DOMTransaction(NativeBroker.this, domDb, () -> lockManager.acquireBtreeWriteLock(domDb.getLockName())) {
                     @Override
