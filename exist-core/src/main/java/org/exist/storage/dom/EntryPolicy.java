@@ -28,16 +28,12 @@ import org.w3c.dom.Node;
  * address of its record.
  *
  * <p>A node without an entry is found by walking the document from its nearest ancestor that has one, so what has an
- * entry sets the cost of finding a node by its id. Up to {@code index-depth} levels every element has one; text,
- * attribute and CDATA records never do.</p>
+ * entry sets the cost of finding a node by its id. Every node at level 1 has an entry, see
+ * https://github.com/eXist-db/exist/issues/1691, and below it every element up to {@code index-depth} levels. The same
+ * rule applies when a node is stored, when the entries of a document are rebuilt and when an update inserts nodes.</p>
  *
- * <p>The rule is asked in two places that do not agree about every node. Storing a node gives an entry to everything
- * but text, attributes and CDATA up to the index depth, so comments and processing instructions get one. Rebuilding the
- * entries of a document (a reindex that stores, and nodes inserted by an update) gives one to every element up to the
- * index depth and to anything at level 1, so comments and processing instructions below the root level lose theirs.
- * Both rules are kept as they were, in one place; whether they should be one is a separate question.</p>
- *
- * <p>With an index depth of 0 nothing gets an entry when storing, but the root level still does when rebuilding.</p>
+ * <p>Documents stored before the rule was made one may hold entries for comments and processing instructions below the
+ * root level. They are harmless: an entry is only a hint, and a node found through one is read and checked.</p>
  */
 public final class EntryPolicy {
 
@@ -62,30 +58,13 @@ public final class EntryPolicy {
     }
 
     /**
-     * Tells whether a node gets an entry when it is stored.
+     * Tells whether a node gets an entry.
      *
      * @param nodeType the DOM node type of the node
      * @param level the level of the node in the document, 1 for the root element
      * @return true if the record of the node is stored with an entry
      */
-    public boolean entryOnStore(final short nodeType, final int level) {
-        if (nodeType == Node.TEXT_NODE || nodeType == Node.ATTRIBUTE_NODE || nodeType == Node.CDATA_SECTION_NODE) {
-            return false;
-        }
-        return level <= indexDepth;
-    }
-
-    /**
-     * Tells whether a node gets an entry when the entries of its document are rebuilt, or when it is inserted by an
-     * update.
-     *
-     * <p>All nodes at level 1 get one, see https://github.com/eXist-db/exist/issues/1691, and only elements below.</p>
-     *
-     * @param nodeType the DOM node type of the node
-     * @param level the level of the node in the document, 1 for the root element
-     * @return true if an entry is added for the node
-     */
-    public boolean entryOnReindex(final short nodeType, final int level) {
+    public boolean hasEntry(final short nodeType, final int level) {
         return level == 1 || (nodeType == Node.ELEMENT_NODE && level <= indexDepth);
     }
 }
