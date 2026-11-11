@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/storage/dom/EntryPolicyTest.java
+  s_b8fe46c1fb9a2b::t_3aa1fdf89fe854 52-75,81-103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "30c0b014d630f1044dd7a422ac03e1eec5c21865",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
