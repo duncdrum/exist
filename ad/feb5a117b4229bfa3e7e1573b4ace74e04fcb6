@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/util/Configuration.java
+  s_b8fe46c1fb9a2b::t_71c6cfe939befc 493-503,1271
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  s_b8fe46c1fb9a2b::t_f7a8823c881d81 53,57,80,84-85,107,110-111
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  s_b8fe46c1fb9a2b::t_5d35acf678b790 62,64,82,84,108,111,137,140,159,162,246,249
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  s_b8fe46c1fb9a2b::t_f702cf92245d1f 27,32,42,108-142
+exist-core/src/test/java/org/exist/storage/dom/DomAnchorsTest.java
+  s_b8fe46c1fb9a2b::t_7ba90d6b8317cf 112,115,124,126-127,136,138-139,148,151,165-166,172-173
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "adfeb5a117b4229bfa3e7e1573b4ace74e04fcb6",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
