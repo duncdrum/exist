@@ -1,0 +1,23 @@
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_b8fe46c1fb9a2b::t_bb7031e5c33c81 1301-1303,1315-1332,1338-1342,1348-1349,1353,1358,1363-1368,1384-1385,1390,1393,1399,1401-1402,1406,1410,1412,1414-1415
+exist-core/src/main/java/org/exist/storage/dom/LookupStatistics.java
+  s_b8fe46c1fb9a2b::t_456eda652a9492 1-45
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  s_b8fe46c1fb9a2b::t_462d1dfe6818c2 28,33,118,127-131,145,147-149,154-159,163-164,167-169,173,175,178,182,187-189,200-220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "869ee6248c41f7fc29d1c4e3dea65341f603411c",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
