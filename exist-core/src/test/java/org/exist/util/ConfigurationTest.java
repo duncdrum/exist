@@ -23,6 +23,7 @@ package org.exist.util;
 
 import org.exist.indexing.IndexManager;
 import org.exist.source.URLSource;
+import org.exist.storage.NativeBroker;
 import org.exist.xquery.ModuleRegistration;
 import org.exist.xquery.XQueryContext;
 import org.junit.jupiter.api.Test;
@@ -70,6 +71,43 @@ class ConfigurationTest {
             Files.copy(in, conf);
         }
         assertThatNoException().isThrownBy(() -> new Configuration(conf.toString(), Optional.of(existHomeDir)));
+    }
+
+    /** Reads conf.xml with the {@code index-scan-limit} attribute of the indexer set to a value, or left out. */
+    private static int indexScanLimit(final Path existHomeDir, final String value) throws Exception {
+        String xml;
+        try (InputStream in = ConfigurationTest.class.getResourceAsStream("/conf.xml")) {
+            xml = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        assertThat(xml).contains("<indexer ");
+        if (value != null) {
+            xml = xml.replace("<indexer ", "<indexer index-scan-limit=\"" + value + "\" ");
+        }
+        final Path conf = existHomeDir.resolve("scan-limit-conf.xml");
+        Files.writeString(conf, xml);
+        return new Configuration(conf.toString(), Optional.of(existHomeDir)).getInteger(NativeBroker.PROPERTY_INDEX_SCAN_LIMIT);
+    }
+
+    @Test
+    void indexScanLimitIsReadFromTheIndexer(@TempDir Path existHomeDir) throws Exception {
+        assertThat(indexScanLimit(existHomeDir, "64")).isEqualTo(64);
+        assertThat(indexScanLimit(existHomeDir, "0")).isZero();
+    }
+
+    @Test
+    void aLowIndexScanLimitIsWarnedAboutButUsed(@TempDir Path existHomeDir) throws Exception {
+        assertThat(indexScanLimit(existHomeDir, "4")).isEqualTo(4);
+    }
+
+    @Test
+    void anIndexScanLimitThatIsNegativeOrNotANumberIsIgnored(@TempDir Path existHomeDir) throws Exception {
+        assertThat(indexScanLimit(existHomeDir, "-5")).isEqualTo(-1);
+        assertThat(indexScanLimit(existHomeDir, "many")).isEqualTo(-1);
+    }
+
+    @Test
+    void withoutAnIndexScanLimitTheBrokerUsesItsDefault(@TempDir Path existHomeDir) throws Exception {
+        assertThat(indexScanLimit(existHomeDir, null)).isEqualTo(-1);
     }
 
     // parseBooleanAttribute — #6001: unified boolean config attribute parsing
