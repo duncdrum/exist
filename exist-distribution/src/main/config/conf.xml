@@ -549,7 +549,7 @@
         - preserve-whitespace-mixed-content:
             preserve the white space inside a mixed content node: "yes" or "no".
     -->
-    <indexer caseSensitive="yes" index-depth="5" preserve-whitespace-mixed-content="no"
+    <indexer caseSensitive="yes" index-depth="5" index-scan-limit="64" preserve-whitespace-mixed-content="no"
         suppress-whitespace="none">
 
         <modules>
