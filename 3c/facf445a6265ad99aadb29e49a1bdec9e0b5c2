@@ -1,0 +1,14 @@
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  h_ff0005bef58c9d 42,158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3cfacf445a6265ad99aadb29e49a1bdec9e0b5c2",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
