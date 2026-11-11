@@ -70,10 +70,27 @@ public class RawNodeIterator implements IRawNodeIterator {
      * @throws IOException if an I/O error occurs
      */
     public RawNodeIterator(final DBBroker broker, final DOMFile db, final NodeHandle node) throws IOException {
+        this(broker, db);
+        seek(node);
+    }
+
+    /**
+     * Construct the iterator positioned before a record that the caller has already found, without looking up
+     * anything. The caller holds the lock on the underlying data file.
+     *
+     * @param broker the owner object used to acquire a lock on the underlying data file (usually a DBBroker)
+     * @param db the underlying data file
+     * @param rec the position of the record where the iterator will be positioned.
+     */
+    public RawNodeIterator(final DBBroker broker, final DOMFile db, final RecordPos rec) {
+        this(broker, db);
+        position(rec);
+    }
+
+    private RawNodeIterator(final DBBroker broker, final DOMFile db) {
         this.broker = broker;
         this.lockManager = broker.getBrokerPool().getLockManager();
         this.db = db;
-        seek(node);
     }
 
     @Override
@@ -92,13 +109,17 @@ public class RawNodeIterator implements IRawNodeIterator {
                     throw new IOException("Node not found: " + e.getMessage());
                 }
             }
-            pageNum = rec.getPage().getPageNum();
-            //Position the stream at the very beginning of the record
-            offset = rec.offset - DOMFile.LENGTH_TID;
-            page = rec.getPage();
+            position(rec);
         } catch (final LockException e) {
             throw new IOException("Exception while scanning document: " + e.getMessage());
         }
+    }
+
+    private void position(final RecordPos rec) {
+        pageNum = rec.getPage().getPageNum();
+        //Position the stream at the very beginning of the record
+        offset = rec.offset - DOMFile.LENGTH_TID;
+        page = rec.getPage();
     }
 
     @Override
