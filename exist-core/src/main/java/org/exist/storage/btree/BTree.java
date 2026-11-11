@@ -348,6 +348,29 @@ public class BTree extends Paged implements Lockable {
     }
 
     /**
+     * An entry of the tree: a key and the pointer stored with it.
+     *
+     * @param key a copy of the key
+     * @param pointer the pointer stored with the key
+     */
+    public record FloorEntry(Value key, long pointer) {
+    }
+
+    /**
+     * Finds the entry with the greatest key that is less than or equal to the given one.
+     *
+     * @param value the key
+     *
+     * @return the entry, or null if every key is greater
+     *
+     * @throws IOException if an I/O error occurs
+     * @throws BTreeException if an error occurs with the tree
+     */
+    public FloorEntry findFloor(final Value value) throws IOException, BTreeException {
+        return getRootNode().findFloor(value);
+    }
+
+    /**
      * query performs a query against the BTree and performs callback
      * operations to report the search results.
      *
@@ -1682,6 +1705,94 @@ public class BTree extends Paged implements Lockable {
                 default :
                     throw new BTreeException("Invalid Page Type In findValue");
             }
+        }
+
+        /**
+         * Finds the entry with the greatest key that is less than or equal to the given one, in the subtree of this
+         * node.
+         *
+         * @param value the key
+         *
+         * @return the entry, or null if every key of the subtree is greater
+         *
+         * @throws IOException if an I/O error occurs
+         * @throws BTreeException if an error occurs with the tree
+         */
+        private FloorEntry findFloor(final Value value) throws IOException, BTreeException {
+            final int idx = searchKey(value);
+            switch (pageHeader.getStatus()) {
+
+                case BRANCH :
+                    final int child = idx < 0 ? - (idx + 1) : idx + 1;
+                    final BTreeNode node = getChildNode(child);
+                    if (node == null) {
+                        throw new BTreeException("Unexpected " + child + ", " + page.getPageNum() + ": value '" +
+                                value.toString() + "' doesn't exist");
+                    }
+                    final FloorEntry entry = node.findFloor(value);
+                    if (entry != null) {
+                        return entry;
+                    }
+                    // every key of that child is greater (or it has none left after removals): look to its left
+                    for (int i = child - 1; i >= 0; i--) {
+                        final FloorEntry left = childOf(i).lastEntry();
+                        if (left != null) {
+                            return left;
+                        }
+                    }
+                    return null;
+
+                case LEAF :
+                    final int pos = idx >= 0 ? idx : - (idx + 1) - 1;
+                    return pos < 0 ? null : entryAt(pos);
+
+                default :
+                    throw new BTreeException("Invalid Page Type In findFloor");
+            }
+        }
+
+        /**
+         * Returns the entry with the greatest key in the subtree of this node.
+         *
+         * @return the entry, or null if the subtree has none
+         *
+         * @throws IOException if an I/O error occurs
+         * @throws BTreeException if an error occurs with the tree
+         */
+        private FloorEntry lastEntry() throws IOException, BTreeException {
+            switch (pageHeader.getStatus()) {
+
+                case BRANCH :
+                    for (int i = nPtrs - 1; i >= 0; i--) {
+                        final FloorEntry last = childOf(i).lastEntry();
+                        if (last != null) {
+                            return last;
+                        }
+                    }
+                    return null;
+
+                case LEAF :
+                    return nKeys == 0 ? null : entryAt(nKeys - 1);
+
+                default :
+                    throw new BTreeException("Invalid Page Type In lastEntry");
+            }
+        }
+
+        /**
+         * Returns a child page, or fails the way a search does when the pointer leads nowhere, instead of with a NullPointerException.
+         */
+        private BTreeNode childOf(final int pos) throws IOException, BTreeException {
+            final BTreeNode child = getChildNode(pos);
+            if (child == null) {
+                throw new BTreeException("Unexpected child " + pos + " of page " + page.getPageNum());
+            }
+            return child;
+        }
+
+        private FloorEntry entryAt(final int pos) {
+            final Value key = keys[pos];
+            return new FloorEntry(new Value(Arrays.copyOfRange(key.data(), key.start(), key.start() + key.getLength())), ptrs[pos]);
         }
 
         @Override
