@@ -1,0 +1,45 @@
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_b8fe46c1fb9a2b::t_58d8cc0c3e2fdc 53,136,139,153,205,251-256
+  s_b8fe46c1fb9a2b::t_7e42845265e844 3520,4491
+  s_b8fe46c1fb9a2b::t_0def99cdedbce1 4490
+exist-core/src/main/java/org/exist/storage/dom/EntryPlanner.java
+  s_b8fe46c1fb9a2b::t_093ac317054a7a 1-32,36-54,56-61,63-79
+  s_b8fe46c1fb9a2b::t_85b91fd8f80d31 33-35,55,62
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  s_b8fe46c1fb9a2b::t_1289a65ad2d2b7 35-36,40,47,50,55-64,66,79-88
+  s_b8fe46c1fb9a2b::t_313e9c499e5798 30,37-39
+exist-core/src/main/java/org/exist/util/Configuration.java
+  s_b8fe46c1fb9a2b::t_30d45e94060c23 165,167,1260-1268,1274-1280
+  s_b8fe46c1fb9a2b::t_ae82f7d869650c 254-256,1269-1273
+exist-core/src/test/java/org/exist/storage/dom/DomAnchorsTest.java
+  s_b8fe46c1fb9a2b::t_34c93020f532a8 1-37,39-40,42-150,187
+  s_b8fe46c1fb9a2b::t_d2c01aa700ffd2 38,41,151-186
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  s_b8fe46c1fb9a2b::t_7a1ff662a89c3b 66-73,75-92,114-126,131
+  s_b8fe46c1fb9a2b::t_1925f22920c43b 74
+exist-core/src/test/java/org/exist/storage/dom/EntryPlannerTest.java
+  s_b8fe46c1fb9a2b::t_12b9c58519901c 1-40,42-63,65-71,73,76-84
+  s_b8fe46c1fb9a2b::t_4cddfe243cb37f 41,64,72,74-75
+exist-distribution/src/main/config/conf.xml
+  s_b8fe46c1fb9a2b::t_7308f58bd32405 61,535-542
+schema/conf.xsd
+  s_b8fe46c1fb9a2b::t_a9945d23491411 11,742-754
+exist-core/src/test/java/org/exist/util/ConfigurationTest.java
+  s_b8fe46c1fb9a2b::t_73b95c6b88efd5 26,76-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1e065c65a3d6d1b6915bbfc2bc729b94732b7ea8",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
