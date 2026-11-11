@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/storage/dom/RawNodeIterator.java
+  s_b8fe46c1fb9a2b::t_9b425415293de4 73,86-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fe6798c504c5c7dd51b58d37af6b547c379e7ffb",
+  "prompts": {},
+  "sessions": {
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
