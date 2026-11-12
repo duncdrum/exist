@@ -157,7 +157,7 @@ public class DomLookupTest {
         return first(nodes, Node.COMMENT_NODE, level);
     }
 
-    private void lookupWithWrongEntry(final String collection, final boolean ancestor, final long expectedRejections,
+    private void assertLookupWithWrongEntry(final String collection, final boolean ancestor, final long expectedRejections,
             final ToLongFunction<List<IStoredNode<?>>> wrongAddress) throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
         try (final DBBroker broker = pool.get(Optional.of(pool.getSecurityManager().getSystemSubject()))) {
@@ -206,42 +206,49 @@ public class DomLookupTest {
 
     @Test
     void anEntryThatLeadsToAnotherNodeIsIgnored() throws Exception {
-        lookupWithWrongEntry("/db/entries-wrong-node", false, 1, nodes -> first(nodes, Node.ELEMENT_NODE, 1).getInternalAddress());
+        assertLookupWithWrongEntry("/db/entries-wrong-node", false, 1, nodes -> first(nodes, Node.ELEMENT_NODE, 1).getInternalAddress());
     }
 
     @Test
     void anEntryThatLeadsToAPageThatDoesNotExistIsIgnored() throws Exception {
-        lookupWithWrongEntry("/db/entries-wrong-page", false, 1, nodes -> StorageAddress.createPointer(9_999_999, (short) 1));
+        assertLookupWithWrongEntry("/db/entries-wrong-page", false, 1, nodes -> StorageAddress.createPointer(9_999_999, (short) 1));
     }
 
     @Test
     void anEntryThatLeadsToNoRecordOnItsPageIsIgnored() throws Exception {
-        lookupWithWrongEntry("/db/entries-wrong-slot", false, 1, nodes ->
+        assertLookupWithWrongEntry("/db/entries-wrong-slot", false, 1, nodes ->
                 StorageAddress.createPointer(StorageAddress.pageFromPointer(first(nodes, Node.ELEMENT_NODE, 1).getInternalAddress()), (short) 30000));
     }
 
     @Test
     void anEntryWithoutAnAddressIsIgnored() throws Exception {
-        lookupWithWrongEntry("/db/entries-wrong-unknown", false, 1, nodes -> StoredNode.UNKNOWN_NODE_IMPL_ADDRESS);
+        assertLookupWithWrongEntry("/db/entries-wrong-unknown", false, 1, nodes -> StoredNode.UNKNOWN_NODE_IMPL_ADDRESS);
     }
 
     // the nearest entry and the nearest ancestor with an entry are the same entry here, so it is ignored by both
 
     @Test
     void anAncestorEntryThatLeadsToAPageThatDoesNotExistIsSkipped() throws Exception {
-        lookupWithWrongEntry("/db/entries-anc-page", true, 2, nodes -> StorageAddress.createPointer(9_999_999, (short) 1));
+        assertLookupWithWrongEntry("/db/entries-anc-page", true, 2, nodes -> StorageAddress.createPointer(9_999_999, (short) 1));
     }
 
     @Test
     void anAncestorEntryThatLeadsToNoRecordOnItsPageIsSkipped() throws Exception {
-        lookupWithWrongEntry("/db/entries-anc-slot", true, 2, nodes ->
+        assertLookupWithWrongEntry("/db/entries-anc-slot", true, 2, nodes ->
                 StorageAddress.createPointer(StorageAddress.pageFromPointer(first(nodes, Node.ELEMENT_NODE, 1).getInternalAddress()), (short) 30000));
     }
 
     @Test
     void anAncestorEntryWithoutAnAddressIsSkipped() throws Exception {
         // an address of -1 is what a missing key returns, so the climb passes it without counting it
-        lookupWithWrongEntry("/db/entries-anc-unknown", true, 1, nodes -> StoredNode.UNKNOWN_NODE_IMPL_ADDRESS);
+        assertLookupWithWrongEntry("/db/entries-anc-unknown", true, 1, nodes -> StoredNode.UNKNOWN_NODE_IMPL_ADDRESS);
+    }
+
+    @Test
+    void anAncestorEntryThatLeadsToAnotherNodeIsSkipped() throws Exception {
+        // the entry leads to the last record of the document, which is after the target and not an ancestor of it: reading
+        // from there never reaches the target, so the climb has to reject the entry and go on to the next ancestor
+        assertLookupWithWrongEntry("/db/entries-anc-other", true, 2, nodes -> nodes.get(nodes.size() - 1).getInternalAddress());
     }
 
     @Test
