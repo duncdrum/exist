@@ -1396,6 +1396,13 @@ The BaseX Team. The original license statement is also included below.]]></pream
                                  root cause not fully resolved (isShuttingDownOrDown fix was insufficient).
                                  see https://github.com/eXist-db/exist/pull/6153 -->
                         <exclude>org.exist.xmldb.concurrent.FragmentsTest</exclude>
+
+                        <!-- Asserts what readers see while a document is updated and defragmented. Fails in about one
+                                 run in two, with and without anchor entries: a defragmentation gives the nodes of a
+                                 document other ids while a query still holds the old ones, see
+                                 https://github.com/eXist-db/exist/issues/7029. Kept as the reproducer, run on purpose
+                                 with -Dtest=AnchorsConcurrencyStressTest (see the class comment). -->
+                        <exclude>org.exist.storage.dom.AnchorsConcurrencyStressTest</exclude>
                     </excludes>
                 </configuration>
             </plugin>
