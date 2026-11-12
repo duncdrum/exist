@@ -1,0 +1,38 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_8c882bcb6b3111::t_7a671069b81913 54,164,1313-1338
+  s_dbe48f241c601f::t_536ae387020851 287-289
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_8c882bcb6b3111::t_5d1d6c30529be4 70-79
+extensions/indexes/range/src/test/xquery/range/rhs-path.xqm
+  s_8c882bcb6b3111::t_190edf3ee1cf69 1-164
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_8c882bcb6b3111::t_57626f6900e94a 82-85
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/IndexCollation.java
+  s_dbe48f241c601f::t_0ffb4b0cf35904 91-94
+extensions/indexes/range/src/test/xquery/range/collation-case-no.xqm
+  s_dbe48f241c601f::t_dc916ebd19f0a7 1-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "07d28bed989bb96c12911f8f0b7ce8dcb49a834c",
+  "prompts": {},
+  "sessions": {
+    "s_8c882bcb6b3111": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b6a6bfdf-b5e2-4144-8709-3a7e650445e6",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_dbe48f241c601f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b0cd8e7-27ee-4754-abbb-745510d5fd50",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
