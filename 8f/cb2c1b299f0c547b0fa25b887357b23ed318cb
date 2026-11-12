@@ -1,0 +1,21 @@
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyScenarios.java
+  s_dbe48f241c601f::t_3849500da7b1c1 65-67,77-92,99-106,209,289
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyTest.java
+  s_dbe48f241c601f::t_c9334ba15fd23d 49-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8fcb2c1b299f0c547b0fa25b887357b23ed318cb",
+  "prompts": {},
+  "sessions": {
+    "s_dbe48f241c601f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b0cd8e7-27ee-4754-abbb-745510d5fd50",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
