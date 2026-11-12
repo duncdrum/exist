@@ -1,0 +1,45 @@
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  s_14610e7a010aa6::t_384d021da0f17b 1-36,38-39,41-46,54-56,70-76,123,125-126,128-130,132-136,138-139,141-144,153,158,164
+  s_14610e7a010aa6::t_4e9e45aa5be75e 146-150,152,154,156-157,165,171-174
+  s_b8fe46c1fb9a2b::t_f6b1aa293e5c0a 124,137,151
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  s_14610e7a010aa6::t_431c8ff4f7ec2e 42,60,76
+  s_b8fe46c1fb9a2b::t_40571b552fe667 380
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  s_14610e7a010aa6::t_03db413458283b 1-30,34,37-60,62-66,68-70
+  s_b8fe46c1fb9a2b::t_bc6311153811be 31-33,35-36,61,67
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_14610e7a010aa6::t_f10352b88b9509 53,200,242-244,246,586-595,3512-3513,4485
+  s_14610e7a010aa6::t_911a24ae8df4a3 578-584
+  s_b8fe46c1fb9a2b::t_784f2426bb75f4 3510,4486
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  s_14610e7a010aa6::t_bd6630155d76e5 1-131
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  s_14610e7a010aa6::t_dcd7190608bb03 1-95
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_14610e7a010aa6::t_5173ff5f462542 1290-1300,1302-1342,1344-1359,1361-1362,1364-1365,1367-1369,1372-1374,1378-1384,1387-1394
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d525996f70060fd2d898016db9ddd2d8cbe0bee7",
+  "prompts": {},
+  "sessions": {
+    "s_14610e7a010aa6": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e4cad6ae-04b3-4758-9320-0ed360dca998",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_b8fe46c1fb9a2b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9716f6ad-0727-4703-b03d-36a0a69e60ee",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
