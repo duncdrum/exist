@@ -1,0 +1,21 @@
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/IndexCollation.java
+  s_dbe48f241c601f::t_0ffb4b0cf35904 91-94
+extensions/indexes/range/src/test/xquery/range/collation-case-no.xqm
+  s_dbe48f241c601f::t_dc916ebd19f0a7 1-87
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "431faaa64d0e46175cfca786b2e40f5dc9925bca",
+  "prompts": {},
+  "sessions": {
+    "s_dbe48f241c601f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b0cd8e7-27ee-4754-abbb-745510d5fd50",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
