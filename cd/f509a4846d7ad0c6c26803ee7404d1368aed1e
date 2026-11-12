@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  s_dbe48f241c601f::t_8eaaa5bdcf2ab8 378-380
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  s_dbe48f241c601f::t_86cb33a77bcc3f 37,40,47-53,57-78,86-132,137,141,150,155,165,169-173,176-181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cdf509a4846d7ad0c6c26803ee7404d1368aed1e",
+  "prompts": {},
+  "sessions": {
+    "s_dbe48f241c601f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b0cd8e7-27ee-4754-abbb-745510d5fd50",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
