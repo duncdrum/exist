@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_dbe48f241c601f::t_536ae387020851 287-289
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c742a7f94e1839a9a724e8c7a9b72583c891eb1f",
+  "prompts": {},
+  "sessions": {
+    "s_dbe48f241c601f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b0cd8e7-27ee-4754-abbb-745510d5fd50",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
