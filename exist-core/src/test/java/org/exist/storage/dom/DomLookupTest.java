@@ -242,6 +242,13 @@ public class DomLookupTest {
     }
 
     @Test
+    void anAncestorEntryThatLeadsToAnotherNodeIsSkipped() throws Exception {
+        // the entry leads to the last record of the document, which is after the target and not an ancestor of it: reading
+        // from there never reaches the target, so the climb has to reject the entry and go on to the next ancestor
+        lookupWithWrongEntry("/db/entries-anc-other", true, 2, nodes -> nodes.get(nodes.size() - 1).getInternalAddress());
+    }
+
+    @Test
     void aNodeBeforeEveryEntryOfItsDocumentClimbsWithoutRejectingAnything() throws Exception {
         final BrokerPool pool = SERVER.getBrokerPool();
         try (final DBBroker broker = DomTestDocuments.systemBroker(pool)) {

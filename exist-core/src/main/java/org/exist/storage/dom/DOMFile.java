@@ -190,6 +190,9 @@ public class DOMFile extends BTree implements Lockable {
 
     private final AddValueLoggable addValueLog = new AddValueLoggable();
 
+    /** Returned by {@link #findInSubtree} when the entry of the ancestor does not lead to the ancestor; no address is negative. */
+    private static final long ENTRY_UNUSABLE = Long.MIN_VALUE;
+
     private final LongAdder lookupsFromEntry = new LongAdder();
     private final LongAdder recordsScanned = new LongAdder();
     private final LongAdder rejectedEntries = new LongAdder();
@@ -1306,11 +1309,19 @@ public class DOMFile extends BTree implements Lockable {
         // that entry is wrong or stale: try to find the nearest available
         // ancestor and traverse it
         ancestorFallbacks.increment();
-        final AncestorEntry ancestor = findNearestAncestorEntry(doc, node);
-        if (ancestor == null) {
-            return KEY_NOT_FOUND;
+        NodeId climbFrom = node.getNodeId();
+        while (true) {
+            final AncestorEntry ancestor = findNearestAncestorEntry(doc, climbFrom);
+            if (ancestor == null) {
+                return KEY_NOT_FOUND;
+            }
+            final long address = findInSubtree(broker, doc, ancestor, node);
+            if (address != ENTRY_UNUSABLE) {
+                return address;
+            }
+            // the entry of this ancestor leads to another node: go on to the next ancestor above it
+            climbFrom = ancestor.nodeId();
         }
-        return findInSubtree(broker, doc, ancestor, node);
     }
 
     /**
@@ -1446,14 +1457,14 @@ public class DOMFile extends BTree implements Lockable {
      * record.
      *
      * @param doc the document of the node
-     * @param node the node
+     * @param below the id of the node to climb from; its ancestors are looked at, not the node itself
      * @return the nearest ancestor with an entry, or null if the climb reaches the document node
      * @throws IOException if an I/O error occurs
      * @throws BTreeException if the node has no parent id
      */
-    private AncestorEntry findNearestAncestorEntry(final DocumentImpl doc, final NodeProxy node)
+    private AncestorEntry findNearestAncestorEntry(final DocumentImpl doc, final NodeId below)
             throws IOException, BTreeException {
-        NodeId nodeID = node.getNodeId();
+        NodeId nodeID = below;
         long parentPointer = KEY_NOT_FOUND;
         do {
             nodeID = nodeID.getParentId();
@@ -1485,7 +1496,8 @@ public class DOMFile extends BTree implements Lockable {
      * @param doc the document of the node
      * @param ancestor the ancestor to read from
      * @param node the node to find
-     * @return the address of the node, or {@link #KEY_NOT_FOUND} if the subtree does not contain it
+     * @return the address of the node, {@link #KEY_NOT_FOUND} if the subtree does not contain it, or
+     *     {@link #ENTRY_UNUSABLE} if the entry of the ancestor does not lead to the ancestor
      * @throws IOException if an I/O error occurs
      * @throws BTreeException if the subtree cannot be read
      */
@@ -1494,6 +1506,7 @@ public class DOMFile extends BTree implements Lockable {
         try {
             final int thisLevel = ancestor.nodeId().getTreeLevel();
             Integer childLevel = null; // lazily initialized below
+            boolean first = true;
 
             final NodeProxy parent = new NodeProxy(null, doc, ancestor.nodeId(), ancestor.pointer());
             final EmbeddedXMLStreamReader reader = (EmbeddedXMLStreamReader)broker.getXMLStreamReader(parent, true);
@@ -1507,6 +1520,15 @@ public class DOMFile extends BTree implements Lockable {
                     }
 
                     final NodeId otherId = (NodeId) reader.getProperty(ExtendedXMLStreamReader.PROPERTY_NODE_ID);
+                    if (first) {
+                        first = false;
+                        // the first record must be the ancestor the entry is keyed by, else the entry is wrong or stale and
+                        // reading on from it would read through the rest of the document
+                        if (!otherId.equals(ancestor.nodeId())) {
+                            ignoreEntry(doc, "the entry of an ancestor leads to another node");
+                            return ENTRY_UNUSABLE;
+                        }
+                    }
                     if (otherId.equals(node.getNodeId())) {
                         return reader.getCurrentPosition();
                     }
