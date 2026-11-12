@@ -1,0 +1,25 @@
+exist-core/pom.xml
+  s_dbe48f241c601f::t_b59cab84a0f224 1399-1404
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyScenarios.java
+  s_dbe48f241c601f::t_8a857ac48a0a25 1-286
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyStressTest.java
+  s_dbe48f241c601f::t_a2d51307b823c5 1-69
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyTest.java
+  s_dbe48f241c601f::t_e986ca4e8c8184 33,41-46,48-49,60,62-63,68,73,78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4333cc797fefe06996ffe20cedcf48c52febb755",
+  "prompts": {},
+  "sessions": {
+    "s_dbe48f241c601f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2b0cd8e7-27ee-4754-abbb-745510d5fd50",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
