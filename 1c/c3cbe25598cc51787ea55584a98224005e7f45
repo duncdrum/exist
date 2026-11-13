@@ -1,0 +1,24 @@
+exist-core/src/test/java/org/exist/dom/persistent/MatchChainTest.java
+  s_88cf898156bfb0::t_9ad47bcb4c3e46 104-122
+exist-core/src/main/java/org/exist/dom/persistent/Match.java
+  s_88cf898156bfb0::t_2d966be8e1649d 154-158
+  s_88cf898156bfb0::t_e4cee4ae2712dc 401
+  s_88cf898156bfb0::t_fb352831587c10 133-134,138
+  s_88cf898156bfb0::t_15f05a6c76b3a1 402-415
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1cc3cbe25598cc51787ea55584a98224005e7f45",
+  "prompts": {},
+  "sessions": {
+    "s_88cf898156bfb0": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12004739-566a-48ab-baed-5d297038f50c",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
