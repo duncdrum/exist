@@ -29,7 +29,9 @@ import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.LongAdder;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -197,6 +199,35 @@ public class DOMFile extends BTree implements Lockable {
     private final LongAdder recordsScanned = new LongAdder();
     private final LongAdder rejectedEntries = new LongAdder();
     private final LongAdder ancestorFallbacks = new LongAdder();
+    private final LongAdder exactHits = new LongAdder();
+    private final LongAdder forwardLinkHops = new LongAdder();
+    private final LongAdder[] lookupBuckets = newAdders(LookupBuckets.COUNT);
+
+    /** The most documents that the statistics per document follow, so that they cannot grow without a bound. */
+    private static final int MAX_DOCUMENT_STATISTICS = 10_000;
+
+    /** Whether the lookups are also counted per document, see {@link #setDocumentStatistics(boolean)}. */
+    private volatile boolean documentStatistics = false;
+    private final ConcurrentHashMap<Integer, DocumentCounters> perDocument = new ConcurrentHashMap<>();
+
+    /** What the lookups of one document read, while the statistics per document are on. */
+    private static final class DocumentCounters {
+        final String uri;
+        final LongAdder lookups = new LongAdder();
+        final LongAdder recordsScanned = new LongAdder();
+
+        DocumentCounters(final String uri) {
+            this.uri = uri;
+        }
+    }
+
+    private static LongAdder[] newAdders(final int count) {
+        final LongAdder[] adders = new LongAdder[count];
+        for (int i = 0; i < count; i++) {
+            adders[i] = new LongAdder();
+        }
+        return adders;
+    }
 
     public DOMFile(final BrokerPool pool, final byte id, final Path dataDir, final Configuration config) throws DBException {
         super(pool, id, FILE_FORMAT_VERSION_ID, true, pool.getCacheManager());
@@ -1313,17 +1344,21 @@ public class DOMFile extends BTree implements Lockable {
         // first try to find the node in the index
         final long pointer = findValue(nodeRef);
         if (pointer != KEY_NOT_FOUND) {
+            exactHits.increment();
             return pointer;
         }
         // node not found in index: read forward from the nearest entry before it
         final FromEntry fromEntry = findFromNearestEntry(broker, doc, node, nodeRef);
         if (fromEntry.outcome() != FromEntry.Outcome.UNUSABLE) {
             lookupsFromEntry.increment();
+            lookupBuckets[LookupBuckets.bucketOf(fromEntry.scanned(), scanLimitOf(broker))].increment();
+            countForDocument(doc, fromEntry.scanned());
             return fromEntry.address();
         }
         // that entry is wrong or stale: try to find the nearest available
         // ancestor and traverse it
         ancestorFallbacks.increment();
+        countForDocument(doc, fromEntry.scanned());
         NodeId climbFrom = node.getNodeId();
         while (true) {
             final AncestorEntry ancestor = findNearestAncestorEntry(doc, climbFrom);
@@ -1344,16 +1379,22 @@ public class DOMFile extends BTree implements Lockable {
      *
      * @param outcome whether the node was found, is not in the document, or the entry could not be used
      * @param address the address of the node if it was found, else {@link #KEY_NOT_FOUND}
+     * @param scanned the records that were read from the entry
      */
-    private record FromEntry(Outcome outcome, long address) {
+    private record FromEntry(Outcome outcome, long address, long scanned) {
 
         enum Outcome { FOUND, ABSENT, UNUSABLE }
 
-        static final FromEntry ABSENT = new FromEntry(Outcome.ABSENT, KEY_NOT_FOUND);
-        static final FromEntry UNUSABLE = new FromEntry(Outcome.UNUSABLE, KEY_NOT_FOUND);
+        static FromEntry absent(final long scanned) {
+            return new FromEntry(Outcome.ABSENT, KEY_NOT_FOUND, scanned);
+        }
 
-        static FromEntry found(final long address) {
-            return new FromEntry(Outcome.FOUND, address);
+        static FromEntry unusable(final long scanned) {
+            return new FromEntry(Outcome.UNUSABLE, KEY_NOT_FOUND, scanned);
+        }
+
+        static FromEntry found(final long address, final long scanned) {
+            return new FromEntry(Outcome.FOUND, address, scanned);
         }
     }
 
@@ -1387,7 +1428,7 @@ public class DOMFile extends BTree implements Lockable {
             throws IOException, BTreeException {
         final FloorEntry floor = findFloor(nodeRef);
         if (!isEntryOfDocument(floor, doc)) {
-            return FromEntry.UNUSABLE;
+            return FromEntry.unusable(0);
         }
         long scanned = 0;
         try {
@@ -1395,7 +1436,7 @@ public class DOMFile extends BTree implements Lockable {
             // record is found here and the iterator starts at it
             final RecordPos start = findRecordOfEntry(doc, floor.pointer());
             if (start == null) {
-                return FromEntry.UNUSABLE;
+                return FromEntry.unusable(scanned);
             }
             // a new reader: the shared one checks its start node by its id, which is this lookup
             final EmbeddedXMLStreamReader reader = new EmbeddedXMLStreamReader(broker, doc, new RawNodeIterator(broker, this, start), null, true);
@@ -1411,15 +1452,15 @@ public class DOMFile extends BTree implements Lockable {
                         first = false;
                         if (!Arrays.equals(floor.key().getData(), new NodeRef(doc.getDocId(), otherId).getData())) {
                             ignoreEntry(doc, "it leads to another node");
-                            return FromEntry.UNUSABLE;
+                            return FromEntry.unusable(scanned);
                         }
                     }
                     final int order = otherId.compareTo(node.getNodeId());
                     if (order == 0) {
-                        return FromEntry.found(reader.getCurrentPosition());
+                        return FromEntry.found(reader.getCurrentPosition(), scanned);
                     }
                     if (order > 0) {
-                        return FromEntry.ABSENT;
+                        return FromEntry.absent(scanned);
                     }
                 }
             } finally {
@@ -1427,11 +1468,11 @@ public class DOMFile extends BTree implements Lockable {
             }
         } catch (final XMLStreamException e) {
             ignoreEntry(doc, "it cannot be read: " + e.getMessage());
-            return FromEntry.UNUSABLE;
+            return FromEntry.unusable(scanned);
         } finally {
             recordsScanned.add(scanned);
         }
-        return FromEntry.ABSENT;
+        return FromEntry.absent(scanned);
     }
 
     /**
@@ -1445,6 +1486,9 @@ public class DOMFile extends BTree implements Lockable {
         final RecordPos record = StorageAddress.hasAddress(pointer) ? findRecord(pointer) : null;
         if (record == null) {
             ignoreEntry(doc, "it leads to no record");
+        } else if (record.getPage().getPageNum() != StorageAddress.pageFromPointer(pointer)) {
+            // a page split moved the record and left a forward link where the entry points
+            forwardLinkHops.increment();
         }
         return record;
     }
@@ -1460,7 +1504,77 @@ public class DOMFile extends BTree implements Lockable {
      * @return a snapshot of the counters
      */
     public LookupStatistics getLookupStatistics() {
-        return new LookupStatistics(lookupsFromEntry.sum(), recordsScanned.sum(), rejectedEntries.sum(), ancestorFallbacks.sum());
+        return new LookupStatistics(lookupsFromEntry.sum(), recordsScanned.sum(), rejectedEntries.sum(), ancestorFallbacks.sum(),
+                exactHits.sum(), forwardLinkHops.sum(), new LookupBuckets(lookupBuckets[0].sum(), lookupBuckets[1].sum(),
+                        lookupBuckets[2].sum(), lookupBuckets[3].sum()));
+    }
+
+    /**
+     * Sets all counters of the by-id lookups, and those per document, back to zero.
+     */
+    public void resetLookupStatistics() {
+        lookupsFromEntry.reset();
+        recordsScanned.reset();
+        rejectedEntries.reset();
+        ancestorFallbacks.reset();
+        exactHits.reset();
+        forwardLinkHops.reset();
+        for (final LongAdder bucket : lookupBuckets) {
+            bucket.reset();
+        }
+        perDocument.clear();
+    }
+
+    /**
+     * Switches the counting of lookups per document on or off. It is off by default, as it costs a map lookup for each
+     * lookup that is not answered by an entry of its own. Switching it off keeps what was counted until the statistics
+     * are reset. At most {@value #MAX_DOCUMENT_STATISTICS} documents are followed; the lookups of any other are not counted.
+     *
+     * @param enabled true to count per document
+     */
+    public void setDocumentStatistics(final boolean enabled) {
+        documentStatistics = enabled;
+    }
+
+    /**
+     * Returns whether the lookups are counted per document.
+     *
+     * @return true if they are
+     */
+    public boolean isDocumentStatistics() {
+        return documentStatistics;
+    }
+
+    /**
+     * Returns the documents whose lookups read the most records from entries.
+     *
+     * @param limit the most documents to return
+     * @return the documents, the one that read the most records first; empty unless the statistics per document were on
+     */
+    public List<DocumentLookups> getDocumentStatistics(final int limit) {
+        return perDocument.entrySet().stream()
+                .map(e -> new DocumentLookups(e.getKey(), e.getValue().uri, e.getValue().lookups.sum(), e.getValue().recordsScanned.sum()))
+                .sorted(Comparator.comparingLong(DocumentLookups::recordsScanned).reversed().thenComparingInt(DocumentLookups::documentId))
+                .limit(limit)
+                .toList();
+    }
+
+    private void countForDocument(final DocumentImpl doc, final long records) {
+        if (!documentStatistics) {
+            return;
+        }
+        final DocumentCounters counters = perDocument.get(doc.getDocId());
+        final DocumentCounters counted = counters != null ? counters
+                : perDocument.size() < MAX_DOCUMENT_STATISTICS ? perDocument.computeIfAbsent(doc.getDocId(), id -> new DocumentCounters(doc.getURI().toString())) : null;
+        if (counted != null) {
+            counted.lookups.increment();
+            counted.recordsScanned.add(records);
+        }
+    }
+
+    /** The scan limit of the broker, 0 if there is none or the broker does not say. */
+    private static int scanLimitOf(final DBBroker broker) {
+        return broker instanceof final NativeBroker nativeBroker ? nativeBroker.getEntryPolicy().getScanLimit() : 0;
     }
 
     /**
