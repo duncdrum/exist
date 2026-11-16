@@ -29,6 +29,7 @@ import org.exist.management.Cache;
 import org.exist.management.CacheManager;
 import org.exist.management.impl.BinaryValues;
 import org.exist.management.impl.CollectionCache;
+import org.exist.management.impl.NodeLookups;
 import org.exist.management.impl.Database;
 import org.exist.management.impl.DiskUsage;
 import org.exist.management.impl.LockTable;
@@ -134,6 +135,7 @@ public class JMXtoXML {
         putCategory("locking", LockTable.getAllInstancesQuery());
         putCategory("disk", DiskUsage.getAllInstancesQuery());
         putCategory("collectioncaches", CollectionCache.getAllInstancesQuery());
+        putCategory("nodelookups", NodeLookups.getAllInstancesQuery());
         putCategory("caches",
                 CacheManager.getAllInstancesQuery(),
                 Cache.getAllInstancesQuery()

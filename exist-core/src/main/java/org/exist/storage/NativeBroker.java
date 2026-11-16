@@ -228,6 +228,27 @@ public class NativeBroker implements DBBroker {
 
     private ObjectLinkedOpenHashSet<Txn> currentTransactions = new ObjectLinkedOpenHashSet(4);  // 4 - we don't expect many concurrent transactions per-broker!
 
+    /**
+     * Returns the {@code index-depth} of a configuration: the levels of elements that get an entry in the DOM index.
+     *
+     * @param config the configuration
+     * @return the configured depth, or the default if there is none
+     */
+    public static int configuredIndexDepth(final Configuration config) {
+        return integerOrDefault(config, PROPERTY_INDEX_DEPTH, DEFAULT_INDEX_DEPTH);
+    }
+
+    /**
+     * Returns the {@code index-scan-limit} of a configuration: the most records a lookup of a node by its id reads from the
+     * nearest entry in the DOM index before it.
+     *
+     * @param config the configuration
+     * @return the configured limit, or the default if there is none; 0 means no anchors
+     */
+    public static int configuredIndexScanLimit(final Configuration config) {
+        return integerOrDefault(config, PROPERTY_INDEX_SCAN_LIMIT, DEFAULT_INDEX_SCAN_LIMIT);
+    }
+
     private static int integerOrDefault(final Configuration config, final String property, final int defaultValue) {
         final int value = config.getInteger(property);
         return value < 0 ? defaultValue : value;
@@ -249,11 +270,8 @@ public class NativeBroker implements DBBroker {
             nodesCountThreshold = nodesCountThreshold * 1000;
         }
 
-        int indexDepth = config.getInteger(PROPERTY_INDEX_DEPTH);
-        if(indexDepth < 0) {
-            indexDepth = DEFAULT_INDEX_DEPTH;
-        }
-        final int indexScanLimit = integerOrDefault(config, PROPERTY_INDEX_SCAN_LIMIT, DEFAULT_INDEX_SCAN_LIMIT);
+        final int indexDepth = configuredIndexDepth(config);
+        final int indexScanLimit = configuredIndexScanLimit(config);
         this.entryPolicy = new EntryPolicy(indexDepth, indexScanLimit);
         this.entryPlanner = new EntryPlanner(entryPolicy);
 
