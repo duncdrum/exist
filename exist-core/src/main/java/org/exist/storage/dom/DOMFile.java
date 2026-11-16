@@ -2190,6 +2190,9 @@ public class DOMFile extends BTree implements Lockable {
                 }
                 break;
             }
+            default:
+                // the node kinds that are stored are all handled above
+                break;
         }
         if (!inOverflow) {
             //If it isn't an overflow value, add the value length to the current offset
@@ -3569,6 +3572,8 @@ public class DOMFile extends BTree implements Lockable {
                 case KEYS:
                     values.add(value);
                     return true;
+                default:
+                    break;
             }
             return false;
         }
