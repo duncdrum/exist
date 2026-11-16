@@ -16,6 +16,7 @@ JMH micro-benchmarks for `exist-core` (and the Lucene index extension, which sev
 | `XQueryServletBenchmark` | `org.exist.http.servlets` | Per-request cost of `XQueryServlet#process` for inline, `xquery.url` and database-fallback sources (NPath refactoring guard) |
 | `LockTableBenchmark` | `org.exist.storage.lock` | Lock table contention |
 | `ReindexBenchmark` | `org.exist.storage` | End-to-end `xmldb:reindex()` fast path ([#572](https://github.com/eXist-db/exist/issues/572)) |
+| `NodeLookupBenchmark` | `org.exist.storage.dom` | Finding a stored node again by its id, with the anchor entries of the DOM index off and on, over five document shapes; the `attributes` shape keeps the known attribute limit visible ([#7026](https://github.com/eXist-db/exist/issues/7026)). About 4 to 5 minutes with the weekly job's arguments |
 | `LucenePhraseQueryBenchmark` | `org.exist.indexing.lucene` | Query-time Lucene phrase lookup over many small documents ([#2812](https://github.com/eXist-db/exist/issues/2812)) |
 | `ReindexDeleteStrategyBenchmark` | `org.exist.indexing.lucene` | Reindex-time Lucene delete strategies for mixed document shapes |
 | `LuceneFacetsBenchmark` | `org.exist.indexing.lucene` | A Lucene search with and without reading its facets, over small and large taxonomies |
