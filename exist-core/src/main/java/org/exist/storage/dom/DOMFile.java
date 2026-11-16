@@ -971,7 +971,7 @@ public class DOMFile extends BTree implements Lockable {
         if (nextSplitPage.len == 0) {
             LOG.warn("Page {} is empty. Remove it", nextSplitPage.getPageNum());
             //If nothing has been copied to the last split page, remove it
-            if (nextSplitPage == firstSplitPage) {
+            if (nextSplitPage.equals(firstSplitPage)) {
                 firstSplitPage = null;
             }
             try {
@@ -1005,7 +1005,7 @@ public class DOMFile extends BTree implements Lockable {
                 writeToLog(loggable, nextSplitPage.page);
             }
             firstSplitPage.getPageHeader().setPrevDataPage(rec.getPage().getPageNum());
-            if (nextSplitPage != firstSplitPage) {
+            if (!nextSplitPage.equals(firstSplitPage)) {
                 firstSplitPage.setDirty(true);
                 dataCache.add(firstSplitPage);
             }
