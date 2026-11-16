@@ -2044,23 +2044,13 @@ public class DOMFile extends BTree implements Lockable {
     }
 
     /**
-     * Recursive method to retrieve the string values of the root node
-     * and all its descendants.
+     * Moves a record position to the next real node: a link is skipped, and at the end of a page the position goes on to the
+     * first record of the next page.
      *
-     * @param pool the broker pool
-     * @param os the output stream to receive the value
      * @param rec the record position
-     * @param isTopNode true if this is the top node, false otherwise
-     * @param addWhitespace true if whitespace should be added to the node value
+     * @return false if the page chain ends before there is another node, true if the position is at the next node
      */
-    private void getNodeValue(final BrokerPool pool,
-                              final UnsynchronizedByteArrayOutputStream os,
-                              final RecordPos rec, final boolean isTopNode,
-                              final boolean addWhitespace) {
-        if(LOG.isDebugEnabled() && !lockManager.isBtreeLocked(getLockName())) {
-            LOG.debug("The file doesn't own a lock");
-        }
-        //Locate the next real node, skipping relocated nodes
+    private boolean locateNextRecord(final RecordPos rec) {
         boolean foundNext = false;
         do {
             final DOMFilePageHeader pageHeader = rec.getPage().getPageHeader();
@@ -2073,7 +2063,7 @@ public class DOMFile extends BTree implements Lockable {
                         ", Len: " + pageHeader.getDataLength() +
                         ", Page info : " + rec.getPage().page.getPageInfo());
                     //TODO : throw exception ? -pb
-                    return;
+                    return false;
                 }
                 rec.setPage(getDOMPage(nextPage));
                 dataCache.add(rec.getPage());
@@ -2091,6 +2081,29 @@ public class DOMFile extends BTree implements Lockable {
                 foundNext = true;
             }
         } while (!foundNext);
+        return true;
+    }
+
+    /**
+     * Recursive method to retrieve the string values of the root node
+     * and all its descendants.
+     *
+     * @param pool the broker pool
+     * @param os the output stream to receive the value
+     * @param rec the record position
+     * @param isTopNode true if this is the top node, false otherwise
+     * @param addWhitespace true if whitespace should be added to the node value
+     */
+    private void getNodeValue(final BrokerPool pool,
+                              final UnsynchronizedByteArrayOutputStream os,
+                              final RecordPos rec, final boolean isTopNode,
+                              final boolean addWhitespace) {
+        if(LOG.isDebugEnabled() && !lockManager.isBtreeLocked(getLockName())) {
+            LOG.debug("The file doesn't own a lock");
+        }
+        if (!locateNextRecord(rec)) {
+            return;
+        }
         final short valueLength = ByteConversion.byteToShort(rec.getPage().data, rec.offset);
         int realLen = valueLength;
         rec.offset += LENGTH_DATA_LENGTH;
@@ -2114,92 +2127,129 @@ public class DOMFile extends BTree implements Lockable {
         // check the type of the node
         final short type = Signatures.getType(data[readOffset]);
         readOffset += StoredNode.LENGTH_SIGNATURE_LENGTH;
-        //Switch on the node type
-        switch (type) {
-            case Node.ELEMENT_NODE: {
-                final int children = ByteConversion.byteToInt(data, readOffset);
-                readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
-                final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                readOffset += nodeIdLen;
-                final short attributes = ByteConversion.byteToShort(data, readOffset);
-                //Ignore the following NS data which are of no use
-                //We position the offset *after* the next TID
-                rec.offset += realLen + LENGTH_TID;
-                final boolean extraWhitespace = addWhitespace && (children - attributes) > 1;
-                for (int i = 0; i < children; i++) {
-                    //recursive call : we ignore attributes children
-                    getNodeValue(pool, os, rec, false, addWhitespace);
-                    if (extraWhitespace) {
-                        os.write((byte) ' ');
-                    }
-                }
-                return;
-            }
-            case Node.TEXT_NODE:
-            case Node.CDATA_SECTION_NODE: {
-                final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                readOffset += nodeIdLen;
-                os.write(data, readOffset, realLen -
-                    (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen));
-                break;
-            }
-            case Node.PROCESSING_INSTRUCTION_NODE: {
-	            final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-	            readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-	            final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-	            readOffset += nodeIdLen;
-	            final int targetLen = ByteConversion.byteToInt(data, readOffset);
-	            readOffset += 4 + targetLen;
-	            os.write(
-            		data, 
-            		readOffset, 
-            		realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen + targetLen + 4));
-	            break;
-            }
-            case Node.ATTRIBUTE_NODE: {
-                if (isTopNode) {
-                    final int start = readOffset - StoredNode.LENGTH_SIGNATURE_LENGTH;
-                    final byte idSizeType = (byte) (data[start] & 0x3);
-                    final boolean hasNamespace = (data[start] & 0x10) == 0x10;
-                    final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                    readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                    final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                    readOffset += nodeIdLen;
-                    readOffset += Signatures.getLength(idSizeType);
-                    if (hasNamespace) {
-                        readOffset += AttrImpl.LENGTH_NS_ID; // skip namespace id
-                        final short prefixLen = ByteConversion.byteToShort(data, readOffset);
-                        readOffset += AttrImpl.LENGTH_PREFIX_LENGTH;
-                        readOffset += prefixLen; // skip prefix
-                    }
-                    os.write(data, readOffset, realLen - (readOffset - start));
-                }
-                break;
-            }
-            case Node.COMMENT_NODE:
-            {
-                if (isTopNode) {
-                    final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                    readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                    final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                    readOffset += nodeIdLen;
-                    os.write(data, readOffset, realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen));
-                }
-                break;
-            }
-            default:
-                // the node kinds that are stored are all handled above
-                break;
+        //Write the value of the node by its kind
+        if (!writeValueOfKind(pool, os, rec, type, data, readOffset, realLen, isTopNode, addWhitespace)) {
+            return;
         }
         if (!inOverflow) {
             //If it isn't an overflow value, add the value length to the current offset
             //We position the offset *after* the next TID
             rec.offset += realLen + LENGTH_TID;
         }
+    }
+
+    /**
+     * Writes the string value of a record by the kind of node it holds.
+     *
+     * @param type the kind of node
+     * @param data the bytes of the record, or of its overflow value
+     * @param readOffset where the node id starts, after the signature
+     * @param realLen the length of the record
+     * @return false if the record is an element, whose children follow it and which has already moved the record position
+     *     past them, true for any other kind, whose position is still to be moved
+     */
+    private boolean writeValueOfKind(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final RecordPos rec,
+            final short type, final byte[] data, final int readOffset, final int realLen, final boolean isTopNode,
+            final boolean addWhitespace) {
+        switch (type) {
+            case Node.ELEMENT_NODE:
+                writeElementValue(pool, os, rec, data, readOffset, realLen, addWhitespace);
+                return false;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                writeTextValue(pool, os, data, readOffset, realLen);
+                break;
+            case Node.PROCESSING_INSTRUCTION_NODE:
+                writeProcessingInstructionValue(pool, os, data, readOffset, realLen);
+                break;
+            case Node.ATTRIBUTE_NODE:
+                if (isTopNode) {
+                    writeAttributeValue(pool, os, data, readOffset, realLen);
+                }
+                break;
+            case Node.COMMENT_NODE:
+                if (isTopNode) {
+                    // a comment is written like a text: its node id, then its characters
+                    writeTextValue(pool, os, data, readOffset, realLen);
+                }
+                break;
+            default:
+                // the node kinds that are stored are all handled above
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * Writes the string value of an element: the values of its children, the records that follow it. It leaves the record
+     * position after the last of them.
+     */
+    private void writeElementValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final RecordPos rec,
+            final byte[] data, final int startOffset, final int realLen, final boolean addWhitespace) {
+        int readOffset = startOffset;
+        final int children = ByteConversion.byteToInt(data, readOffset);
+        readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        final short attributes = ByteConversion.byteToShort(data, readOffset);
+        //Ignore the following NS data which are of no use
+        //We position the offset *after* the next TID
+        rec.offset += realLen + LENGTH_TID;
+        final boolean extraWhitespace = addWhitespace && (children - attributes) > 1;
+        for (int i = 0; i < children; i++) {
+            //recursive call : we ignore attributes children
+            getNodeValue(pool, os, rec, false, addWhitespace);
+            if (extraWhitespace) {
+                os.write((byte) ' ');
+            }
+        }
+    }
+
+    /** Writes the string value of a text, a CDATA section or a comment: the characters after its node id. */
+    private static void writeTextValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final byte[] data,
+            final int startOffset, final int realLen) {
+        int readOffset = startOffset;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        os.write(data, readOffset, realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen));
+    }
+
+    /** Writes the string value of a processing instruction: its data, after its node id and its target. */
+    private static void writeProcessingInstructionValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os,
+            final byte[] data, final int startOffset, final int realLen) {
+        int readOffset = startOffset;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        final int targetLen = ByteConversion.byteToInt(data, readOffset);
+        readOffset += 4 + targetLen;
+        os.write(data, readOffset, realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen + targetLen + 4));
+    }
+
+    /** Writes the string value of an attribute: its value, after its node id, its name id and, if it has one, its namespace and prefix. */
+    private static void writeAttributeValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final byte[] data,
+            final int startOffset, final int realLen) {
+        int readOffset = startOffset;
+        final int start = readOffset - StoredNode.LENGTH_SIGNATURE_LENGTH;
+        final byte idSizeType = (byte) (data[start] & 0x3);
+        final boolean hasNamespace = (data[start] & 0x10) == 0x10;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        readOffset += Signatures.getLength(idSizeType);
+        if (hasNamespace) {
+            readOffset += AttrImpl.LENGTH_NS_ID; // skip namespace id
+            final short prefixLen = ByteConversion.byteToShort(data, readOffset);
+            readOffset += AttrImpl.LENGTH_PREFIX_LENGTH;
+            readOffset += prefixLen; // skip prefix
+        }
+        os.write(data, readOffset, realLen - (readOffset - start));
     }
 
     RecordPos findRecord(final long pointer) {
