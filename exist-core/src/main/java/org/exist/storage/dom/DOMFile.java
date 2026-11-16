@@ -3290,11 +3290,7 @@ public class DOMFile extends BTree implements Lockable {
 
         @Override
         public boolean equals(final Object obj) {
-            if(!(obj instanceof DOMPage other)) {
-                return false;
-            }
-
-            return page.equals(other.page);
+            return obj instanceof DOMPage other && page.equals(other.page);
         }
 
         void invalidate() {
