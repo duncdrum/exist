@@ -535,11 +535,12 @@ public class DOMFile extends BTree implements Lockable {
      * @param doc       the document to which the new node belongs.
      * @param address   the storage address of the node after which the 
      *                  new value should be inserted.
-     * @param value     the value of the new node.
+     * @param nodeData  the value of the new node.
      *
      * @return the storage address pointer
      */
-    public long insertAfter(final Txn transaction, final DocumentImpl doc, final long address, byte[] value) {
+    public long insertAfter(final Txn transaction, final DocumentImpl doc, final long address, final byte[] nodeData) {
+        byte[] value = nodeData;
         if(LOG.isDebugEnabled() && !lockManager.isBtreeLockedForWrite(getLockName())) {
             LOG.debug("The file doesn't own a write lock");
         }
@@ -3023,8 +3024,8 @@ public class DOMFile extends BTree implements Lockable {
         }
 
         @Override
-        public int read(final byte[] data, int offset) throws IOException {
-            offset = super.read(data, offset);
+        public int read(final byte[] data, final int startOffset) throws IOException {
+            int offset = super.read(data, startOffset);
             records = ByteConversion.byteToShort(data, offset);
             offset += LENGTH_RECORDS_COUNT;
             dataLength = ByteConversion.byteToInt(data, offset);
@@ -3038,8 +3039,8 @@ public class DOMFile extends BTree implements Lockable {
         }
 
         @Override
-        public int write(final byte[] data, int offset) throws IOException {
-            offset = super.write(data, offset);
+        public int write(final byte[] data, final int startOffset) throws IOException {
+            int offset = super.write(data, startOffset);
             ByteConversion.shortToByte(records, data, offset);
             offset += LENGTH_RECORDS_COUNT;
             ByteConversion.intToByte(dataLength, data, offset);
