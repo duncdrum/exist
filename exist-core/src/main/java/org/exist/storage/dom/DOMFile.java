@@ -1725,7 +1725,7 @@ public class DOMFile extends BTree implements Lockable {
         rec.offset += LENGTH_DATA_LENGTH;
         short realLen = vlen;
         if (ItemId.isLink(rec.getTupleID())) {
-            throw new RuntimeException("Cannot remove link ...");
+            throw new IllegalStateException("Cannot remove link ...");
         }
         boolean isOverflow = false;
         long backLink = 0;
@@ -2987,7 +2987,7 @@ public class DOMFile extends BTree implements Lockable {
 
         short getNextTupleID() {
             if (++tupleID == ItemId.ID_MASK) {
-                throw new RuntimeException("No spare ids on page");
+                throw new IllegalStateException("No spare ids on page");
             }
             return tupleID;
         }
@@ -2998,7 +2998,7 @@ public class DOMFile extends BTree implements Lockable {
 
         void setNextTupleID(final short tupleID) {
             if (tupleID > ItemId.MAX_ID) {
-                throw new RuntimeException("TupleID overflow! TupleID = " + tupleID);
+                throw new IllegalStateException("TupleID overflow! TupleID = " + tupleID);
             }
             this.tupleID = tupleID;
         }
@@ -3316,7 +3316,7 @@ public class DOMFile extends BTree implements Lockable {
                 pos += LENGTH_TID;
                 if (ItemId.getId(tupleID) > ItemId.MAX_ID) {
                     LOG.error(debugPageContents(this));
-                    throw new RuntimeException("TupleID overflow in page " + getPageNum());
+                    throw new IllegalStateException("TupleID overflow in page " + getPageNum());
                 }
                 if (ItemId.getId(tupleID) > maxTupleID) {
                     maxTupleID = ItemId.getId(tupleID);
