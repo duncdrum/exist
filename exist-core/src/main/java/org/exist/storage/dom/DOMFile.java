@@ -1104,116 +1104,15 @@ public class DOMFile extends BTree implements Lockable {
                     buf.append("[");
                     switch (Signatures.getType(page.data[pos])) {
                     case Node.ELEMENT_NODE :
-                    {
-                        buf.append("element ");
-                        int readOffset = pos;
-                        readOffset += 1;
-                        final int children = ByteConversion.byteToInt(page.data, readOffset);
-                        readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
-                        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
-                        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                        //That might happen during recovery runs : TODO, investigate
-                        if (owner == null) {
-                            buf.append("(Can't read data, owner is null)");
-                        } else {
-                            try {
-                                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
-                                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
-                                readOffset += nodeId.size();
-                                buf.append("(").append(nodeId).append(")");
-                                final short attributes = ByteConversion.byteToShort(page.data, readOffset);
-                                buf.append(" children: ").append(children);
-                                buf.append(" attributes: ").append(attributes);
-                            } catch (final Exception e) {
-                                //TODO : more friendly message. Provide the array of bytes ?
-                                buf.append("(Unable to read the node ID at: ").append(readOffset);
-                                buf.append(" children : ").append(children);
-                                //Probably a wrong offset so... don't read it
-                                buf.append(" attributes : unknown");
-                            }
-                        }
+                        describeElementRecord(buf, page, pos);
                         break;
-                    }
                     case Node.TEXT_NODE:
                     case Node.CDATA_SECTION_NODE:
-                    {
-                        if (Signatures.getType(page.data[pos]) == Node.TEXT_NODE) {
-                            buf.append("text ");
-                        } else {
-                            buf.append("CDATA ");
-                        }
-                        int readOffset = pos;
-                        readOffset += 1;
-                        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
-                        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                        //That might happen during recovery runs : TODO, investigate
-                        if (owner == null) {
-                            buf.append("(Can't read data, owner is null)");
-                        } else {
-                            try {
-                                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
-                                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
-                                readOffset += nodeId.size();
-                                buf.append("(").append(nodeId).append(")");
-                                String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
-                                if (value.length() > 15) {
-                                    value = value.substring(0,8) + "..." + value.substring(value.length() - 8);
-                                }
-
-                                buf.append(":'").append(value).append("'");
-                            } catch (final Exception e) {
-                                //TODO : more friendly message. Provide the array of bytes ?
-                                buf.append("(unable to read the node ID at : ").append(readOffset);
-                            }
-                        }
+                        describeTextRecord(buf, page, pos, valueLength);
                         break;
-                    }
                     case Node.ATTRIBUTE_NODE:
-                    {
-                        buf.append("[");
-                        buf.append("attribute ");
-                        int readOffset = pos;
-                        final byte idSizeType = (byte) (page.data[readOffset] & 0x3);
-                        final boolean hasNamespace = (page.data[readOffset] & 0x10) == 0x10;
-                        readOffset += 1;
-                        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
-                        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                        //That might happen during recovery runs : TODO, investigate
-                        if (owner == null) {
-                            buf.append("(can't read data, owner is null)");
-                        } else {
-                            try {
-                                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
-                                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
-                                readOffset += nodeId.size();
-                                buf.append("(").append(nodeId).append(")");
-                                readOffset += Signatures.getLength(idSizeType);
-                                if (hasNamespace) {
-                                    //Untested
-                                    final short NSId = ByteConversion.byteToShort(page.data, readOffset);
-                                    readOffset += AttrImpl.LENGTH_NS_ID;
-                                    final short prefixLen = ByteConversion.byteToShort(page.data, readOffset);
-                                    readOffset += AttrImpl.LENGTH_PREFIX_LENGTH + prefixLen;
-                                    final String prefix = new String(page.data, readOffset, valueLength - (readOffset - prefixLen), UTF_8);
-
-                                    final String NsURI = ((NativeBroker)owner).getBrokerPool()
-                                        .getSymbols().getNamespace(NSId);
-                                    buf.append(prefix).append("{").append(NsURI).append("}");
-                                }
-                                    String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
-                                    if (value.length() > 15) {
-                                        value = value.substring(0, 8) + "..." + value.substring(value.length() - 8);
-                                    }
-
-                                    buf.append(":'").append(value).append("'");
-                            } catch (final Exception e) {
-                                //TODO : more friendly message. Provide the array of bytes ?
-                                buf.append("(unable to read the node ID at : ").append(readOffset);
-                            }
-                        }
-                            buf.append("] ");
-                            break;
-                        }
+                        describeAttributeRecord(buf, page, pos, valueLength);
+                        break;
                     default:
                         buf.append("Unknown node type !");
                     }
@@ -1222,6 +1121,122 @@ public class DOMFile extends BTree implements Lockable {
                 pos += valueLength;
             }
         }
+        describePageFooter(buf, page, count);
+        return buf.toString();
+    }
+
+    /** Describes an element record: its number of children and attributes, and its node id if it can be read. */
+    private void describeElementRecord(final StringBuilder buf, final DOMPage page, final int pos) {
+        buf.append("element ");
+        int readOffset = pos;
+        readOffset += 1;
+        final int children = ByteConversion.byteToInt(page.data, readOffset);
+        readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
+        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        //That might happen during recovery runs : TODO, investigate
+        if (owner == null) {
+            buf.append("(Can't read data, owner is null)");
+        } else {
+            try {
+                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
+                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
+                readOffset += nodeId.size();
+                buf.append("(").append(nodeId).append(")");
+                final short attributes = ByteConversion.byteToShort(page.data, readOffset);
+                buf.append(" children: ").append(children);
+                buf.append(" attributes: ").append(attributes);
+            } catch (final Exception e) {
+                //TODO : more friendly message. Provide the array of bytes ?
+                buf.append("(Unable to read the node ID at: ").append(readOffset);
+                buf.append(" children : ").append(children);
+                //Probably a wrong offset so... don't read it
+                buf.append(" attributes : unknown");
+            }
+        }
+    }
+
+    /** Describes a text or a CDATA record: its node id and its value, cut to its first and last 8 characters if it is longer than 15. */
+    private void describeTextRecord(final StringBuilder buf, final DOMPage page, final int pos, final short valueLength) {
+        if (Signatures.getType(page.data[pos]) == Node.TEXT_NODE) {
+            buf.append("text ");
+        } else {
+            buf.append("CDATA ");
+        }
+        int readOffset = pos;
+        readOffset += 1;
+        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        //That might happen during recovery runs : TODO, investigate
+        if (owner == null) {
+            buf.append("(Can't read data, owner is null)");
+        } else {
+            try {
+                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
+                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
+                readOffset += nodeId.size();
+                buf.append("(").append(nodeId).append(")");
+                String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
+                if (value.length() > 15) {
+                    value = value.substring(0,8) + "..." + value.substring(value.length() - 8);
+                }
+
+                buf.append(":'").append(value).append("'");
+            } catch (final Exception e) {
+                //TODO : more friendly message. Provide the array of bytes ?
+                buf.append("(unable to read the node ID at : ").append(readOffset);
+            }
+        }
+    }
+
+    /** Describes an attribute record: its node id and its value, cut as a text is; an attribute with a namespace cannot be read. */
+    private void describeAttributeRecord(final StringBuilder buf, final DOMPage page, final int pos, final short valueLength) {
+        buf.append("[");
+        buf.append("attribute ");
+        int readOffset = pos;
+        final byte idSizeType = (byte) (page.data[readOffset] & 0x3);
+        final boolean hasNamespace = (page.data[readOffset] & 0x10) == 0x10;
+        readOffset += 1;
+        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        //That might happen during recovery runs : TODO, investigate
+        if (owner == null) {
+            buf.append("(can't read data, owner is null)");
+        } else {
+            try {
+                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
+                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
+                readOffset += nodeId.size();
+                buf.append("(").append(nodeId).append(")");
+                readOffset += Signatures.getLength(idSizeType);
+                if (hasNamespace) {
+                    //Untested
+                    final short NSId = ByteConversion.byteToShort(page.data, readOffset);
+                    readOffset += AttrImpl.LENGTH_NS_ID;
+                    final short prefixLen = ByteConversion.byteToShort(page.data, readOffset);
+                    readOffset += AttrImpl.LENGTH_PREFIX_LENGTH + prefixLen;
+                    final String prefix = new String(page.data, readOffset, valueLength - (readOffset - prefixLen), UTF_8);
+
+                    final String NsURI = ((NativeBroker)owner).getBrokerPool()
+                        .getSymbols().getNamespace(NSId);
+                    buf.append(prefix).append("{").append(NsURI).append("}");
+                }
+                    String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
+                    if (value.length() > 15) {
+                        value = value.substring(0, 8) + "..." + value.substring(value.length() - 8);
+                    }
+
+                    buf.append(":'").append(value).append("'");
+            } catch (final Exception e) {
+                //TODO : more friendly message. Provide the array of bytes ?
+                buf.append("(unable to read the node ID at : ").append(readOffset);
+            }
+        }
+            buf.append("] ");
+    }
+
+    /** Ends the description of a page: the records counted against those the header says, the next tuple id, the data length. */
+    private static void describePageFooter(final StringBuilder buf, final DOMPage page, final short count) {
         buf.append("; records in page: ").append(count).append(" (header says: ").append(page.getPageHeader().getRecordCount()).append(")");
         buf.append("; currentTupleID: ").append(page.getPageHeader().getCurrentTupleID());
         buf.append("; data length: ").append(page.getPageHeader().getDataLength());
@@ -1231,7 +1246,6 @@ public class DOMFile extends BTree implements Lockable {
                 break;
             }
         }
-        return buf.toString();
     }
 
     @Override
