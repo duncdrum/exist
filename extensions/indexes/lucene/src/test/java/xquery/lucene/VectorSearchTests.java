@@ -38,7 +38,8 @@ import org.exist.test.xqsuite.XQSuite;
     "src/test/xquery/lucene/query-vector-mixed-configs.xqm",
     "src/test/xquery/lucene/vector-spaces.xqm",
     "src/test/xquery/lucene/vector-field-pairs.xqm",
-    "src/test/xquery/lucene/query-vector-ownership.xqm"
+    "src/test/xquery/lucene/query-vector-ownership.xqm",
+    "src/test/xquery/lucene/vector-models.xqm"
 })
 public class VectorSearchTests {
 }

@@ -58,6 +58,8 @@ public class LuceneModule extends AbstractInternalModule {
             "The query vector has a number of dimensions the vector field is not configured with.");
     public final static ErrorCode EXXQDYFT0007 = new LuceneErrorCode("EXXQDYFT0007",
             "The query vector matches more than one vector field: use ft:query-field-vector to name the field.");
+    public final static ErrorCode EXXQDYFT0008 = new LuceneErrorCode("EXXQDYFT0008",
+            "A vector field is configured with different models in the collections queried together.");
     
     public static final FunctionDef[] functions = {
         new FunctionDef(Query.signatures[0], Query.class),

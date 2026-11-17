@@ -60,7 +60,8 @@ public class QueryFieldVector extends AbstractVectorQueryFunction {
             functionSignature("query-field-vector",
                     "KNN vector search by field name. Uses context document set. The field is searched at the "
                             + "dimension of the query vector: collections that configure it with another dimension are "
-                            + "not searched. Raises EXXQDYFT0006 if the field is configured with other dimensions only; "
+                            + "not searched. Raises EXXQDYFT0006 if the field is configured with other dimensions only, "
+                            + "and EXXQDYFT0008 if the collections searched configure it from different models; "
                             + "an unknown field name gives an empty result.",
                     returnsOptMany(Type.NODE, "Nodes matching the vector query."),
                     FS_PARAM_FIELD,
