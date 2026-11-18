@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/LiteralFlagsRewriteTest.java
+  s_62ed092db78105::t_a5cf7006772208 83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2aa832094cad7e6a6090c584ca8c94edd5b0b3ff",
+  "prompts": {},
+  "sessions": {
+    "s_62ed092db78105": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7678b2d0-6028-41de-8652-335086b8ea9a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
