@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  s_62ed092db78105::t_9aa82bf439c126 138-262
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ac7dafb63442514b132d8c737a87b75fc6f5cb4a",
+  "prompts": {},
+  "sessions": {
+    "s_62ed092db78105": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7678b2d0-6028-41de-8652-335086b8ea9a",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
