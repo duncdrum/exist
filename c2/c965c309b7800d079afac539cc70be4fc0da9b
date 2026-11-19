@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_2015c21e494b10 1-183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c2c965c309b7800d079afac539cc70be4fc0da9b",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
