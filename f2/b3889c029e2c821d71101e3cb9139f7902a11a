@@ -1,0 +1,23 @@
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  s_849c5b760f4834::t_88a77fc8afb7fc 194-199,222,253,257,393-395,468-472
+extensions/indexes/lucene/src/test/java/xquery/lucene/PathShapesTest.java
+  s_849c5b760f4834::t_ea715d992296d0 43,176-180,186,222-224,229-234,273-275,277,297,368,377,396-398,403
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.xqm
+  s_849c5b760f4834::t_258fa87a6c2d9a 46,57-62,82,283-292,304-305,320,323,352-354,401,404,414-416,418,563-564,567,570,573,576-577,582-583,586,589,592,595-596,599-601,609-611,616
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f2b3889c029e2c821d71101e3cb9139f7902a11a",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
