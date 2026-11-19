@@ -1,0 +1,25 @@
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_2015c21e494b10 1-389
+exist-core/src/test/java/org/exist/xquery/PredicateAndWhereClauseEvaluationTest.java
+  s_849c5b760f4834::t_ed596e5db7a3a1 1-161
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_dd63f4485b4dc3 1-174
+extensions/indexes/ngram/src/test/java/org/exist/indexing/ngram/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_e2ffa5bd5a4729 1-140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "353c5005bd4820c6c3a55168ea684ef93842dd5e",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
