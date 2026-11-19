@@ -1,0 +1,18 @@
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/PreSelectionAcrossEvaluationsTest.java
+  h_ff0005bef58c9d 69-71
+extensions/indexes/ngram/src/test/java/org/exist/indexing/ngram/PreSelectionAcrossEvaluationsTest.java
+  h_ff0005bef58c9d 61-63
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/PreSelectionAcrossEvaluationsTest.java
+  h_ff0005bef58c9d 77-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7b08bb97d9b886a9e7d366dd66a3f68f753d2fc4",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
