@@ -1,0 +1,59 @@
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_2015c21e494b10 1-76,80-158,159-174,181-188,190-194,196-199,201-205,207-211,213-217,219-221,223-229,231,233-234,236-245,247-251,253-257,259-263,265-271,273-278,280-281,283-287,293-297,301,303-356,360-365,368-371,374-378,382-383
+  s_849c5b760f4834::t_574eb73308462b 175-180,189,195,200,206,212,218,222,230,232,235,246,252,258,264,272,279,282,288-292,298-300,302,357-359,366-367,372-373,379-381
+  h_ff0005bef58c9d 77-79
+exist-core/src/test/java/org/exist/xquery/PredicateAndWhereClauseEvaluationTest.java
+  s_849c5b760f4834::t_ed596e5db7a3a1 1-75,82-86,90-94,98-102,109-112,114-124,129-132,134-138,143-147,150-153,155-159,161,163-164
+  s_849c5b760f4834::t_166475ce31f6e7 76-81,87-89,95-97,103-108,113,125-128,133,139-142,148-149,154,160,162
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_dd63f4485b4dc3 1-68,72-99,100-115,122-134,137-141,144-148,151-155,158-165,167-168,170-172,174-175
+  s_849c5b760f4834::t_cd55e36ec5243a 116-121,135-136,142-143,149-150,156-157,166,169,173
+  h_ff0005bef58c9d 69-71
+extensions/indexes/ngram/src/test/java/org/exist/indexing/ngram/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_e2ffa5bd5a4729 1-60,64-91,92-107,110,115-123,126-130,132-139,141-143
+  s_849c5b760f4834::t_f4e76fcfa591fa 108-109,111-114,124-125,131,140
+  h_ff0005bef58c9d 61-63
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_849c5b760f4834::t_2fced7ea617544 1373-1380
+exist-core/src/main/java/org/exist/xquery/LocationStep.java
+  s_849c5b760f4834::t_f750ef8cf5128f 207-217
+exist-core/src/main/java/org/exist/xquery/Optimizable.java
+  s_849c5b760f4834::t_27f632652790eb 62-70
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunMatches.java
+  s_849c5b760f4834::t_79dae7a4967049 747-754
+exist-core/src/main/java/org/exist/xquery/pragmas/Optimize.java
+  s_849c5b760f4834::t_83f611c59992dc 100-117
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/AbstractVectorQueryFunction.java
+  s_849c5b760f4834::t_30cd3bc87e0a4b 273-278
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/Query.java
+  s_849c5b760f4834::t_9af65ee5b389d6 443-450
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryField.java
+  s_849c5b760f4834::t_1e2f6299812531 194-198
+extensions/indexes/ngram/src/main/java/org/exist/xquery/modules/ngram/NGramSearch.java
+  s_849c5b760f4834::t_6ff3138d3a6f0b 644-651
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/FieldLookup.java
+  s_849c5b760f4834::t_524d5cef05b2d6 439-443
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_849c5b760f4834::t_debc811363f794 640-650
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2ef2774fe0f8574326eef4a27a2b53dc88449856",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  },
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
