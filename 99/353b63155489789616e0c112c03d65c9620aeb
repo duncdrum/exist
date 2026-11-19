@@ -1,0 +1,33 @@
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  s_849c5b760f4834::t_8fded57cfd57ca 137-163
+extensions/indexes/lucene/src/test/java/xquery/lucene/PathShapesTest.java
+  s_849c5b760f4834::t_51e9759d2dff02 396-409
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.xqm
+  s_849c5b760f4834::t_e465cbe54e710f 603-620
+extensions/indexes/ngram/src/test/java/xquery/ngram/PathShapesTest.java
+  s_849c5b760f4834::t_1302bc811e52df 153-159
+extensions/indexes/range/src/test/java/xquery/range/PathShapesTest.java
+  s_849c5b760f4834::t_97a9afd0d7a2f8 360-409,637-672
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  s_849c5b760f4834::t_dc9aa6d4f37c7e 389-436
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  s_849c5b760f4834::t_9f9b0189ac72cd 556-621
+extensions/indexes/ngram/src/test/xquery/ngram/path-shapes.xqm
+  s_849c5b760f4834::t_4e2595a0f21e9b 246-254
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "99353b63155489789616e0c112c03d65c9620aeb",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
