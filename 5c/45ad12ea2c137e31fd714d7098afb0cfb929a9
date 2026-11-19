@@ -1,0 +1,39 @@
+extensions/indexes/range/src/test/java/xquery/range/PathShapesTest.java
+  s_849c5b760f4834::t_97a9afd0d7a2f8 361-366,369,371-375,378,380-384,387,389-393,396,398-402,405
+  s_849c5b760f4834::t_485e194ee0c8fc 59-60,367-368,376-377,385-386,394-395,403-404
+  s_849c5b760f4834::t_db2cf13bf99e88 370,379,388,397,406,634-658
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  s_849c5b760f4834::t_ca1cb3e86ce077 52-58,73-76,79-80,99-102,579-580,590-591,601-602,612-613,623-624,634
+  s_849c5b760f4834::t_9f9b0189ac72cd 571-578,581-589,592-600,603-611,614-622,625-633
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  s_849c5b760f4834::t_8fded57cfd57ca 139-150,154-167
+  s_849c5b760f4834::t_efbc1efc5acdde 30,36
+  s_849c5b760f4834::t_8ea8d99dddfea6 151-153,168-170,352,354,373-382,413-437,446,455-464,468,473-477,536,550-555,570-593
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  s_849c5b760f4834::t_45796c9bc8b162 398-399,409-410,420-421
+  s_849c5b760f4834::t_dc9aa6d4f37c7e 389-397,400-408,411-419,422-423
+extensions/indexes/lucene/src/test/java/xquery/lucene/PathShapesTest.java
+  s_849c5b760f4834::t_046399be6218b2 51-52,397-424
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.xqm
+  s_849c5b760f4834::t_f2120c0b623161 50-56,86-89,92-93,112-115,618-657
+extensions/indexes/ngram/src/test/java/xquery/ngram/PathShapesTest.java
+  s_849c5b760f4834::t_5c05bf0d2b9251 51-52,154-162
+extensions/indexes/ngram/src/test/xquery/ngram/path-shapes.xqm
+  s_849c5b760f4834::t_12822fe60a673e 52-58,73-76,79-80,99-102,261-273
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5c45ad12ea2c137e31fd714d7098afb0cfb929a9",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
