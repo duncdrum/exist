@@ -1,0 +1,33 @@
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  s_849c5b760f4834::t_8ea8d99dddfea6 149-151,166-180,362,382-391,438-447,543-566
+extensions/indexes/lucene/src/test/java/xquery/lucene/PathShapesTest.java
+  s_849c5b760f4834::t_0accf4bddf5544 402-403,411-412,420-421,429-430,438-439,447-455
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.xqm
+  s_849c5b760f4834::t_bfe5fb1f7f1ce2 611-612,622-623,633-634,644-645,655-656,666-673
+extensions/indexes/ngram/src/test/java/xquery/ngram/PathShapesTest.java
+  s_849c5b760f4834::t_52c8cb6d63e08b 159-160,168-169,177-178
+extensions/indexes/ngram/src/test/xquery/ngram/path-shapes.xqm
+  s_849c5b760f4834::t_e60d3c8665b6fe 254-255,265-266,276-277
+extensions/indexes/range/src/test/java/xquery/range/PathShapesTest.java
+  s_849c5b760f4834::t_485e194ee0c8fc 59-60,367-368,376-377,385-386,394-395,403-404,412-413,429-430,438-439,447-448,456-498,733-734,742-743,751-752,760-761,777-778,786-787,795-829
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  s_849c5b760f4834::t_45796c9bc8b162 398-399,409-410,420-421,431-432,454-455,465-466,476-513
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  s_849c5b760f4834::t_ca1cb3e86ce077 52-58,73-76,79-80,99-102,579-580,590-591,601-602,612-613,623-624,634-635,657-658,668-669,679-680,690-735
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2b62f5b42ecb86c3a74c90f7df7de5fc008f430d",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
