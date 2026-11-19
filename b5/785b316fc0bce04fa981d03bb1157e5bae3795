@@ -1,0 +1,25 @@
+exist-core/src/test/java/org/exist/xquery/PredicateAndWhereClauseEvaluationTest.java
+  s_849c5b760f4834::t_166475ce31f6e7 76-81,87-89,95-97,103-108,113,125-128,133,139-142,148-149,154,160,162
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_cd55e36ec5243a 116-121,135-136,142-143,149-150,156-157,166,169,173
+extensions/indexes/ngram/src/test/java/org/exist/indexing/ngram/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_f4e76fcfa591fa 108-109,111-114,124-125,131,140
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/PreSelectionAcrossEvaluationsTest.java
+  s_849c5b760f4834::t_574eb73308462b 175-180,189,195,200,206,212,218,222,230,232,235,246,252,258,264,272,279,282,288-292,298-300,302,357-359,366-367,372-373,379-381
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b5785b316fc0bce04fa981d03bb1157e5bae3795",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
