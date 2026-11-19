@@ -1,0 +1,39 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_849c5b760f4834::t_f63cd220a6d414 1373-1381
+exist-core/src/main/java/org/exist/xquery/LocationStep.java
+  s_849c5b760f4834::t_19aa216cb16620 207-214
+exist-core/src/main/java/org/exist/xquery/Optimizable.java
+  s_849c5b760f4834::t_51dc6552b9bac7 62-65
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunMatches.java
+  s_849c5b760f4834::t_6e42510478a9d4 747-755
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/AbstractVectorQueryFunction.java
+  s_849c5b760f4834::t_cea57eb3fb32ac 273-279
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/Query.java
+  s_849c5b760f4834::t_a83258b4b2b818 443-451
+extensions/indexes/lucene/src/main/java/org/exist/xquery/modules/lucene/QueryField.java
+  s_849c5b760f4834::t_52b04dc74249cf 194-199
+extensions/indexes/ngram/src/main/java/org/exist/xquery/modules/ngram/NGramSearch.java
+  s_849c5b760f4834::t_42454090643c4e 644-652
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/FieldLookup.java
+  s_849c5b760f4834::t_0d0c56d97549da 439-444
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_849c5b760f4834::t_c6529e37477039 640-651
+exist-core/src/main/java/org/exist/xquery/pragmas/Optimize.java
+  s_849c5b760f4834::t_57b97d7dedb942 100-116,139
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b0287a64d6bc5f880e54474a17785030ece48bd",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
