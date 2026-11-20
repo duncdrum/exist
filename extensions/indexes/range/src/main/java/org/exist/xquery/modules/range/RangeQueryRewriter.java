@@ -68,74 +68,10 @@ public class RangeQueryRewriter extends QueryRewriter {
                 // calls to the range functions. If those functions are used or not will
                 // be decided at run time.
 
-                // will become true if optimizable expression is found
-                boolean canOptimize = false;
                 // get path of path expression before the predicates
                 final NodePath contextPath = toNodePath(getPrecedingSteps(locationStep));
-                // process the remaining predicates
-                for (final Predicate pred : preds) {
-                    if (pred.getLength() != 1) {
-                        // can only optimize predicates with one expression
-                        break;
-                    }
-
-                    final Expression innerExpr = pred.getExpression(0);
-                    final List<LocationStep> steps = getStepsToOptimize(innerExpr);
-                    if (steps == null || steps.isEmpty()) {
-                        // no optimizable steps found
-                        continue;
-                    }
-
-                    // check if inner steps are on an axis we can optimize
-                    if (innerExpr instanceof InternalFunctionCall fcall) {
-                        axis = ((Optimizable) fcall.getFunction()).getOptimizeAxis();
-                    } else {
-                        axis = ((Optimizable) innerExpr).getOptimizeAxis();
-                    }
-                    if (!(axis == Constants.CHILD_AXIS || axis == Constants.DESCENDANT_AXIS ||
-                            axis == Constants.DESCENDANT_SELF_AXIS || axis == Constants.ATTRIBUTE_AXIS ||
-                            axis == Constants.DESCENDANT_ATTRIBUTE_AXIS || axis == Constants.SELF_AXIS
-                    )) {
-                        continue;
-                    }
-
-                    // compute left hand path
-                    final NodePath innerPath = toNodePath(steps);
-                    if (innerPath == null) {
-                        continue;
-                    }
-                    final NodePath path;
-                    if (contextPath == null) {
-                        path = innerPath;
-                    } else {
-                        path = new NodePath(contextPath);
-                        path.append(innerPath);
-                    }
-
-                    if (path.length() > 0) {
-                        if (innerExpr instanceof final InternalFunctionCall internalFunctionCall
-                                && internalFunctionCall.getFunction() instanceof final Lookup lookup) {
-
-                            // innerExpr was already optimized, just update the contextPath if it is missing
-                            if (lookup.getContextPath() == null) {
-                                lookup.setContextPath(path);
-                            }
-
-                        } else {
-                            // replace with call to lookup function
-                            final Lookup func = rewrite(innerExpr, path);
-                            if (func != null) {
-                                // preserve original comparison: may need it for in-memory lookups
-                                func.setFallback(innerExpr, axis);
-                                func.setLocation(innerExpr.getLine(), innerExpr.getColumn());
-
-                                pred.replace(innerExpr, new InternalFunctionCall(func));
-                            }
-                        }
-
-                        canOptimize = true;
-                    }
-                }
+                // process the predicates
+                final boolean canOptimize = rewritePredicates(preds, contextPath, false);
 
                 if (canOptimize) {
                     // Step 2: return an OptimizeFieldPragma to handle field lookups and optimize the entire
@@ -158,6 +94,154 @@ public class RangeQueryRewriter extends QueryRewriter {
      */
     private static boolean keyReadsFocus(final Expression expression) {
         return Optimizer.unwrapOperand(expression) instanceof final Optimizable optimizable && optimizable.keyReadsFocus();
+    }
+
+    /**
+     * The comparisons in the predicates of a filter on a variable, {@code $i[@k = 'x']}, become lookups like those in the
+     * predicates of a step. The path of the variable's nodes is not known, so the lookup is made from the path of the
+     * comparison alone; the lookup is judged at run time, with the comparison to fall back on. The optimizer pre-selects
+     * for the variable's value. Other filtered expressions are not rewritten.
+     */
+    @Override
+    public Pragma rewriteFilteredExpression(final FilteredExpression filtered) throws XPathException {
+        if (filtered.getExpression() instanceof VariableReference) {
+            rewritePredicates(filtered.getPredicates().toArray(new Predicate[0]), null, true);
+        }
+        return null;
+    }
+
+    /**
+     * Replaces the optimizable expressions within predicates with calls to the range functions. If those functions are used
+     * or not will be decided at run time.
+     *
+     * @param preds the predicates of a step or a filtered expression
+     * @param contextPath the path of the nodes the predicates filter, or null if it is not known
+     * @param independentOperandsOnly rewrite only a comparison or match whose other operands do not depend on the item
+     *                                filtered: a lookup evaluates them once, for the whole sequence
+     * @return true if an optimizable expression was found
+     */
+    private boolean rewritePredicates(final Predicate[] preds, @Nullable final NodePath contextPath,
+            final boolean independentOperandsOnly) throws XPathException {
+        // will become true if optimizable expression is found
+        boolean canOptimize = false;
+        int axis;
+        // process the remaining predicates
+        for (final Predicate pred : preds) {
+            if (pred.getLength() != 1) {
+                // can only optimize predicates with one expression
+                break;
+            }
+
+            final Expression innerExpr = pred.getExpression(0);
+            if (independentOperandsOnly && !hasIndependentOperands(innerExpr)) {
+                continue;
+            }
+            final List<LocationStep> steps = getStepsToOptimize(innerExpr);
+            if (steps == null || steps.isEmpty()) {
+                // no optimizable steps found
+                continue;
+            }
+
+            // check if inner steps are on an axis we can optimize
+            if (innerExpr instanceof InternalFunctionCall fcall) {
+                axis = ((Optimizable) fcall.getFunction()).getOptimizeAxis();
+            } else {
+                axis = ((Optimizable) innerExpr).getOptimizeAxis();
+            }
+            if (!(axis == Constants.CHILD_AXIS || axis == Constants.DESCENDANT_AXIS ||
+                    axis == Constants.DESCENDANT_SELF_AXIS || axis == Constants.ATTRIBUTE_AXIS ||
+                    axis == Constants.DESCENDANT_ATTRIBUTE_AXIS || axis == Constants.SELF_AXIS
+            )) {
+                continue;
+            }
+
+            // compute left hand path
+            final NodePath innerPath = toNodePath(steps);
+            if (innerPath == null) {
+                continue;
+            }
+            final NodePath path;
+            if (contextPath == null) {
+                path = innerPath;
+            } else {
+                path = new NodePath(contextPath);
+                path.append(innerPath);
+            }
+
+            if (path.length() > 0) {
+                if (innerExpr instanceof final InternalFunctionCall internalFunctionCall
+                        && internalFunctionCall.getFunction() instanceof final Lookup lookup) {
+
+                    // innerExpr was already optimized, just update the contextPath if it is missing
+                    if (lookup.getContextPath() == null) {
+                        lookup.setContextPath(path);
+                    }
+
+                } else {
+                    // replace with call to lookup function
+                    final Lookup func = rewrite(innerExpr, path);
+                    if (func != null) {
+                        // preserve original comparison: may need it for in-memory lookups
+                        func.setFallback(innerExpr, axis);
+                        func.setLocation(innerExpr.getLine(), innerExpr.getColumn());
+
+                        pred.replace(innerExpr, new InternalFunctionCall(func));
+                    }
+                }
+
+                canOptimize = true;
+            }
+        }
+
+        return canOptimize;
+    }
+
+    /**
+     * Whether the operands of a comparison or match, other than the path it asks the index about, can be evaluated once for
+     * the whole sequence: they do not depend on the context item, its position or the size of the sequence. Anything else
+     * that is not a comparison or a match is declined.
+     */
+    private static boolean hasIndependentOperands(final Expression expr) {
+        final List<Expression> operands;
+        if (expr instanceof final GeneralComparison comparison) {
+            operands = List.of(comparison.getRight());
+        } else if (expr instanceof final InternalFunctionCall fcall
+                && fcall.getFunction() instanceof final org.exist.xquery.functions.fn.FunMatches funMatches) {
+            operands = new ArrayList<>();
+            for (int i = 1; i < funMatches.getArgumentCount(); i++) {
+                operands.add(funMatches.getArgument(i));
+            }
+        } else {
+            return false;
+        }
+        for (final Expression operand : operands) {
+            if (!isIndependentOfContext(operand)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * A variable is bound outside the predicate and has the same value for every item filtered, whatever its dependencies
+     * say: a function's parameter is not declared while the optimizer runs, and its reference then reports a dependency on
+     * the context item. Any other operand is judged by its dependencies.
+     */
+    private static boolean isIndependentOfContext(final Expression operand) {
+        Expression current = operand;
+        while (true) {
+            if (current instanceof DebuggableExpression debuggable) {
+                current = debuggable.getFirst();
+            } else if (current.getClass() == PathExpr.class && ((PathExpr) current).getLength() == 1) {
+                current = ((PathExpr) current).getExpression(0);
+            } else {
+                break;
+            }
+        }
+        if (current instanceof VariableReference) {
+            return true;
+        }
+        return !Dependency.dependsOn(operand, Dependency.CONTEXT_ITEM) && !Dependency.dependsOn(operand, Dependency.CONTEXT_POSITION);
     }
 
     protected static @Nullable Lookup rewrite(final Expression expression, final NodePath path) throws XPathException {
