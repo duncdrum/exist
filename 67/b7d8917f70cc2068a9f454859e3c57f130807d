@@ -1,0 +1,23 @@
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/PreSelectionAcrossEvaluationsTest.java
+  s_ef2621e0b5f380::t_40ba5076439451 55-69,71-77,79-82
+extensions/indexes/ngram/src/test/java/org/exist/indexing/ngram/PreSelectionAcrossEvaluationsTest.java
+  s_ef2621e0b5f380::t_a73f70c2d42d54 55-61,63-68,70-73
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/PreSelectionAcrossEvaluationsTest.java
+  s_ef2621e0b5f380::t_ff488253790458 65-94,344-356,359-361
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "67b7d8917f70cc2068a9f454859e3c57f130807d",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
