@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/java/xquery/range/PathShapesOracleTest.java
+  s_ef2621e0b5f380::t_6182f9f701224a 1-239
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1f92e6ad0db6e91b880cbc1e561f1e4c37dec954",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
