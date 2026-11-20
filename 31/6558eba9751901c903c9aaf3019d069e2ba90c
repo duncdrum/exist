@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/xquery/pragmas/Optimize.java
+  s_ef2621e0b5f380::t_d8167f0f3cfaea 164-193,210
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "316558eba9751901c903c9aaf3019d069e2ba90c",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
