@@ -162,7 +162,9 @@ import static org.exist.storage.DefaultCacheManager.PROPERTY_CACHE_SIZE;
 import static org.exist.storage.DefaultCacheManager.SHRINK_THRESHOLD_ATTRIBUTE;
 import static org.exist.storage.DefaultCacheManager.SHRINK_THRESHOLD_PROPERTY;
 import static org.exist.storage.NativeBroker.INDEX_DEPTH_ATTRIBUTE;
+import static org.exist.storage.NativeBroker.INDEX_SCAN_LIMIT_ATTRIBUTE;
 import static org.exist.storage.NativeBroker.PROPERTY_INDEX_DEPTH;
+import static org.exist.storage.NativeBroker.PROPERTY_INDEX_SCAN_LIMIT;
 import static org.exist.storage.NativeValueIndex.INDEX_CASE_SENSITIVE_ATTRIBUTE;
 import static org.exist.storage.NativeValueIndex.PROPERTY_INDEX_CASE_SENSITIVE;
 import static org.exist.storage.XQueryPool.MAX_STACK_SIZE_ATTRIBUTE;
@@ -249,6 +251,9 @@ public class Configuration implements ErrorHandler {
     public static final String PROPERTY_VECTOR_MODELS = "vector.models";
     private static final String PRP_DETAILS = "{}: {}";
     private static final Logger LOG = LogManager.getLogger(Configuration.class); //Logger
+
+    /** The smallest index-scan-limit that is not warned about. */
+    private static final int RECOMMENDED_MIN_INDEX_SCAN_LIMIT = 8;
     private static final String XQUERY_CONFIGURATION_ELEMENT_NAME = "xquery";
     private static final String XQUERY_BUILTIN_MODULES_CONFIGURATION_MODULES_ELEMENT_NAME = "builtin-modules";
     private static final String XQUERY_BUILTIN_MODULES_CONFIGURATION_MODULE_ELEMENT_NAME = "module";
@@ -483,6 +488,17 @@ public class Configuration implements ErrorHandler {
             }
         }
         return null;
+    }
+
+    @Nullable
+    private static Integer asIndexScanLimit(@Nullable final String value) {
+        final Integer limit = asNonNegativeInteger(value);
+        if (limit != null && limit > 0 && limit < RECOMMENDED_MIN_INDEX_SCAN_LIMIT) {
+            LOG.warn("parameter index-scan-limit {} is low: about one record in {} gets an entry in the DOM index, "
+                    + "which makes it much larger. {} or more is recommended, 0 turns the entries off",
+                    limit, limit, RECOMMENDED_MIN_INDEX_SCAN_LIMIT);
+        }
+        return limit;
     }
 
     @Nullable
@@ -1251,6 +1267,8 @@ public class Configuration implements ErrorHandler {
                 LOG.warn(e);
             }
         }
+
+        configureProperty(indexer, INDEX_SCAN_LIMIT_ATTRIBUTE, PROPERTY_INDEX_SCAN_LIMIT, Configuration::asIndexScanLimit, null);
 
         configureProperty(indexer, SUPPRESS_WHITESPACE_ATTRIBUTE, PROPERTY_SUPPRESS_WHITESPACE);
         configureProperty(indexer, PRESERVE_WS_MIXED_CONTENT_ATTRIBUTE, PROPERTY_PRESERVE_WS_MIXED_CONTENT, Configuration::asBoolean, FALSE);

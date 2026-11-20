@@ -28,7 +28,11 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.LongAdder;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -187,6 +191,43 @@ public class DOMFile extends BTree implements Lockable {
     private DocumentImpl currentDocument = null;
 
     private final AddValueLoggable addValueLog = new AddValueLoggable();
+
+    /** Returned by {@link #findInSubtree} when the entry of the ancestor does not lead to the ancestor; no address is negative. */
+    private static final long ENTRY_UNUSABLE = Long.MIN_VALUE;
+
+    private final LongAdder lookupsFromEntry = new LongAdder();
+    private final LongAdder recordsScanned = new LongAdder();
+    private final LongAdder rejectedEntries = new LongAdder();
+    private final LongAdder ancestorFallbacks = new LongAdder();
+    private final LongAdder exactHits = new LongAdder();
+    private final LongAdder forwardLinkHops = new LongAdder();
+    private final LongAdder[] lookupBuckets = newAdders(LookupBuckets.COUNT);
+
+    /** The most documents that the statistics per document follow, so that they cannot grow without a bound. */
+    private static final int MAX_DOCUMENT_STATISTICS = 10_000;
+
+    /** Whether the lookups are also counted per document, see {@link #setDocumentStatistics(boolean)}. */
+    private volatile boolean documentStatistics = false;
+    private final ConcurrentHashMap<Integer, DocumentCounters> perDocument = new ConcurrentHashMap<>();
+
+    /** What the lookups of one document read, while the statistics per document are on. */
+    private static final class DocumentCounters {
+        final String uri;
+        final LongAdder lookups = new LongAdder();
+        final LongAdder recordsScanned = new LongAdder();
+
+        DocumentCounters(final String uri) {
+            this.uri = uri;
+        }
+    }
+
+    private static LongAdder[] newAdders(final int count) {
+        final LongAdder[] adders = new LongAdder[count];
+        for (int i = 0; i < count; i++) {
+            adders[i] = new LongAdder();
+        }
+        return adders;
+    }
 
     public DOMFile(final BrokerPool pool, final byte id, final Path dataDir, final Configuration config) throws DBException {
         super(pool, id, FILE_FORMAT_VERSION_ID, true, pool.getCacheManager());
@@ -535,11 +576,12 @@ public class DOMFile extends BTree implements Lockable {
      * @param doc       the document to which the new node belongs.
      * @param address   the storage address of the node after which the 
      *                  new value should be inserted.
-     * @param value     the value of the new node.
+     * @param nodeData  the value of the new node.
      *
      * @return the storage address pointer
      */
-    public long insertAfter(final Txn transaction, final DocumentImpl doc, final long address, byte[] value) {
+    public long insertAfter(final Txn transaction, final DocumentImpl doc, final long address, final byte[] nodeData) {
+        byte[] value = nodeData;
         if(LOG.isDebugEnabled() && !lockManager.isBtreeLockedForWrite(getLockName())) {
             LOG.debug("The file doesn't own a write lock");
         }
@@ -970,7 +1012,7 @@ public class DOMFile extends BTree implements Lockable {
         if (nextSplitPage.len == 0) {
             LOG.warn("Page {} is empty. Remove it", nextSplitPage.getPageNum());
             //If nothing has been copied to the last split page, remove it
-            if (nextSplitPage == firstSplitPage) {
+            if (nextSplitPage.equals(firstSplitPage)) {
                 firstSplitPage = null;
             }
             try {
@@ -1004,7 +1046,7 @@ public class DOMFile extends BTree implements Lockable {
                 writeToLog(loggable, nextSplitPage.page);
             }
             firstSplitPage.getPageHeader().setPrevDataPage(rec.getPage().getPageNum());
-            if (nextSplitPage != firstSplitPage) {
+            if (!nextSplitPage.equals(firstSplitPage)) {
                 firstSplitPage.setDirty(true);
                 dataCache.add(firstSplitPage);
             }
@@ -1103,116 +1145,15 @@ public class DOMFile extends BTree implements Lockable {
                     buf.append("[");
                     switch (Signatures.getType(page.data[pos])) {
                     case Node.ELEMENT_NODE :
-                    {
-                        buf.append("element ");
-                        int readOffset = pos;
-                        readOffset += 1;
-                        final int children = ByteConversion.byteToInt(page.data, readOffset);
-                        readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
-                        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
-                        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                        //That might happen during recovery runs : TODO, investigate
-                        if (owner == null) {
-                            buf.append("(Can't read data, owner is null)");
-                        } else {
-                            try {
-                                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
-                                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
-                                readOffset += nodeId.size();
-                                buf.append("(").append(nodeId).append(")");
-                                final short attributes = ByteConversion.byteToShort(page.data, readOffset);
-                                buf.append(" children: ").append(children);
-                                buf.append(" attributes: ").append(attributes);
-                            } catch (final Exception e) {
-                                //TODO : more friendly message. Provide the array of bytes ?
-                                buf.append("(Unable to read the node ID at: ").append(readOffset);
-                                buf.append(" children : ").append(children);
-                                //Probably a wrong offset so... don't read it
-                                buf.append(" attributes : unknown");
-                            }
-                        }
+                        describeElementRecord(buf, page, pos);
                         break;
-                    }
                     case Node.TEXT_NODE:
                     case Node.CDATA_SECTION_NODE:
-                    {
-                        if (Signatures.getType(page.data[pos]) == Node.TEXT_NODE) {
-                            buf.append("text ");
-                        } else {
-                            buf.append("CDATA ");
-                        }
-                        int readOffset = pos;
-                        readOffset += 1;
-                        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
-                        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                        //That might happen during recovery runs : TODO, investigate
-                        if (owner == null) {
-                            buf.append("(Can't read data, owner is null)");
-                        } else {
-                            try {
-                                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
-                                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
-                                readOffset += nodeId.size();
-                                buf.append("(").append(nodeId).append(")");
-                                String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
-                                if (value.length() > 15) {
-                                    value = value.substring(0,8) + "..." + value.substring(value.length() - 8);
-                                }
-
-                                buf.append(":'").append(value).append("'");
-                            } catch (final Exception e) {
-                                //TODO : more friendly message. Provide the array of bytes ?
-                                buf.append("(unable to read the node ID at : ").append(readOffset);
-                            }
-                        }
+                        describeTextRecord(buf, page, pos, valueLength);
                         break;
-                    }
                     case Node.ATTRIBUTE_NODE:
-                    {
-                        buf.append("[");
-                        buf.append("attribute ");
-                        int readOffset = pos;
-                        final byte idSizeType = (byte) (page.data[readOffset] & 0x3);
-                        final boolean hasNamespace = (page.data[readOffset] & 0x10) == 0x10;
-                        readOffset += 1;
-                        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
-                        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                        //That might happen during recovery runs : TODO, investigate
-                        if (owner == null) {
-                            buf.append("(can't read data, owner is null)");
-                        } else {
-                            try {
-                                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
-                                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
-                                readOffset += nodeId.size();
-                                buf.append("(").append(nodeId).append(")");
-                                readOffset += Signatures.getLength(idSizeType);
-                                if (hasNamespace) {
-                                    //Untested
-                                    final short NSId = ByteConversion.byteToShort(page.data, readOffset);
-                                    readOffset += AttrImpl.LENGTH_NS_ID;
-                                    final short prefixLen = ByteConversion.byteToShort(page.data, readOffset);
-                                    readOffset += AttrImpl.LENGTH_PREFIX_LENGTH + prefixLen;
-                                    final String prefix = new String(page.data, readOffset, valueLength - (readOffset - prefixLen), UTF_8);
-
-                                    final String NsURI = ((NativeBroker)owner).getBrokerPool()
-                                        .getSymbols().getNamespace(NSId);
-                                    buf.append(prefix).append("{").append(NsURI).append("}");
-                                }
-                                    String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
-                                    if (value.length() > 15) {
-                                        value = value.substring(0, 8) + "..." + value.substring(value.length() - 8);
-                                    }
-
-                                    buf.append(":'").append(value).append("'");
-                            } catch (final Exception e) {
-                                //TODO : more friendly message. Provide the array of bytes ?
-                                buf.append("(unable to read the node ID at : ").append(readOffset);
-                            }
-                        }
-                            buf.append("] ");
-                            break;
-                        }
+                        describeAttributeRecord(buf, page, pos, valueLength);
+                        break;
                     default:
                         buf.append("Unknown node type !");
                     }
@@ -1221,6 +1162,122 @@ public class DOMFile extends BTree implements Lockable {
                 pos += valueLength;
             }
         }
+        describePageFooter(buf, page, count);
+        return buf.toString();
+    }
+
+    /** Describes an element record: its number of children and attributes, and its node id if it can be read. */
+    private void describeElementRecord(final StringBuilder buf, final DOMPage page, final int pos) {
+        buf.append("element ");
+        int readOffset = pos;
+        readOffset += 1;
+        final int children = ByteConversion.byteToInt(page.data, readOffset);
+        readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
+        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        //That might happen during recovery runs : TODO, investigate
+        if (owner == null) {
+            buf.append("(Can't read data, owner is null)");
+        } else {
+            try {
+                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
+                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
+                readOffset += nodeId.size();
+                buf.append("(").append(nodeId).append(")");
+                final short attributes = ByteConversion.byteToShort(page.data, readOffset);
+                buf.append(" children: ").append(children);
+                buf.append(" attributes: ").append(attributes);
+            } catch (final Exception e) {
+                //TODO : more friendly message. Provide the array of bytes ?
+                buf.append("(Unable to read the node ID at: ").append(readOffset);
+                buf.append(" children : ").append(children);
+                //Probably a wrong offset so... don't read it
+                buf.append(" attributes : unknown");
+            }
+        }
+    }
+
+    /** Describes a text or a CDATA record: its node id and its value, cut to its first and last 8 characters if it is longer than 15. */
+    private void describeTextRecord(final StringBuilder buf, final DOMPage page, final int pos, final short valueLength) {
+        if (Signatures.getType(page.data[pos]) == Node.TEXT_NODE) {
+            buf.append("text ");
+        } else {
+            buf.append("CDATA ");
+        }
+        int readOffset = pos;
+        readOffset += 1;
+        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        //That might happen during recovery runs : TODO, investigate
+        if (owner == null) {
+            buf.append("(Can't read data, owner is null)");
+        } else {
+            try {
+                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
+                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
+                readOffset += nodeId.size();
+                buf.append("(").append(nodeId).append(")");
+                String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
+                if (value.length() > 15) {
+                    value = value.substring(0,8) + "..." + value.substring(value.length() - 8);
+                }
+
+                buf.append(":'").append(value).append("'");
+            } catch (final Exception e) {
+                //TODO : more friendly message. Provide the array of bytes ?
+                buf.append("(unable to read the node ID at : ").append(readOffset);
+            }
+        }
+    }
+
+    /** Describes an attribute record: its node id and its value, cut as a text is; an attribute with a namespace cannot be read. */
+    private void describeAttributeRecord(final StringBuilder buf, final DOMPage page, final int pos, final short valueLength) {
+        buf.append("[");
+        buf.append("attribute ");
+        int readOffset = pos;
+        final byte idSizeType = (byte) (page.data[readOffset] & 0x3);
+        final boolean hasNamespace = (page.data[readOffset] & 0x10) == 0x10;
+        readOffset += 1;
+        final int dlnLen = ByteConversion.byteToShort(page.data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        //That might happen during recovery runs : TODO, investigate
+        if (owner == null) {
+            buf.append("(can't read data, owner is null)");
+        } else {
+            try {
+                final NodeId nodeId = ((NativeBroker)owner).getBrokerPool()
+                    .getNodeFactory().createFromData(dlnLen, page.data, readOffset);
+                readOffset += nodeId.size();
+                buf.append("(").append(nodeId).append(")");
+                readOffset += Signatures.getLength(idSizeType);
+                if (hasNamespace) {
+                    //Untested
+                    final short NSId = ByteConversion.byteToShort(page.data, readOffset);
+                    readOffset += AttrImpl.LENGTH_NS_ID;
+                    final short prefixLen = ByteConversion.byteToShort(page.data, readOffset);
+                    readOffset += AttrImpl.LENGTH_PREFIX_LENGTH + prefixLen;
+                    final String prefix = new String(page.data, readOffset, valueLength - (readOffset - prefixLen), UTF_8);
+
+                    final String NsURI = ((NativeBroker)owner).getBrokerPool()
+                        .getSymbols().getNamespace(NSId);
+                    buf.append(prefix).append("{").append(NsURI).append("}");
+                }
+                    String value = new String(page.data, readOffset, valueLength - (readOffset - pos), UTF_8);
+                    if (value.length() > 15) {
+                        value = value.substring(0, 8) + "..." + value.substring(value.length() - 8);
+                    }
+
+                    buf.append(":'").append(value).append("'");
+            } catch (final Exception e) {
+                //TODO : more friendly message. Provide the array of bytes ?
+                buf.append("(unable to read the node ID at : ").append(readOffset);
+            }
+        }
+            buf.append("] ");
+    }
+
+    /** Ends the description of a page: the records counted against those the header says, the next tuple id, the data length. */
+    private static void describePageFooter(final StringBuilder buf, final DOMPage page, final short count) {
         buf.append("; records in page: ").append(count).append(" (header says: ").append(page.getPageHeader().getRecordCount()).append(")");
         buf.append("; currentTupleID: ").append(page.getPageHeader().getCurrentTupleID());
         buf.append("; data length: ").append(page.getPageHeader().getDataLength());
@@ -1230,7 +1287,6 @@ public class DOMFile extends BTree implements Lockable {
                 break;
             }
         }
-        return buf.toString();
     }
 
     @Override
@@ -1288,15 +1344,237 @@ public class DOMFile extends BTree implements Lockable {
         // first try to find the node in the index
         final long pointer = findValue(nodeRef);
         if (pointer != KEY_NOT_FOUND) {
+            exactHits.increment();
             return pointer;
         }
-        // node not found in index: try to find the nearest available
-        // ancestor and traverse it
-        final AncestorEntry ancestor = findNearestAncestorEntry(doc, node);
-        if (ancestor == null) {
-            return KEY_NOT_FOUND;
+        // node not found in index: read forward from the nearest entry before it
+        final FromEntry fromEntry = findFromNearestEntry(broker, doc, node, nodeRef);
+        if (fromEntry.outcome() != FromEntry.Outcome.UNUSABLE) {
+            lookupsFromEntry.increment();
+            lookupBuckets[LookupBuckets.bucketOf(fromEntry.scanned(), scanLimitOf(broker))].increment();
+            countForDocument(doc, fromEntry.scanned());
+            return fromEntry.address();
         }
-        return findInSubtree(broker, doc, ancestor, node);
+        // that entry is wrong or stale: try to find the nearest available
+        // ancestor and traverse it
+        ancestorFallbacks.increment();
+        countForDocument(doc, fromEntry.scanned());
+        NodeId climbFrom = node.getNodeId();
+        while (true) {
+            final AncestorEntry ancestor = findNearestAncestorEntry(doc, climbFrom);
+            if (ancestor == null) {
+                return KEY_NOT_FOUND;
+            }
+            final long address = findInSubtree(broker, doc, ancestor, node);
+            if (address != ENTRY_UNUSABLE) {
+                return address;
+            }
+            // the entry of this ancestor leads to another node: go on to the next ancestor above it
+            climbFrom = ancestor.nodeId();
+        }
+    }
+
+    /**
+     * What reading forward from the nearest entry before a node found.
+     *
+     * @param outcome whether the node was found, is not in the document, or the entry could not be used
+     * @param address the address of the node if it was found, else {@link #KEY_NOT_FOUND}
+     * @param scanned the records that were read from the entry
+     */
+    private record FromEntry(Outcome outcome, long address, long scanned) {
+
+        enum Outcome { FOUND, ABSENT, UNUSABLE }
+
+        static FromEntry absent(final long scanned) {
+            return new FromEntry(Outcome.ABSENT, KEY_NOT_FOUND, scanned);
+        }
+
+        static FromEntry unusable(final long scanned) {
+            return new FromEntry(Outcome.UNUSABLE, KEY_NOT_FOUND, scanned);
+        }
+
+        static FromEntry found(final long address, final long scanned) {
+            return new FromEntry(Outcome.FOUND, address, scanned);
+        }
+    }
+
+    /** Whether there is an entry, and it is one of the document: the floor of a key can be an entry of the document before. */
+    private static boolean isEntryOfDocument(final FloorEntry floor, final DocumentImpl doc) {
+        return floor != null && floor.key().getLength() >= DocumentImpl.LENGTH_DOCUMENT_ID
+                && ByteConversion.byteToInt(floor.key().data(), floor.key().start()) == doc.getDocId();
+    }
+
+    /**
+     * Reads forward in document order from the nearest entry before a node, which need not be an ancestor of the node,
+     * until it reaches the node or passes its id. That entry is never before the nearest ancestor with an entry, so
+     * this reads no more than climbing to that ancestor does.
+     *
+     * <p>An entry is only a hint: it must lead to a record, and the first record read from it must carry the node id it
+     * is keyed by, else the entry is wrong or stale, and is ignored. That finds a record that moved, or an address that
+     * leads nowhere. It cannot find an entry that leads into another document at a record with the same node id: nothing
+     * in {@code dom.dbx} says which document owns a page, so an exact entry has the same trust in
+     * {@link #findValue(DBBroker, NodeProxy)}.</p>
+     *
+     * @param broker the database broker
+     * @param doc the document of the node
+     * @param node the node to find
+     * @param nodeRef the key of the node
+     * @return where the node is, that the document does not contain it, or that there is no entry to read from or it
+     *     cannot be used
+     * @throws IOException if an I/O error occurs
+     * @throws BTreeException if the tree cannot be read
+     */
+    private FromEntry findFromNearestEntry(final DBBroker broker, final DocumentImpl doc, final NodeProxy node, final NodeRef nodeRef)
+            throws IOException, BTreeException {
+        final FloorEntry floor = findFloor(nodeRef);
+        if (!isEntryOfDocument(floor, doc)) {
+            return FromEntry.unusable(0);
+        }
+        long scanned = 0;
+        try {
+            // an iterator looks a node up by its id when its address leads nowhere, which is this lookup again, so the
+            // record is found here and the iterator starts at it
+            final RecordPos start = findRecordOfEntry(doc, floor.pointer());
+            if (start == null) {
+                return FromEntry.unusable(scanned);
+            }
+            // a new reader: the shared one checks its start node by its id, which is this lookup
+            final EmbeddedXMLStreamReader reader = new EmbeddedXMLStreamReader(broker, doc, new RawNodeIterator(broker, this, start), null, true);
+            try {
+                boolean first = true;
+                while (reader.hasNext()) {
+                    if (reader.next() == XMLStreamConstants.END_ELEMENT) {
+                        continue;
+                    }
+                    scanned++;
+                    final NodeId otherId = (NodeId) reader.getProperty(ExtendedXMLStreamReader.PROPERTY_NODE_ID);
+                    if (first) {
+                        first = false;
+                        if (!Arrays.equals(floor.key().getData(), new NodeRef(doc.getDocId(), otherId).getData())) {
+                            ignoreEntry(doc, "it leads to another node");
+                            return FromEntry.unusable(scanned);
+                        }
+                    }
+                    final int order = otherId.compareTo(node.getNodeId());
+                    if (order == 0) {
+                        return FromEntry.found(reader.getCurrentPosition(), scanned);
+                    }
+                    if (order > 0) {
+                        return FromEntry.absent(scanned);
+                    }
+                }
+            } finally {
+                reader.close();
+            }
+        } catch (final XMLStreamException e) {
+            ignoreEntry(doc, "it cannot be read: " + e.getMessage());
+            return FromEntry.unusable(scanned);
+        } finally {
+            recordsScanned.add(scanned);
+        }
+        return FromEntry.absent(scanned);
+    }
+
+    /**
+     * Finds the record that an entry leads to. An entry that leads to no record is ignored and counted.
+     *
+     * @param doc the document of the entry
+     * @param pointer the address stored in the entry
+     * @return the position of the record, or null if the address leads to none
+     */
+    private RecordPos findRecordOfEntry(final DocumentImpl doc, final long pointer) {
+        final RecordPos record = StorageAddress.hasAddress(pointer) ? findRecord(pointer) : null;
+        if (record == null) {
+            ignoreEntry(doc, "it leads to no record");
+        } else if (record.getPage().getPageNum() != StorageAddress.pageFromPointer(pointer)) {
+            // a page split moved the record and left a forward link where the entry points
+            forwardLinkHops.increment();
+        }
+        return record;
+    }
+
+    private void ignoreEntry(final DocumentImpl doc, final String reason) {
+        rejectedEntries.increment();
+        LOG.debug("Ignoring an entry of document {}: {}", doc.getDocId(), reason);
+    }
+
+    /**
+     * Returns the counters of the by-id lookups of nodes that have no entry.
+     *
+     * @return a snapshot of the counters
+     */
+    public LookupStatistics getLookupStatistics() {
+        return new LookupStatistics(lookupsFromEntry.sum(), recordsScanned.sum(), rejectedEntries.sum(), ancestorFallbacks.sum(),
+                exactHits.sum(), forwardLinkHops.sum(), new LookupBuckets(lookupBuckets[0].sum(), lookupBuckets[1].sum(),
+                        lookupBuckets[2].sum(), lookupBuckets[3].sum()));
+    }
+
+    /**
+     * Sets all counters of the by-id lookups, and those per document, back to zero.
+     */
+    public void resetLookupStatistics() {
+        lookupsFromEntry.reset();
+        recordsScanned.reset();
+        rejectedEntries.reset();
+        ancestorFallbacks.reset();
+        exactHits.reset();
+        forwardLinkHops.reset();
+        for (final LongAdder bucket : lookupBuckets) {
+            bucket.reset();
+        }
+        perDocument.clear();
+    }
+
+    /**
+     * Switches the counting of lookups per document on or off. It is off by default, as it costs a map lookup for each
+     * lookup that is not answered by an entry of its own. Switching it off keeps what was counted until the statistics
+     * are reset. At most {@value #MAX_DOCUMENT_STATISTICS} documents are followed; the lookups of any other are not counted.
+     *
+     * @param enabled true to count per document
+     */
+    public void setDocumentStatistics(final boolean enabled) {
+        documentStatistics = enabled;
+    }
+
+    /**
+     * Returns whether the lookups are counted per document.
+     *
+     * @return true if they are
+     */
+    public boolean isDocumentStatistics() {
+        return documentStatistics;
+    }
+
+    /**
+     * Returns the documents whose lookups read the most records from entries.
+     *
+     * @param limit the most documents to return
+     * @return the documents, the one that read the most records first; empty unless the statistics per document were on
+     */
+    public List<DocumentLookups> getDocumentStatistics(final int limit) {
+        return perDocument.entrySet().stream()
+                .map(e -> new DocumentLookups(e.getKey(), e.getValue().uri, e.getValue().lookups.sum(), e.getValue().recordsScanned.sum()))
+                .sorted(Comparator.comparingLong(DocumentLookups::recordsScanned).reversed().thenComparingInt(DocumentLookups::documentId))
+                .limit(limit)
+                .toList();
+    }
+
+    private void countForDocument(final DocumentImpl doc, final long records) {
+        if (!documentStatistics) {
+            return;
+        }
+        final DocumentCounters counters = perDocument.get(doc.getDocId());
+        final DocumentCounters counted = counters != null ? counters
+                : perDocument.size() < MAX_DOCUMENT_STATISTICS ? perDocument.computeIfAbsent(doc.getDocId(), id -> new DocumentCounters(doc.getURI().toString())) : null;
+        if (counted != null) {
+            counted.lookups.increment();
+            counted.recordsScanned.add(records);
+        }
+    }
+
+    /** The scan limit of the broker, 0 if there is none or the broker does not say. */
+    private static int scanLimitOf(final DBBroker broker) {
+        return broker instanceof final NativeBroker nativeBroker ? nativeBroker.getEntryPolicy().getScanLimit() : 0;
     }
 
     /**
@@ -1309,17 +1587,18 @@ public class DOMFile extends BTree implements Lockable {
     }
 
     /**
-     * Climbs from a node towards the root until it reaches an ancestor that has an entry in the B-tree.
+     * Climbs from a node towards the root until it reaches an ancestor that has an entry in the B-tree that leads to a
+     * record.
      *
      * @param doc the document of the node
-     * @param node the node
+     * @param below the id of the node to climb from; its ancestors are looked at, not the node itself
      * @return the nearest ancestor with an entry, or null if the climb reaches the document node
      * @throws IOException if an I/O error occurs
      * @throws BTreeException if the node has no parent id
      */
-    private AncestorEntry findNearestAncestorEntry(final DocumentImpl doc, final NodeProxy node)
+    private AncestorEntry findNearestAncestorEntry(final DocumentImpl doc, final NodeId below)
             throws IOException, BTreeException {
-        NodeId nodeID = node.getNodeId();
+        NodeId nodeID = below;
         long parentPointer = KEY_NOT_FOUND;
         do {
             nodeID = nodeID.getParentId();
@@ -1337,6 +1616,9 @@ public class DOMFile extends BTree implements Lockable {
             } catch (final BTreeException bte) {
                 LOG.error("report me", bte);
             }
+            if (parentPointer != KEY_NOT_FOUND && findRecordOfEntry(doc, parentPointer) == null) {
+                parentPointer = KEY_NOT_FOUND;
+            }
         } while (parentPointer == KEY_NOT_FOUND);
         return new AncestorEntry(nodeID, parentPointer);
     }
@@ -1348,7 +1630,8 @@ public class DOMFile extends BTree implements Lockable {
      * @param doc the document of the node
      * @param ancestor the ancestor to read from
      * @param node the node to find
-     * @return the address of the node, or {@link #KEY_NOT_FOUND} if the subtree does not contain it
+     * @return the address of the node, {@link #KEY_NOT_FOUND} if the subtree does not contain it, or
+     *     {@link #ENTRY_UNUSABLE} if the entry of the ancestor does not lead to the ancestor
      * @throws IOException if an I/O error occurs
      * @throws BTreeException if the subtree cannot be read
      */
@@ -1357,6 +1640,7 @@ public class DOMFile extends BTree implements Lockable {
         try {
             final int thisLevel = ancestor.nodeId().getTreeLevel();
             Integer childLevel = null; // lazily initialized below
+            boolean first = true;
 
             final NodeProxy parent = new NodeProxy(null, doc, ancestor.nodeId(), ancestor.pointer());
             final EmbeddedXMLStreamReader reader = (EmbeddedXMLStreamReader)broker.getXMLStreamReader(parent, true);
@@ -1370,6 +1654,15 @@ public class DOMFile extends BTree implements Lockable {
                     }
 
                     final NodeId otherId = (NodeId) reader.getProperty(ExtendedXMLStreamReader.PROPERTY_NODE_ID);
+                    if (first) {
+                        first = false;
+                        // the first record must be the ancestor the entry is keyed by, else the entry is wrong or stale and
+                        // reading on from it would read through the rest of the document
+                        if (!otherId.equals(ancestor.nodeId())) {
+                            ignoreEntry(doc, "the entry of an ancestor leads to another node");
+                            return ENTRY_UNUSABLE;
+                        }
+                    }
                     if (otherId.equals(node.getNodeId())) {
                         return reader.getCurrentPosition();
                     }
@@ -1724,7 +2017,7 @@ public class DOMFile extends BTree implements Lockable {
         rec.offset += LENGTH_DATA_LENGTH;
         short realLen = vlen;
         if (ItemId.isLink(rec.getTupleID())) {
-            throw new RuntimeException("Cannot remove link ...");
+            throw new IllegalStateException("Cannot remove link ...");
         }
         boolean isOverflow = false;
         long backLink = 0;
@@ -2043,23 +2336,13 @@ public class DOMFile extends BTree implements Lockable {
     }
 
     /**
-     * Recursive method to retrieve the string values of the root node
-     * and all its descendants.
+     * Moves a record position to the next real node: a link is skipped, and at the end of a page the position goes on to the
+     * first record of the next page.
      *
-     * @param pool the broker pool
-     * @param os the output stream to receive the value
      * @param rec the record position
-     * @param isTopNode true if this is the top node, false otherwise
-     * @param addWhitespace true if whitespace should be added to the node value
+     * @return false if the page chain ends before there is another node, true if the position is at the next node
      */
-    private void getNodeValue(final BrokerPool pool,
-                              final UnsynchronizedByteArrayOutputStream os,
-                              final RecordPos rec, final boolean isTopNode,
-                              final boolean addWhitespace) {
-        if(LOG.isDebugEnabled() && !lockManager.isBtreeLocked(getLockName())) {
-            LOG.debug("The file doesn't own a lock");
-        }
-        //Locate the next real node, skipping relocated nodes
+    private boolean locateNextRecord(final RecordPos rec) {
         boolean foundNext = false;
         do {
             final DOMFilePageHeader pageHeader = rec.getPage().getPageHeader();
@@ -2072,7 +2355,7 @@ public class DOMFile extends BTree implements Lockable {
                         ", Len: " + pageHeader.getDataLength() +
                         ", Page info : " + rec.getPage().page.getPageInfo());
                     //TODO : throw exception ? -pb
-                    return;
+                    return false;
                 }
                 rec.setPage(getDOMPage(nextPage));
                 dataCache.add(rec.getPage());
@@ -2090,6 +2373,29 @@ public class DOMFile extends BTree implements Lockable {
                 foundNext = true;
             }
         } while (!foundNext);
+        return true;
+    }
+
+    /**
+     * Recursive method to retrieve the string values of the root node
+     * and all its descendants.
+     *
+     * @param pool the broker pool
+     * @param os the output stream to receive the value
+     * @param rec the record position
+     * @param isTopNode true if this is the top node, false otherwise
+     * @param addWhitespace true if whitespace should be added to the node value
+     */
+    private void getNodeValue(final BrokerPool pool,
+                              final UnsynchronizedByteArrayOutputStream os,
+                              final RecordPos rec, final boolean isTopNode,
+                              final boolean addWhitespace) {
+        if(LOG.isDebugEnabled() && !lockManager.isBtreeLocked(getLockName())) {
+            LOG.debug("The file doesn't own a lock");
+        }
+        if (!locateNextRecord(rec)) {
+            return;
+        }
         final short valueLength = ByteConversion.byteToShort(rec.getPage().data, rec.offset);
         int realLen = valueLength;
         rec.offset += LENGTH_DATA_LENGTH;
@@ -2113,89 +2419,129 @@ public class DOMFile extends BTree implements Lockable {
         // check the type of the node
         final short type = Signatures.getType(data[readOffset]);
         readOffset += StoredNode.LENGTH_SIGNATURE_LENGTH;
-        //Switch on the node type
-        switch (type) {
-            case Node.ELEMENT_NODE: {
-                final int children = ByteConversion.byteToInt(data, readOffset);
-                readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
-                final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                readOffset += nodeIdLen;
-                final short attributes = ByteConversion.byteToShort(data, readOffset);
-                //Ignore the following NS data which are of no use
-                //We position the offset *after* the next TID
-                rec.offset += realLen + LENGTH_TID;
-                final boolean extraWhitespace = addWhitespace && (children - attributes) > 1;
-                for (int i = 0; i < children; i++) {
-                    //recursive call : we ignore attributes children
-                    getNodeValue(pool, os, rec, false, addWhitespace);
-                    if (extraWhitespace) {
-                        os.write((byte) ' ');
-                    }
-                }
-                return;
-            }
-            case Node.TEXT_NODE:
-            case Node.CDATA_SECTION_NODE: {
-                final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                readOffset += nodeIdLen;
-                os.write(data, readOffset, realLen -
-                    (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen));
-                break;
-            }
-            case Node.PROCESSING_INSTRUCTION_NODE: {
-	            final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-	            readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-	            final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-	            readOffset += nodeIdLen;
-	            final int targetLen = ByteConversion.byteToInt(data, readOffset);
-	            readOffset += 4 + targetLen;
-	            os.write(
-            		data, 
-            		readOffset, 
-            		realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen + targetLen + 4));
-	            break;
-            }
-            case Node.ATTRIBUTE_NODE: {
-                if (isTopNode) {
-                    final int start = readOffset - StoredNode.LENGTH_SIGNATURE_LENGTH;
-                    final byte idSizeType = (byte) (data[start] & 0x3);
-                    final boolean hasNamespace = (data[start] & 0x10) == 0x10;
-                    final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                    readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                    final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                    readOffset += nodeIdLen;
-                    readOffset += Signatures.getLength(idSizeType);
-                    if (hasNamespace) {
-                        readOffset += AttrImpl.LENGTH_NS_ID; // skip namespace id
-                        final short prefixLen = ByteConversion.byteToShort(data, readOffset);
-                        readOffset += AttrImpl.LENGTH_PREFIX_LENGTH;
-                        readOffset += prefixLen; // skip prefix
-                    }
-                    os.write(data, readOffset, realLen - (readOffset - start));
-                }
-                break;
-            }
-            case Node.COMMENT_NODE:
-            {
-                if (isTopNode) {
-                    final int dlnLen = ByteConversion.byteToShort(data, readOffset);
-                    readOffset += NodeId.LENGTH_NODE_ID_UNITS;
-                    final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
-                    readOffset += nodeIdLen;
-                    os.write(data, readOffset, realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen));
-                }
-                break;
-            }
+        //Write the value of the node by its kind
+        if (!writeValueOfKind(pool, os, rec, type, data, readOffset, realLen, isTopNode, addWhitespace)) {
+            return;
         }
         if (!inOverflow) {
             //If it isn't an overflow value, add the value length to the current offset
             //We position the offset *after* the next TID
             rec.offset += realLen + LENGTH_TID;
         }
+    }
+
+    /**
+     * Writes the string value of a record by the kind of node it holds.
+     *
+     * @param type the kind of node
+     * @param data the bytes of the record, or of its overflow value
+     * @param readOffset where the node id starts, after the signature
+     * @param realLen the length of the record
+     * @return false if the record is an element, whose children follow it and which has already moved the record position
+     *     past them, true for any other kind, whose position is still to be moved
+     */
+    private boolean writeValueOfKind(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final RecordPos rec,
+            final short type, final byte[] data, final int readOffset, final int realLen, final boolean isTopNode,
+            final boolean addWhitespace) {
+        switch (type) {
+            case Node.ELEMENT_NODE:
+                writeElementValue(pool, os, rec, data, readOffset, realLen, addWhitespace);
+                return false;
+            case Node.TEXT_NODE:
+            case Node.CDATA_SECTION_NODE:
+                writeTextValue(pool, os, data, readOffset, realLen);
+                break;
+            case Node.PROCESSING_INSTRUCTION_NODE:
+                writeProcessingInstructionValue(pool, os, data, readOffset, realLen);
+                break;
+            case Node.ATTRIBUTE_NODE:
+                if (isTopNode) {
+                    writeAttributeValue(pool, os, data, readOffset, realLen);
+                }
+                break;
+            case Node.COMMENT_NODE:
+                if (isTopNode) {
+                    // a comment is written like a text: its node id, then its characters
+                    writeTextValue(pool, os, data, readOffset, realLen);
+                }
+                break;
+            default:
+                // the node kinds that are stored are all handled above
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * Writes the string value of an element: the values of its children, the records that follow it. It leaves the record
+     * position after the last of them.
+     */
+    private void writeElementValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final RecordPos rec,
+            final byte[] data, final int startOffset, final int realLen, final boolean addWhitespace) {
+        int readOffset = startOffset;
+        final int children = ByteConversion.byteToInt(data, readOffset);
+        readOffset += ElementImpl.LENGTH_ELEMENT_CHILD_COUNT;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        final short attributes = ByteConversion.byteToShort(data, readOffset);
+        //Ignore the following NS data which are of no use
+        //We position the offset *after* the next TID
+        rec.offset += realLen + LENGTH_TID;
+        final boolean extraWhitespace = addWhitespace && (children - attributes) > 1;
+        for (int i = 0; i < children; i++) {
+            //recursive call : we ignore attributes children
+            getNodeValue(pool, os, rec, false, addWhitespace);
+            if (extraWhitespace) {
+                os.write((byte) ' ');
+            }
+        }
+    }
+
+    /** Writes the string value of a text, a CDATA section or a comment: the characters after its node id. */
+    private static void writeTextValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final byte[] data,
+            final int startOffset, final int realLen) {
+        int readOffset = startOffset;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        os.write(data, readOffset, realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen));
+    }
+
+    /** Writes the string value of a processing instruction: its data, after its node id and its target. */
+    private static void writeProcessingInstructionValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os,
+            final byte[] data, final int startOffset, final int realLen) {
+        int readOffset = startOffset;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        final int targetLen = ByteConversion.byteToInt(data, readOffset);
+        readOffset += 4 + targetLen;
+        os.write(data, readOffset, realLen - (StoredNode.LENGTH_SIGNATURE_LENGTH + NodeId.LENGTH_NODE_ID_UNITS + nodeIdLen + targetLen + 4));
+    }
+
+    /** Writes the string value of an attribute: its value, after its node id, its name id and, if it has one, its namespace and prefix. */
+    private static void writeAttributeValue(final BrokerPool pool, final UnsynchronizedByteArrayOutputStream os, final byte[] data,
+            final int startOffset, final int realLen) {
+        int readOffset = startOffset;
+        final int start = readOffset - StoredNode.LENGTH_SIGNATURE_LENGTH;
+        final byte idSizeType = (byte) (data[start] & 0x3);
+        final boolean hasNamespace = (data[start] & 0x10) == 0x10;
+        final int dlnLen = ByteConversion.byteToShort(data, readOffset);
+        readOffset += NodeId.LENGTH_NODE_ID_UNITS;
+        final int nodeIdLen = pool.getNodeFactory().lengthInBytes(dlnLen, data, readOffset);
+        readOffset += nodeIdLen;
+        readOffset += Signatures.getLength(idSizeType);
+        if (hasNamespace) {
+            readOffset += AttrImpl.LENGTH_NS_ID; // skip namespace id
+            final short prefixLen = ByteConversion.byteToShort(data, readOffset);
+            readOffset += AttrImpl.LENGTH_PREFIX_LENGTH;
+            readOffset += prefixLen; // skip prefix
+        }
+        os.write(data, readOffset, realLen - (readOffset - start));
     }
 
     RecordPos findRecord(final long pointer) {
@@ -2983,7 +3329,7 @@ public class DOMFile extends BTree implements Lockable {
 
         short getNextTupleID() {
             if (++tupleID == ItemId.ID_MASK) {
-                throw new RuntimeException("No spare ids on page");
+                throw new IllegalStateException("No spare ids on page");
             }
             return tupleID;
         }
@@ -2994,7 +3340,7 @@ public class DOMFile extends BTree implements Lockable {
 
         void setNextTupleID(final short tupleID) {
             if (tupleID > ItemId.MAX_ID) {
-                throw new RuntimeException("TupleID overflow! TupleID = " + tupleID);
+                throw new IllegalStateException("TupleID overflow! TupleID = " + tupleID);
             }
             this.tupleID = tupleID;
         }
@@ -3020,8 +3366,8 @@ public class DOMFile extends BTree implements Lockable {
         }
 
         @Override
-        public int read(final byte[] data, int offset) throws IOException {
-            offset = super.read(data, offset);
+        public int read(final byte[] data, final int startOffset) throws IOException {
+            int offset = super.read(data, startOffset);
             records = ByteConversion.byteToShort(data, offset);
             offset += LENGTH_RECORDS_COUNT;
             dataLength = ByteConversion.byteToInt(data, offset);
@@ -3035,8 +3381,8 @@ public class DOMFile extends BTree implements Lockable {
         }
 
         @Override
-        public int write(final byte[] data, int offset) throws IOException {
-            offset = super.write(data, offset);
+        public int write(final byte[] data, final int startOffset) throws IOException {
+            int offset = super.write(data, startOffset);
             ByteConversion.shortToByte(records, data, offset);
             offset += LENGTH_RECORDS_COUNT;
             ByteConversion.intToByte(dataLength, data, offset);
@@ -3287,11 +3633,7 @@ public class DOMFile extends BTree implements Lockable {
 
         @Override
         public boolean equals(final Object obj) {
-            if(!(obj instanceof DOMPage other)) {
-                return false;
-            }
-
-            return page.equals(other.page);
+            return obj instanceof DOMPage other && page.equals(other.page);
         }
 
         void invalidate() {
@@ -3316,7 +3658,7 @@ public class DOMFile extends BTree implements Lockable {
                 pos += LENGTH_TID;
                 if (ItemId.getId(tupleID) > ItemId.MAX_ID) {
                     LOG.error(debugPageContents(this));
-                    throw new RuntimeException("TupleID overflow in page " + getPageNum());
+                    throw new IllegalStateException("TupleID overflow in page " + getPageNum());
                 }
                 if (ItemId.getId(tupleID) > maxTupleID) {
                     maxTupleID = ItemId.getId(tupleID);
@@ -3569,6 +3911,8 @@ public class DOMFile extends BTree implements Lockable {
                 case KEYS:
                     values.add(value);
                     return true;
+                default:
+                    break;
             }
             return false;
         }

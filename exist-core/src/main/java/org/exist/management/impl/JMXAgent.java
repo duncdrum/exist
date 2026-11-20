@@ -92,7 +92,8 @@ public final class JMXAgent implements Agent {
                 new DiskUsage(instance),
                 new ProcessReport(instance),
                 new BinaryValues(instance),
-                new CollectionCache(instance)
+                new CollectionCache(instance),
+                new NodeLookups(instance)
         );
 
         for (final PerInstanceMBean perInstanceMBean : perInstanceMBeans) {
