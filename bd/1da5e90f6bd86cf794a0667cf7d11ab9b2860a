@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/xquery/OptimizeEmptyContextTest.java
+  s_ef2621e0b5f380::t_03ef12be8cb716 55-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bd1da5e90f6bd86cf794a0667cf7d11ab9b2860a",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
