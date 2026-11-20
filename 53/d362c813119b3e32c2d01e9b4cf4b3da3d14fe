@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/xquery/Optimizer.java
+  s_ef2621e0b5f380::t_9085e47d5e19ff 220-235,293-296
+extensions/indexes/range/src/test/xquery/range/path-shapes.index-use.golden
+  s_ef2621e0b5f380::t_bfc3db7825bb66 45,130,148
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_ef2621e0b5f380::t_42ae169944f665 38-39
+exist-core/src/main/java/org/exist/xquery/LetInliner.java
+  s_ef2621e0b5f380::t_61983c3a0761f2 1-176
+extensions/indexes/range/src/test/xquery/range/let-inlining.xqm
+  s_ef2621e0b5f380::t_6354a8c253f303 1-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "53d362c813119b3e32c2d01e9b4cf4b3da3d14fe",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
