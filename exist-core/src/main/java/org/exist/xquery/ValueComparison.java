@@ -67,6 +67,16 @@ public class ValueComparison extends GeneralComparison {
 		super(context, left, right, relation);
 	}
 
+	/**
+	 * A value comparison keeps a path on the right where it is. With the path on the left, a predicate over stored nodes
+	 * that an index answers does not raise XPTY0004 for a node with several items in the operand (#7002); evaluated as
+	 * written, it does.
+	 */
+	@Override
+	protected boolean mayMovePathLeft() {
+		return false;
+	}
+
 	protected Sequence genericCompare(Sequence contextSequence, Item contextItem) throws XPathException {
         if (context.getProfiler().isEnabled())
             {context.getProfiler().message(this, Profiler.OPTIMIZATION_FLAGS, "OPTIMIZATION CHOICE", "genericCompare");}  
