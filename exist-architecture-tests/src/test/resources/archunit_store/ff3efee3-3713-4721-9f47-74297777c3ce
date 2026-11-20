@@ -1,0 +1,12 @@
+org.exist.xquery.AndPredicateSplitter.split(org.exist.xquery.XQueryContext, org.exist.xquery.OpAnd) calls org.exist.xquery.PathExpr.replace
+org.exist.xquery.BindingExpression.replace(org.exist.xquery.Expression, org.exist.xquery.Expression) calls org.exist.xquery.DebuggableExpression.replace
+org.exist.xquery.ConditionalExpression.replace(org.exist.xquery.Expression, org.exist.xquery.Expression) calls org.exist.xquery.DebuggableExpression.replace
+org.exist.xquery.Function.replace(org.exist.xquery.Expression, org.exist.xquery.Expression) calls org.exist.xquery.PathExpr.replace
+org.exist.xquery.Function.replace(org.exist.xquery.Expression, org.exist.xquery.Expression) calls org.exist.xquery.RewritableExpression.replace
+org.exist.xquery.GlobalVariableInliner.inline(org.exist.xquery.XQueryContext, org.exist.xquery.VariableReference, org.exist.xquery.ExpressionVisitor) calls org.exist.xquery.RewritableExpression.replace
+org.exist.xquery.Optimizer.visitFilteredExpr(org.exist.xquery.FilteredExpression) calls org.exist.xquery.RewritableExpression.replace
+org.exist.xquery.Optimizer.visitFilteredExpr(org.exist.xquery.FilteredExpression) calls org.exist.xquery.RewritableExpression.replace
+org.exist.xquery.Optimizer.visitLocationStep(org.exist.xquery.LocationStep) calls org.exist.xquery.RewritableExpression.replace
+org.exist.xquery.Optimizer.visitLocationStep(org.exist.xquery.LocationStep) calls org.exist.xquery.RewritableExpression.replace
+org.exist.xquery.Optimizer.visitPathExpr(org.exist.xquery.PathExpr) calls org.exist.xquery.PathExpr.replace
+org.exist.xquery.modules.range.RangeQueryRewriter.rewriteLocationStep(org.exist.xquery.LocationStep) calls org.exist.xquery.Predicate.replace
