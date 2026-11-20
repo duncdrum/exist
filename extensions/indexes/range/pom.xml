@@ -141,6 +141,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- the expected answers of the path-shapes matrix are checked against Saxon-HE, in PathShapesOracleTest -->
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>io.github.hakky54</groupId>
             <artifactId>logcaptor</artifactId>
