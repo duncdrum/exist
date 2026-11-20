@@ -48,6 +48,20 @@ public class QueryRewriter {
         return null;
     }
 
+    /**
+     * Rewrite the predicates of a {@link FilteredExpression}, for example {@code $var[pred]}, to make use of indexes.
+     * Their comparisons are not seen by {@link #rewriteLocationStep}, which only looks at the predicates of a step.
+     * The method rewrites the predicates in place, as {@link #rewriteLocationStep} does, and may return an additional
+     * pragma to be added to the extension expression the optimizer wraps around the filtered expression.
+     *
+     * @param filtered the filtered expression to rewrite
+     * @return a pragma expression to add or null if there is none
+     * @throws XPathException in case of a static error
+     */
+    public Pragma rewriteFilteredExpression(final FilteredExpression filtered) throws XPathException {
+        return null;
+    }
+
     protected XQueryContext getContext() {
         return context;
     }

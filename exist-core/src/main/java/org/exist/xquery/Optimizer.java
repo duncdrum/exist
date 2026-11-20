@@ -242,6 +242,19 @@ public class Optimizer extends DefaultExpressionVisitor {
             }
         }
 
+        // let the index rewriters turn the comparisons of the predicates into lookups, as they do for a step's predicates
+        @Nullable Pragma optimizePragma = null;
+        try {
+            for (final QueryRewriter rewriter : rewriters) {
+                optimizePragma = rewriter.rewriteFilteredExpression(filtered);
+                if (optimizePragma != null) {
+                    break;
+                }
+            }
+        } catch (final XPathException e) {
+            LOG.warn("Exception called while rewriting filtered expression: {}", e.getMessage(), e);
+        }
+
         // check if there are any predicates which could be optimized
         final List<Predicate> preds = filtered.getPredicates();
         final boolean optimize = hasOptimizable(preds) && !hasConstantFalsePredicate(preds);
@@ -249,7 +262,8 @@ public class Optimizer extends DefaultExpressionVisitor {
             // we found at least one Optimizable. Rewrite the whole expression and
             // enclose it in an (#exist:optimize#) pragma.
             final Expression parent = filtered.getParent();
-            if (!(parent instanceof final RewritableExpression path)) {
+            // a function whose body is the filter, such as `$n[@k = $k]`, has the function as the parent of the filter
+            if (!(parent instanceof RewritableExpression) && !(parent instanceof UserDefinedFunction)) {
                 if (LOG.isTraceEnabled()) {
                     LOG.trace("Parent expression: {} of step does not implement RewritableExpression", parent.getClass().getName());
                 }
@@ -264,10 +278,17 @@ public class Optimizer extends DefaultExpressionVisitor {
             try {
                 // Create the pragma
                 final ExtensionExpression extension = new ExtensionExpression(context);
+                if (optimizePragma != null) {
+                    extension.addPragma(optimizePragma);
+                }
                 extension.addPragma(new Optimize(extension, context, Optimize.OPTIMIZE_PRAGMA, null, false));
                 extension.setExpression(filtered);
                 // Replace the old expression with the pragma
-                path.replace(filtered, extension);
+                if (parent instanceof final UserDefinedFunction function) {
+                    function.setFunctionBody(extension);
+                } else {
+                    ((RewritableExpression) parent).replace(filtered, extension);
+                }
             } catch (final XPathException e) {
                 LOG.warn("Failed to optimize expression: {}: {}", filtered, e.getMessage(), e);
             }
