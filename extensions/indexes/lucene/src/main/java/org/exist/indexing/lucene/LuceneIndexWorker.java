@@ -78,6 +78,7 @@ import javax.xml.XMLConstants;
 import java.io.IOException;
 import java.lang.ref.Cleaner;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.stream.IntStream;
 
@@ -1119,6 +1120,16 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 // no configuration defines the field: nothing to find, as ft:query-field finds nothing in an unknown field
                 return resultSet;
             }
+            checkOneModel(field, defining, group -> {
+                final List<LuceneVectorFieldConfig> found = new ArrayList<>(1);
+                for (final LuceneIndexConfig idxConf : group.config().getIndexConfigurations()) {
+                    final LuceneVectorFieldConfig vecConf = findVectorField(idxConf, field);
+                    if (vecConf != null && vecConf.getDimension() == vector.length) {
+                        found.add(vecConf);
+                    }
+                }
+                return found;
+            });
             logSkippedSpaces(spaces, Set.of(luceneField), vector.length);
             final Query typedFilter = buildVectorFilterQuery(options, defining);
             final Query filterQuery = inContext(typedFilter, luceneField, docs, within);
@@ -1193,6 +1204,7 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                         "The query vector has " + vector.length + " dimensions, the vector fields of the elements searched are "
                                 + namesOf(others.keySet()) + " with " + dimensionsOf(others.keySet()) + " dimensions");
             }
+            checkOneModelPerField(searched, vector.length);
             logSkippedSpaces(others, spaces, vector.length);
             // with known candidates, one ranking over all of them, whatever the names of the elements that hold the entries
             final List<VectorExactSearch.Probe> probes = new ArrayList<>();
@@ -1294,6 +1306,45 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
             }
         }
         return spaces;
+    }
+
+    /**
+     * The collections queried together may configure the vectors of one field name and dimension from different
+     * models, and their vectors then are not comparable. The query vector carries no model, so the call is refused.
+     * Fields without a model, whose vectors are stored as they are, are not checked: nothing says which model made them.
+     *
+     * @param field the configured name of the vector field
+     * @param groups the configurations that define the field with the query vector's dimension
+     * @param fieldsOf the field's configurations in a group
+     * @throws XPathException EXXQDYFT0008 if the configurations name more than one model
+     */
+    private static void checkOneModel(final String field, final List<LuceneConfigs.Group> groups,
+            final Function<LuceneConfigs.Group, List<LuceneVectorFieldConfig>> fieldsOf) throws XPathException {
+        final Set<String> models = new TreeSet<>();
+        for (final LuceneConfigs.Group group : groups) {
+            for (final LuceneVectorFieldConfig vecConf : fieldsOf.apply(group)) {
+                if (vecConf.getModelId() != null) {
+                    models.add("'" + vecConf.getModelId() + "'");
+                }
+            }
+        }
+        if (models.size() > 1) {
+            throw new XPathException((Expression) null, LuceneModule.EXXQDYFT0008,
+                    "The vector field '" + field + "' is configured with the models " + models
+                            + " in the collections queried, search them separately");
+        }
+    }
+
+    /** {@link #checkOneModel} for each vector field of each element searched, over the fields of the query vector's dimension. */
+    private static void checkOneModelPerField(final Map<QName, Map<String, List<LuceneConfigs.Group>>> searched,
+            final int dimension) throws XPathException {
+        for (final Map.Entry<QName, Map<String, List<LuceneConfigs.Group>>> element : searched.entrySet()) {
+            final QName qname = element.getKey();
+            for (final Map.Entry<String, List<LuceneConfigs.Group>> vectorField : element.getValue().entrySet()) {
+                checkOneModel(LuceneFieldNames.vectorFieldName(vectorField.getKey()), vectorField.getValue(),
+                        group -> getVectorFieldConfigs(group.config().getIndexConfigForQName(qname), d -> d == dimension));
+            }
+        }
     }
 
     /** The dimensions of the vector fields, sorted, for an error message. */
