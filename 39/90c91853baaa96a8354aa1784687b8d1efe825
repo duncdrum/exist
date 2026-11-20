@@ -1,0 +1,45 @@
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_ef2621e0b5f380::t_da1ea769ce7868 495
+exist-core/src/main/java/org/exist/storage/NativeValueIndex.java
+  s_ef2621e0b5f380::t_2865fa30abe43e 71-72,74-75,166-167,195,245,317,445-446,532,534-537,539,541,545-547,553,617,736
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_ef2621e0b5f380::t_48953c63d437cc 249,317,372-375,377
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunElementWithId.java
+  s_ef2621e0b5f380::t_d6793abd98381e 155
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunId.java
+  s_ef2621e0b5f380::t_910b54a4d7e526 188
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunIdRef.java
+  s_ef2621e0b5f380::t_8d0c6540b29e29 190
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunMatches.java
+  s_ef2621e0b5f380::t_3dfeb53b44ea5b 285,392
+exist-core/src/main/java/org/exist/xquery/functions/util/IndexKeyDocuments.java
+  s_ef2621e0b5f380::t_34c97a89892a12 112-113
+exist-core/src/main/java/org/exist/xquery/functions/util/IndexKeyOccurrences.java
+  s_ef2621e0b5f380::t_6698c73fd5aa52 113-114
+exist-core/src/main/java/org/exist/xquery/functions/util/QNameIndexLookup.java
+  s_ef2621e0b5f380::t_311faf398381e9 164-165
+exist-core/src/test/java/org/exist/storage/IdIndexControlProbeTest.java
+  s_ef2621e0b5f380::t_df1a2e211239de 24-39,41,45-49,51-52,54-60,62-72,75-78,81-107
+exist-core/src/test/java/org/exist/storage/IdIndexMatrixProbeTest.java
+  s_ef2621e0b5f380::t_7aa2fe764bf6d9 1-134
+exist-core/src/test/java/org/exist/storage/IdIndexUpdateVisibilityProbeTest.java
+  s_ef2621e0b5f380::t_9f13ed3fb08581 30-32,38,40,42,44-47,49-50,52-56,58,61-65,70-77,79,83-85,87-90,92-120
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/RangeIndexSameQueryVisibilityProbeTest.java
+  s_ef2621e0b5f380::t_b2122ca669205c 1-138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3990c91853baaa96a8354aa1784687b8d1efe825",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
