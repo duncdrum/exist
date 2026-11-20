@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/xquery/range/rhs-path.xqm
+  s_ef2621e0b5f380::t_28b7ebb80e0d17 36,46,54,109,111,118,122,129,133
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8a34885146618a766dea55cffdf81e28d84a8a24",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
