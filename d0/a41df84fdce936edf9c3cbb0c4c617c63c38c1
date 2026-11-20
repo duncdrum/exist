@@ -1,0 +1,19 @@
+exist-architecture-tests/src/test/java/org/exist/architecture/LocaleRules.java
+  s_ef2621e0b5f380::t_3a3d09a4b71fb3 67-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d0a41df84fdce936edf9c3cbb0c4c617c63c38c1",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
