@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_e5206c93453c00::t_29234f75005e62 302-305
+exist-core/src/test/xquery/focus-in-key.xqm
+  s_e5206c93453c00::t_e643e3587de63a 1-167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bf0d22c67edcba681d1449cb4454117429417da6",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
