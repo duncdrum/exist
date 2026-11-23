@@ -425,6 +425,15 @@ public class OrderByClause extends AbstractFLWORClause {
     }
 
     @Override
+    public int getDependencies() {
+        int deps = super.getDependencies();
+        for (final OrderSpec orderSpec : orderSpecs) {
+            deps |= Dependency.focusOf(orderSpec.getSortExpression());
+        }
+        return deps;
+    }
+
+    @Override
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         returnExpr.resetState(postOptimization);

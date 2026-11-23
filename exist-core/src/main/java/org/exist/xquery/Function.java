@@ -685,6 +685,11 @@ public abstract class Function extends PathExpr {
         }
 
         @Override
+        public int getDependencies() {
+            return Dependency.DEFAULT_DEPENDENCIES;
+        }
+
+        @Override
         public void analyze(final AnalyzeContextInfo contextInfo) throws XPathException {
         }
 

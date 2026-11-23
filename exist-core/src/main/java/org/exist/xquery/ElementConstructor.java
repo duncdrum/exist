@@ -451,7 +451,11 @@ public class ElementConstructor extends NodeConstructor {
 
     @Override
     public int getDependencies() {
-        return super.getDependencies() | Dependency.focusOf(qnameExpr, content);
+        int deps = super.getDependencies() | Dependency.focusOf(qnameExpr, content);
+        if (attributes != null) {
+            deps |= Dependency.focusOf(attributes);
+        }
+        return deps;
     }
 
 	@Override

@@ -200,7 +200,7 @@ public class ArrowOperator extends AbstractExpression {
 
     @Override
     public int getDependencies() {
-        return super.getDependencies()
+        return Dependency.DEFAULT_DEPENDENCIES
                 | Dependency.focusOf(leftExpr, namedCall, funcSpec)
                 | Dependency.focusOf(parameters);
     }

@@ -106,7 +106,7 @@ public class MapExpr extends AbstractExpression {
 
     @Override
     public int getDependencies() {
-        int deps = super.getDependencies();
+        int deps = Dependency.DEFAULT_DEPENDENCIES;
         for (final Mapping mapping : mappings) {
             deps |= Dependency.focusOf(mapping.key, mapping.value);
         }

@@ -100,7 +100,7 @@ public class ArrayConstructor extends AbstractExpression {
 
     @Override
     public int getDependencies() {
-        return super.getDependencies() | Dependency.focusOf(arguments);
+        return Dependency.DEFAULT_DEPENDENCIES | Dependency.focusOf(arguments);
     }
 
     @Override

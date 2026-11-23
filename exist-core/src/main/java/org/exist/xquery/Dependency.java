@@ -87,6 +87,13 @@ public class Dependency {
 	 * The default dependencies: just CONTEXT_SET is set.
 	 */
 	public final static int DEFAULT_DEPENDENCIES = CONTEXT_SET;
+
+	/**
+	 * What an expression reports that does not say what it reads: the default, and the focus, the position and the size, as
+	 * if it read them. An expression kind that is missing from the table of the dependency test costs an index lookup in a
+	 * shape that is rare, and never a wrong answer.
+	 */
+	public final static int CONSERVATIVE_DEPENDENCIES = DEFAULT_DEPENDENCIES | CONTEXT_FOCUS | CONTEXT_POSITION;
 	
 	private final static int[] NAMED_BITS = {
 		CONTEXT_SET, CONTEXT_ITEM, LOCAL_VARS, CONTEXT_VARS, CONTEXT_POSITION, CONTEXT_FOCUS

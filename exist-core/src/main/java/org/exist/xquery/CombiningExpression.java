@@ -46,7 +46,7 @@ public abstract class CombiningExpression extends AbstractExpression {
 
 	@Override
 	public int getDependencies() {
-		return super.getDependencies() | Dependency.focusOf(left, right);
+		return Dependency.DEFAULT_DEPENDENCIES | Dependency.focusOf(left, right);
 	}
 
 	@Override

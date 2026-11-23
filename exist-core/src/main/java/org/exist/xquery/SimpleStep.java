@@ -113,6 +113,11 @@ public class SimpleStep extends Step {
 	/* (non-Javadoc)
 	 * @see org.exist.xquery.Step#resetState()
 	 */
+	@Override
+	public int getDependencies() {
+		return Dependency.DEFAULT_DEPENDENCIES | Dependency.focusOf(expression);
+	}
+
 	public void resetState(boolean postOptimization) {
 		super.resetState(postOptimization);
 		expression.resetState(postOptimization);

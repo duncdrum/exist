@@ -180,6 +180,17 @@ public class AttributeConstructor extends NodeConstructor {
 	 * @see org.exist.xquery.NodeConstructor#resetState()
 	 */
     @Override
+    public int getDependencies() {
+        int deps = super.getDependencies();
+        for (final Object part : contents) {
+            if (part instanceof final Expression expression) {
+                deps |= Dependency.focusOf(expression);
+            }
+        }
+        return deps;
+    }
+
+    @Override
     public void resetState(boolean postOptimization) {
 		super.resetState(postOptimization);
 

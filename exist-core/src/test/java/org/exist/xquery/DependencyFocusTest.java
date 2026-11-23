@@ -137,7 +137,34 @@ public class DependencyFocusTest {
         position("map { 'k': last() }"),
         position("array { last() }"),
         position("<e>{last()}</e>"),
-        neither("<e>{$v}</e>")
+        neither("<e>{$v}</e>"),
+        position("<e a=\"{last()}\"/>"),
+        position("attribute a { last() }"),
+        position("text { last() }"),
+        position("comment { last() }"),
+        position("processing-instruction p { last() }"),
+        position("document { last() }"),
+        position("element { last() } { }"),
+        position("attribute { 'a' } { last() }"),
+        // FLWOR clauses
+        position("(for $i in (1, 2) where $i = last() return $i)"),
+        position("(for $i in (1, 2) order by last() return $i)"),
+        position("(for $i in (1, 2) group by $g := last() return $g)"),
+        position("(for $i in (1, 2) count $c return $c + last())"),
+        position("(for tumbling window $w in (1, 2, 3) start when true() end when last() gt 0 return $w)"),
+        // string constructor and lookup
+        position("``[`{last()}`]``"),
+        neither("``[x]``"),
+        position("map { 1: 2 }?(last())"),
+        focus("?1"),
+        neither("(map { 1: 2 } ! ?1)"),
+        // function items: the body does not see the focus of the expression that creates the item
+        neither("(function($x) { $x })"),
+        neither("(function() { last() })"),
+        neither("()"),
+        // kinds that do not say what they read are taken to read the focus, the position and the size
+        position("string#0"),
+        position("(concat('a', ?))")
     );
 
     /** What a key is expected to report about the position and the size of the context. */
