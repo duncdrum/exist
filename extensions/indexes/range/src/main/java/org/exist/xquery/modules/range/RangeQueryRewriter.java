@@ -235,7 +235,7 @@ public class RangeQueryRewriter extends QueryRewriter {
     /**
      * A variable is bound outside the predicate and has the same value for every item filtered, whatever its dependencies
      * say: a function's parameter is not declared while the optimizer runs, and its reference then reports a dependency on
-     * the context item. Any other operand is judged by its dependencies.
+     * the context item. Any other operand is judged by whether it reads the focus: the item, its position or the size.
      */
     private static boolean isIndependentOfContext(final Expression operand) {
         Expression current = operand;
@@ -251,7 +251,7 @@ public class RangeQueryRewriter extends QueryRewriter {
         if (current instanceof VariableReference) {
             return true;
         }
-        return !Dependency.dependsOn(operand, Dependency.CONTEXT_ITEM) && !Dependency.dependsOn(operand, Dependency.CONTEXT_POSITION);
+        return !Dependency.dependsOn(operand, Dependency.CONTEXT_FOCUS);
     }
 
     protected static @Nullable Lookup rewrite(final Expression expression, final NodePath path) throws XPathException {
