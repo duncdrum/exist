@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/xquery/range/path-shapes.index-use.golden
+  s_e5206c93453c00::t_024d206d31465b 159-161,164-167,170,172,175-179,182-185,188,190,193-197,200-203,206,208,211-215,224,226,228-230,349-358
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "71c35c58ee2016409092653143716d6c7ffa1e90",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
