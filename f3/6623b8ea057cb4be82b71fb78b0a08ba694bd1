@@ -1,0 +1,22 @@
+exist-core-jmh/src/main/java/org/exist/indexing/lucene/ReindexDeleteStrategyBenchmark.java
+  5aafc3fc5d16515c 41,56-57,71,80-82,119-171,194,203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f36623b8ea057cb4be82b71fb78b0a08ba694bd1",
+  "prompts": {
+    "5aafc3fc5d16515c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ac7ab2ea-3f81-4496-bbe1-bef338cbe043",
+        "model": "default"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>",
+      "total_additions": 62,
+      "total_deletions": 0,
+      "accepted_lines": 62,
+      "overriden_lines": 0
+    }
+  }
+}
