@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunMatches.java
+  s_e5206c93453c00::t_531cc2a12d67ea 346-348
+exist-core/src/test/xquery/matches-pattern-from-the-node.xqm
+  s_e5206c93453c00::t_51c3c23f70caad 1-125
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "aceb571e8b960d6c63aed25e8b2879397a1a9a2b",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
