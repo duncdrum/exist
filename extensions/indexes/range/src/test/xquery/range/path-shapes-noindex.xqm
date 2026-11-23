@@ -492,10 +492,10 @@ declare %test:assertEquals("#0") function ps:key-is-path-of-item--doc-filter() {
 (: === A key that depends on the size of the focus === :)
 
 (: Named steps :)
-declare %test:pending("last() in an operand of a comparison is not the size of the input of the step on stored nodes when the query runs under another focus, with or without an index, see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--desc() { ps:answer(collection($ps:COLLECTION || "/flat")//item[@a = (if (last() = 1) then "hit" else "miss")]) };
-declare %test:pending("last() in an operand of a comparison is not the size of the input of the step on stored nodes when the query runs under another focus, with or without an index, see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--child() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap/item[@a = (if (last() = 1) then "hit" else "miss")]) };
-declare %test:pending("last() in an operand of a comparison is not the size of the input of the step on stored nodes when the query runs under another focus, with or without an index, see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--desc-after-child() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap//item[@a = (if (last() = 1) then "hit" else "miss")]) };
-declare %test:pending("last() in an operand of a comparison is not the size of the input of the step on stored nodes when the query runs under another focus, with or without an index, see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--self() { ps:answer(collection($ps:COLLECTION || "/flat")//item/self::item[@a = (if (last() = 1) then "hit" else "miss")]) };
+declare %test:pending("A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--desc() { ps:answer(collection($ps:COLLECTION || "/flat")//item[@a = (if (last() = 1) then "hit" else "miss")]) };
+declare %test:pending("A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--child() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap/item[@a = (if (last() = 1) then "hit" else "miss")]) };
+declare %test:pending("A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--desc-after-child() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap//item[@a = (if (last() = 1) then "hit" else "miss")]) };
+declare %test:pending("A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--self() { ps:answer(collection($ps:COLLECTION || "/flat")//item/self::item[@a = (if (last() = 1) then "hit" else "miss")]) };
 
 (: Wildcard and kind tests on the step :)
 declare %test:assertEquals("10 4 5 6 7 8 9 #7") function ps:key-by-last--wildcard() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap/*[@a = (if (last() = 1) then "hit" else "miss")]) };
@@ -505,7 +505,7 @@ declare %test:assertEquals("10 4 5 6 7 8 9 #7") function ps:key-by-last--wildcar
 declare %test:assertEquals("10 4 5 6 7 8 9 #7") function ps:key-by-last--union() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap/(item|other)[@a = (if (last() = 1) then "hit" else "miss")]) };
 declare %test:assertEquals("10 4 5 6 7 8 9 #7") function ps:key-by-last--variable() { ps:answer((let $i := collection($ps:COLLECTION || "/flat")/wrap/item return $i[@a = (if (last() = 1) then "hit" else "miss")])) };
 declare %test:assertEquals("10 4 5 6 7 8 9 #7") function ps:key-by-last--two-filters() { ps:answer((let $i := collection($ps:COLLECTION || "/flat")/wrap/item return $i[@n > 1][@a = (if (last() = 1) then "hit" else "miss")])) };
-declare %test:pending("last() in an operand of a comparison is not the size of the input of the step on stored nodes when the query runs under another focus, with or without an index, see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--typed-argument() { ps:answer(ps:typed(collection($ps:COLLECTION || "/flat")/wrap/item[@a = (if (last() = 1) then "hit" else "miss")])) };
+declare %test:pending("A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("1 2 3 #3") function ps:key-by-last--typed-argument() { ps:answer(ps:typed(collection($ps:COLLECTION || "/flat")/wrap/item[@a = (if (last() = 1) then "hit" else "miss")])) };
 
 (: Reverse and sibling axes :)
 declare %test:assertEquals("1 2 3 #3") function ps:key-by-last--parent() { ps:answer(collection($ps:COLLECTION || "/flat")//t/parent::item[@a = (if (last() = 1) then "hit" else "miss")]) };
@@ -517,7 +517,7 @@ declare %test:assertEquals("#0") function ps:key-by-last--nested-desc() { ps:ans
 
 (: Other predicates and narrower input :)
 declare %test:assertEquals("2 3 #2") function ps:key-by-last--pred-before() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap/item[@n > 1][@a = (if (last() = 1) then "hit" else "miss")]) };
-declare %test:pending("last() in an operand of a comparison is not the size of the input of the step on stored nodes when the query runs under another focus, with or without an index, see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("3 #1") function ps:key-by-last--narrowed() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap[item/xs:integer(@n) > 2]/item[@a = (if (last() = 1) then "hit" else "miss")]) };
+declare %test:pending("A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068") %test:assertEquals("3 #1") function ps:key-by-last--narrowed() { ps:answer(collection($ps:COLLECTION || "/flat")/wrap[item/xs:integer(@n) > 2]/item[@a = (if (last() = 1) then "hit" else "miss")]) };
 declare %test:assertEquals("1 2 #2") function ps:key-by-last--for() { ps:answer((for $w in collection($ps:COLLECTION || "/flat")/wrap[item/xs:integer(@n) <= 2] return $w/item[@a = (if (last() = 1) then "hit" else "miss")])) };
 
 (: Documents as candidates :)

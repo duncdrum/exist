@@ -37,9 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class PathShapesTest {
 
-    private static final String KEY = "The step rewrite looks the key up once for the whole context, so a key that depends on the item gives a wrong answer, see https://github.com/eXist-db/exist/issues/6956";
+    private static final String KEY = "A wrong answer when the key depends on the item, see https://github.com/eXist-db/exist/issues/6956";
 
-    private static final String LAST = "last() in an operand of a comparison is not the size of the input of the step on stored nodes when the query runs under another focus, with or without an index, see https://github.com/eXist-db/exist/issues/7068";
+    private static final String LAST = "A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068";
 
     @Test
     void rangeIsGenerated() throws IOException {
