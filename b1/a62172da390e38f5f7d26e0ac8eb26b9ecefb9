@@ -1,0 +1,24 @@
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_e5206c93453c00::t_e4b10345729c22 151-172
+  s_e5206c93453c00::t_ca48fe8a09edda 227-230
+extensions/indexes/range/src/test/xquery/range/key-reads-focus.xqm
+  s_e5206c93453c00::t_ad0d79bbac8155 1-166
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_e5206c93453c00::t_0fc51a00b0ef4a 33-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b1a62172da390e38f5f7d26e0ac8eb26b9ecefb9",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
