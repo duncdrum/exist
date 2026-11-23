@@ -1,0 +1,83 @@
+exist-core/src/main/java/org/exist/xquery/AbstractExpression.java
+  s_e5206c93453c00::t_53455198cc3d15 93-104,107-113
+exist-core/src/main/java/org/exist/xquery/AbstractFLWORClause.java
+  s_e5206c93453c00::t_8f799211201fc4 107
+exist-core/src/main/java/org/exist/xquery/AbstractRewritableExpression.java
+  s_e5206c93453c00::t_332eded99a1945 23,34,61-62
+exist-core/src/main/java/org/exist/xquery/ArrowOperator.java
+  s_e5206c93453c00::t_1d6c0b15a544df 35,42,203-205
+exist-core/src/main/java/org/exist/xquery/AtomicToString.java
+  s_e5206c93453c00::t_c2e2b8fbc129b9 27,32,102-103
+exist-core/src/main/java/org/exist/xquery/AttributeConstructor.java
+  s_e5206c93453c00::t_905fd8d77472b2 33,40,184,187
+exist-core/src/main/java/org/exist/xquery/BindingExpression.java
+  s_e5206c93453c00::t_113c16055b63a0 31,38,98-99
+exist-core/src/main/java/org/exist/xquery/CastableExpression.java
+  s_e5206c93453c00::t_0ff59d891c391a 30,37,72-79
+exist-core/src/main/java/org/exist/xquery/CombiningExpression.java
+  s_e5206c93453c00::t_2a17618d9d7679 29,37,49-50
+exist-core/src/main/java/org/exist/xquery/ConditionalExpression.java
+  s_e5206c93453c00::t_5ce4a0f2e1e1ba 29,36,53-60
+exist-core/src/main/java/org/exist/xquery/DocumentConstructor.java
+  s_e5206c93453c00::t_ef0232b3b0b93a 33,41,163-164
+exist-core/src/main/java/org/exist/xquery/DynamicAttributeConstructor.java
+  s_e5206c93453c00::t_dfa22917b4d0b7 34,44,226-227
+exist-core/src/main/java/org/exist/xquery/DynamicCommentConstructor.java
+  s_e5206c93453c00::t_729cf0d349302a 29,37,122-123
+exist-core/src/main/java/org/exist/xquery/DynamicPIConstructor.java
+  s_e5206c93453c00::t_b2ba3caaec081b 32,40,153-154
+exist-core/src/main/java/org/exist/xquery/DynamicTextConstructor.java
+  s_e5206c93453c00::t_6fde0ad0f6e4a2 29,38,131-132
+exist-core/src/main/java/org/exist/xquery/ElementConstructor.java
+  s_e5206c93453c00::t_3c0dd0b1545dbf 42,50,454-455,457
+exist-core/src/main/java/org/exist/xquery/GroupByClause.java
+  s_e5206c93453c00::t_7dfbebe109a61b 35,43,270,272
+exist-core/src/main/java/org/exist/xquery/InstanceOfExpression.java
+  s_e5206c93453c00::t_830e23f9dbfc3e 27,34,117-124
+exist-core/src/main/java/org/exist/xquery/LogicalOp.java
+  s_e5206c93453c00::t_a8617088c1461d 27,34,100-107
+exist-core/src/main/java/org/exist/xquery/NodeConstructor.java
+  s_e5206c93453c00::t_886be2d9834866 66
+exist-core/src/main/java/org/exist/xquery/Operands.java
+  s_e5206c93453c00::t_340c5a1a5d302a 1-70
+exist-core/src/main/java/org/exist/xquery/OrderByClause.java
+  s_e5206c93453c00::t_52a0f90e91a48e 31,42,429,431
+exist-core/src/main/java/org/exist/xquery/PathExpr.java
+  s_e5206c93453c00::t_13a0fbf6f7ed31 574
+exist-core/src/main/java/org/exist/xquery/QuantifiedExpression.java
+  s_e5206c93453c00::t_3b88e195bcd1a0 200-202
+exist-core/src/main/java/org/exist/xquery/SimpleStep.java
+  s_e5206c93453c00::t_ad6eee76c554ff 29,38,118-119
+exist-core/src/main/java/org/exist/xquery/StringConstructor.java
+  s_e5206c93453c00::t_39f9fb40e1737c 30,35,97,100
+exist-core/src/main/java/org/exist/xquery/SwitchExpression.java
+  s_e5206c93453c00::t_7f00446c515127 34,42,126-128,130-131,134,136-140
+exist-core/src/main/java/org/exist/xquery/TryCatchExpression.java
+  s_e5206c93453c00::t_e7dec3c51352a8 41,50,93-94,96,98-102
+exist-core/src/main/java/org/exist/xquery/TypeswitchExpression.java
+  s_e5206c93453c00::t_759d1137e241c5 34,42,156-158,160,163,165-169
+exist-core/src/main/java/org/exist/xquery/WhereClause.java
+  s_e5206c93453c00::t_8324381a342513 47,54,483-484
+exist-core/src/main/java/org/exist/xquery/WindowExpr.java
+  s_e5206c93453c00::t_e795f80f3ed26b 33,39,78-80,82
+exist-core/src/main/java/org/exist/xquery/functions/array/ArrayConstructor.java
+  s_e5206c93453c00::t_62fedb9ff886ec 32,37,103-104
+exist-core/src/main/java/org/exist/xquery/functions/map/MapExpr.java
+  s_e5206c93453c00::t_cd3063600b3e4f 36,41,109,111
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "66fb377390a0041c845deae12df33d9f34afc12e",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
