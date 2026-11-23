@@ -1,0 +1,34 @@
+extensions/indexes/range/src/test/java/xquery/range/PathShapesTest.java
+  s_849c5b760f4834::t_e3d864f989bbbe 546-559,876-885
+  s_e5206c93453c00::t_f66c4125ca21e0 266-284,295-313,324-342,352-370,765-843
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  s_849c5b760f4834::t_7edc214605da7f 529-531,536-538,543-545,550-552,557-559
+  s_e5206c93453c00::t_a6017b2a08277c 389-524
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  s_849c5b760f4834::t_88a24720537321 710-712,717-719,724-726,731-733,738-740,745-747,752,754,760,762
+  s_e5206c93453c00::t_3feb9496396505 409-544
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8c8ed29c624e53316d4cb131ae9a96d5e05162bc",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
