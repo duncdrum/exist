@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/xquery/AbstractExpression.java
+  s_e5206c93453c00::t_887811e2097c0f 105-116,122
+exist-core/src/main/java/org/exist/xquery/AbstractFLWORClause.java
+  s_e5206c93453c00::t_8ec2dba2de87f8 110-118
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "854933ec48e44669b6c2e6a48e40898f4cf02f10",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
