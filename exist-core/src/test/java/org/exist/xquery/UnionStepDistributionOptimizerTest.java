@@ -499,7 +499,7 @@ public class UnionStepDistributionOptimizerTest {
      * Optimizer's own {@code context} field rather than the originating
      * expression's static context. Re-analysis then raised a spurious
      * {@code XPST0081 "undeclared prefix"} — sometimes naming a prefix that
-     * isn't even used in the failing path. See bug #TBD.
+     * isn't even used in the failing path. See #6385.
      *
      * <p>The bug only surfaced with imported modules because the engine's
      * existing single-module tests share one static context throughout.
