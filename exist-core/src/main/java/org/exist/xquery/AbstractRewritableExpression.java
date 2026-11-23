@@ -57,6 +57,11 @@ public abstract class AbstractRewritableExpression extends AbstractExpression im
     }
 
     @Override
+    public int getDependencies() {
+        return Dependency.DEFAULT_DEPENDENCIES | Dependency.focusOf(expression);
+    }
+
+    @Override
     public void replace(final Expression oldExpr, final Expression newExpr) {
         if (expression == oldExpr) {
             expression = newExpr;

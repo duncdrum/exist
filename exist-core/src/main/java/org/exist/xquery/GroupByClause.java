@@ -266,6 +266,15 @@ public class GroupByClause extends AbstractFLWORClause {
     }
 
     @Override
+    public int getDependencies() {
+        int deps = super.getDependencies();
+        for (final GroupSpec groupSpec : groupSpecs) {
+            deps |= Dependency.focusOf(groupSpec.getGroupExpression());
+        }
+        return deps;
+    }
+
+    @Override
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         stack.clear();
