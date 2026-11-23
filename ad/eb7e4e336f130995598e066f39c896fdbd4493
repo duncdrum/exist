@@ -1,0 +1,21 @@
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  s_ef2621e0b5f380::t_038dee79dca690 393-395,400-402,407-409,414-416,421-423
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  s_ef2621e0b5f380::t_ed073e3d23773b 574-576,581-583,588-590,595-597,602-604,609-611,616,618,624,626
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "adeb7e4e336f130995598e066f39c896fdbd4493",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
