@@ -64,6 +64,10 @@ variable-filter.xqm: attribute-uses-index
 variable-filter.xqm: number-uses-index
 variable-filter.xqm: child-uses-index
 variable-filter.xqm: in-function-call-uses-index
+variable-filter.xqm: function-parameter-uses-index
+variable-filter.xqm: untyped-parameter-uses-index
+variable-filter.xqm: child-parameter-uses-index
+variable-filter.xqm: variable-key-uses-index
 optimizer.xql: issue2363-formulation1-optimized
 optimizer.xql: issue4881-eq-uses-index
 optimizer.xql: issue4881-matches-case-insensitive-uses-index
