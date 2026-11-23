@@ -199,6 +199,13 @@ public class ArrowOperator extends AbstractExpression {
     }
 
     @Override
+    public int getDependencies() {
+        return super.getDependencies()
+                | Dependency.focusOf(leftExpr, namedCall, funcSpec)
+                | Dependency.focusOf(parameters);
+    }
+
+    @Override
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         if (namedCall != null) {

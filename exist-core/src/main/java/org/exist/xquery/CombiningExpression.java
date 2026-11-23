@@ -45,6 +45,11 @@ public abstract class CombiningExpression extends AbstractExpression {
 	}
 
 	@Override
+	public int getDependencies() {
+		return super.getDependencies() | Dependency.focusOf(left, right);
+	}
+
+	@Override
     public void analyze(final AnalyzeContextInfo contextInfo) throws XPathException {
     	contextInfo.setParent(this);
         left.analyze(contextInfo);

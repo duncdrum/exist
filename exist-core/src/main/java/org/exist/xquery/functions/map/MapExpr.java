@@ -105,6 +105,15 @@ public class MapExpr extends AbstractExpression {
     }
 
     @Override
+    public int getDependencies() {
+        int deps = super.getDependencies();
+        for (final Mapping mapping : mappings) {
+            deps |= Dependency.focusOf(mapping.key, mapping.value);
+        }
+        return deps;
+    }
+
+    @Override
     public void accept(final ExpressionVisitor visitor) {
         super.accept(visitor);
         for (final Mapping mapping : this.mappings) {

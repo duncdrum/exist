@@ -99,6 +99,11 @@ public class ArrayConstructor extends AbstractExpression {
     }
 
     @Override
+    public int getDependencies() {
+        return super.getDependencies() | Dependency.focusOf(arguments);
+    }
+
+    @Override
     public void accept(ExpressionVisitor visitor) {
         for (Expression expr: arguments) {
             expr.accept(visitor);

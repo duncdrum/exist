@@ -123,7 +123,14 @@ public class SwitchExpression extends AbstractExpression {
     }
 
     public int getDependencies() {
-        return Dependency.CONTEXT_SET + Dependency.CONTEXT_ITEM;
+        int deps = Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM | Dependency.focusOf(operand);
+        for (final Case next : cases) {
+            deps |= Dependency.focusOf(next.operands) | Dependency.focusOf(next.returnClause);
+        }
+        if (defaultClause != null) {
+            deps |= Dependency.focusOf(defaultClause.returnClause);
+        }
+        return deps;
     }
 
     @Override

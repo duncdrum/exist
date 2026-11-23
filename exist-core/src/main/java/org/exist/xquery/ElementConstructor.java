@@ -449,6 +449,11 @@ public class ElementConstructor extends NodeConstructor {
             }
 	}
 
+    @Override
+    public int getDependencies() {
+        return super.getDependencies() | Dependency.focusOf(qnameExpr, content);
+    }
+
 	@Override
     public void accept(final ExpressionVisitor visitor) {
         visitor.visitElementConstructor(this);
