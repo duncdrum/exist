@@ -1,0 +1,19 @@
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_e5206c93453c00::t_987772efe4ca7d 228,244
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "45e3db5ab9542a336b6a8e6d80ba81ae181e270b",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
