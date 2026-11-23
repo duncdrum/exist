@@ -156,63 +156,63 @@ fast--comparison | new-range:OPTIMIZED | range:NONE
 fast--comparison-child | new-range:OPTIMIZED | range:NONE
 fast--comparison-on-a-field | new-range:OPTIMIZED | range:NONE
 fast--range-eq | new-range:OPTIMIZED | new-range:BASIC
-key-by-item-attribute--child | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-attribute--desc | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-attribute--desc-after-child | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-attribute--child | range:NONE | range:NONE
+key-by-item-attribute--desc | range:NONE | range:NONE
+key-by-item-attribute--desc-after-child | range:NONE | range:NONE
 key-by-item-attribute--doc-filter | range:NONE | range:NONE
 key-by-item-attribute--following-sibling | range:NONE | range:NONE
-key-by-item-attribute--for | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-attribute--narrowed | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-attribute--nested-child | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-attribute--nested-desc | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-attribute--for | range:NONE | range:NONE
+key-by-item-attribute--narrowed | range:NONE | range:NONE
+key-by-item-attribute--nested-child | range:NONE | range:NONE
+key-by-item-attribute--nested-desc | range:NONE | range:NONE
 key-by-item-attribute--parent | range:NONE | range:NONE
 key-by-item-attribute--pred-before | range:NONE | range:NONE
-key-by-item-attribute--self | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-attribute--self | range:NONE | range:NONE
 key-by-item-attribute--two-filters | range:NONE | range:NONE
-key-by-item-attribute--typed-argument | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-attribute--typed-argument | range:NONE | range:NONE
 key-by-item-attribute--union | range:NONE | range:NONE
 key-by-item-attribute--variable | range:NONE | range:NONE
-key-by-item-attribute--wildcard | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-attribute--wildcard-desc | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-child--child | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-child--desc | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-child--desc-after-child | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-attribute--wildcard | range:NONE | range:NONE
+key-by-item-attribute--wildcard-desc | range:NONE | range:NONE
+key-by-item-child--child | range:NONE | range:NONE
+key-by-item-child--desc | range:NONE | range:NONE
+key-by-item-child--desc-after-child | range:NONE | range:NONE
 key-by-item-child--doc-filter | range:NONE | range:NONE
 key-by-item-child--following-sibling | range:NONE | range:NONE
-key-by-item-child--for | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-child--narrowed | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-child--nested-child | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-child--nested-desc | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-child--for | range:NONE | range:NONE
+key-by-item-child--narrowed | range:NONE | range:NONE
+key-by-item-child--nested-child | range:NONE | range:NONE
+key-by-item-child--nested-desc | range:NONE | range:NONE
 key-by-item-child--parent | range:NONE | range:NONE
 key-by-item-child--pred-before | range:NONE | range:NONE
-key-by-item-child--self | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-child--self | range:NONE | range:NONE
 key-by-item-child--two-filters | range:NONE | range:NONE
-key-by-item-child--typed-argument | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-child--typed-argument | range:NONE | range:NONE
 key-by-item-child--union | range:NONE | range:NONE
 key-by-item-child--variable | range:NONE | range:NONE
-key-by-item-child--wildcard | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-item-child--wildcard-desc | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-last--child | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-last--desc | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-last--desc-after-child | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-item-child--wildcard | range:NONE | range:NONE
+key-by-item-child--wildcard-desc | range:NONE | range:NONE
+key-by-last--child | range:NONE | range:NONE
+key-by-last--desc | range:NONE | range:NONE
+key-by-last--desc-after-child | range:NONE | range:NONE
 key-by-last--doc-filter | range:NONE | range:NONE
 key-by-last--following-sibling | range:NONE | range:NONE
-key-by-last--for | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-last--narrowed | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-last--nested-child | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-last--nested-desc | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-last--for | range:NONE | range:NONE
+key-by-last--narrowed | range:NONE | range:NONE
+key-by-last--nested-child | range:NONE | range:NONE
+key-by-last--nested-desc | range:NONE | range:NONE
 key-by-last--parent | range:NONE | range:NONE
 key-by-last--pred-before | range:NONE | range:NONE
-key-by-last--self | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-last--self | range:NONE | range:NONE
 key-by-last--two-filters | range:NONE | range:NONE
-key-by-last--typed-argument | new-range:OPTIMIZED range:NONE | range:NONE
+key-by-last--typed-argument | range:NONE | range:NONE
 key-by-last--union | range:NONE | range:NONE
 key-by-last--variable | range:NONE | range:NONE
-key-by-last--wildcard | new-range:OPTIMIZED range:NONE | range:NONE
-key-by-last--wildcard-desc | new-range:OPTIMIZED range:NONE | range:NONE
-key-is-path-of-item--child | - | range:NONE
-key-is-path-of-item--desc | - | range:NONE
-key-is-path-of-item--desc-after-child | - | range:NONE
+key-by-last--wildcard | range:NONE | range:NONE
+key-by-last--wildcard-desc | range:NONE | range:NONE
+key-is-path-of-item--child | range:NONE | range:NONE
+key-is-path-of-item--desc | range:NONE | range:NONE
+key-is-path-of-item--desc-after-child | range:NONE | range:NONE
 key-is-path-of-item--doc-filter | - | -
 key-is-path-of-item--following-sibling | - | -
 key-is-path-of-item--for | range:NONE | range:NONE
@@ -221,13 +221,13 @@ key-is-path-of-item--nested-child | - | -
 key-is-path-of-item--nested-desc | - | -
 key-is-path-of-item--parent | range:NONE | range:NONE
 key-is-path-of-item--pred-before | range:NONE | range:NONE
-key-is-path-of-item--self | new-range:OPTIMIZED | range:NONE
+key-is-path-of-item--self | range:NONE | range:NONE
 key-is-path-of-item--two-filters | range:NONE | range:NONE
-key-is-path-of-item--typed-argument | - | range:NONE
+key-is-path-of-item--typed-argument | range:NONE | range:NONE
 key-is-path-of-item--union | range:NONE | range:NONE
-key-is-path-of-item--variable | new-range:OPTIMIZED | range:NONE
-key-is-path-of-item--wildcard | new-range:BASIC | range:NONE
-key-is-path-of-item--wildcard-desc | new-range:BASIC | range:NONE
+key-is-path-of-item--variable | range:NONE | range:NONE
+key-is-path-of-item--wildcard | range:NONE | range:NONE
+key-is-path-of-item--wildcard-desc | range:NONE | range:NONE
 matches--after-wildcard | range:BASIC | range:BASIC
 matches--ancestor | range:BASIC | range:BASIC
 matches--any-ns | range:BASIC | range:BASIC
@@ -346,6 +346,16 @@ range-eq-child--union | new-range:OPTIMIZED | new-range:BASIC
 range-eq-child--variable | new-range:OPTIMIZED | new-range:BASIC
 range-eq-child--wildcard | new-range:OPTIMIZED | new-range:BASIC
 range-eq-child--wildcard-desc | new-range:OPTIMIZED | new-range:BASIC
+range-eq-key-by-item--child | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-item--desc | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-item--desc-after-child | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-item--for | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-item--narrowed | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-last--child | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-last--desc | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-last--desc-after-child | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-last--for | new-range:BASIC range:NONE | new-range:BASIC range:NONE
+range-eq-key-by-last--narrowed | new-range:BASIC range:NONE | new-range:BASIC range:NONE
 range-field--doc-filter | new-range:BASIC | new-range:BASIC
 range-field--element | new-range:BASIC | new-range:BASIC
 range-field--following-sibling | new-range:BASIC | new-range:BASIC
