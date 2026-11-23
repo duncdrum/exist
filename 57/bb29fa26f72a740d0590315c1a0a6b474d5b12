@@ -1,0 +1,69 @@
+exist-core/src/main/java/org/exist/xquery/AbstractExpression.java
+  s_e5206c93453c00::t_bb3ef27131410e 87-89,95
+exist-core/src/main/java/org/exist/xquery/AbstractRewritableExpression.java
+  s_e5206c93453c00::t_d334ed0b6d27a4 59-63
+exist-core/src/main/java/org/exist/xquery/ArrowOperator.java
+  s_e5206c93453c00::t_8519b56169de0b 203
+exist-core/src/main/java/org/exist/xquery/AtomicToString.java
+  s_e5206c93453c00::t_fe67ca61af844d 100-104
+exist-core/src/main/java/org/exist/xquery/AttributeConstructor.java
+  s_e5206c93453c00::t_a9910314bee5fb 182-192
+exist-core/src/main/java/org/exist/xquery/CombiningExpression.java
+  s_e5206c93453c00::t_2a498b3178a4f2 49
+exist-core/src/main/java/org/exist/xquery/Dependency.java
+  s_e5206c93453c00::t_4c432c8bd74bef 90-96
+exist-core/src/main/java/org/exist/xquery/DocumentConstructor.java
+  s_e5206c93453c00::t_b10ec8178ad250 161-165
+exist-core/src/main/java/org/exist/xquery/DynamicAttributeConstructor.java
+  s_e5206c93453c00::t_2a086a3d5bf631 224-228
+exist-core/src/main/java/org/exist/xquery/DynamicCommentConstructor.java
+  s_e5206c93453c00::t_9146cbd5c4a1bb 120-124
+exist-core/src/main/java/org/exist/xquery/DynamicPIConstructor.java
+  s_e5206c93453c00::t_0c5048213445e2 151-155
+exist-core/src/main/java/org/exist/xquery/DynamicTextConstructor.java
+  s_e5206c93453c00::t_db9bdef3a0ccc8 129-133
+exist-core/src/main/java/org/exist/xquery/ElementConstructor.java
+  s_e5206c93453c00::t_04ffbc8abf91b2 454-458
+exist-core/src/main/java/org/exist/xquery/EmptySequenceExpr.java
+  s_e5206c93453c00::t_c4d2c569d0bfbf 38-42
+exist-core/src/main/java/org/exist/xquery/Function.java
+  s_e5206c93453c00::t_e95c2c05e73d20 687-691
+exist-core/src/main/java/org/exist/xquery/GroupByClause.java
+  s_e5206c93453c00::t_4f67a919e1267d 268-276
+exist-core/src/main/java/org/exist/xquery/InlineFunction.java
+  s_e5206c93453c00::t_5a6c7dea66805d 95-100
+exist-core/src/main/java/org/exist/xquery/Lookup.java
+  s_e5206c93453c00::t_bcf150eaa65a30 158-164
+exist-core/src/main/java/org/exist/xquery/OrderByClause.java
+  s_e5206c93453c00::t_49abb3c26b1ae1 427-435
+exist-core/src/main/java/org/exist/xquery/SimpleStep.java
+  s_e5206c93453c00::t_c4c2c8d8ced428 116-120
+exist-core/src/main/java/org/exist/xquery/StringConstructor.java
+  s_e5206c93453c00::t_30dbc8c1941de4 95-105
+exist-core/src/main/java/org/exist/xquery/WhereClause.java
+  s_e5206c93453c00::t_f841cf0db02285 481-485
+exist-core/src/main/java/org/exist/xquery/WindowExpr.java
+  s_e5206c93453c00::t_d6035ffc0a95ee 76-84
+exist-core/src/main/java/org/exist/xquery/functions/array/ArrayConstructor.java
+  s_e5206c93453c00::t_88256bc059d907 103
+exist-core/src/main/java/org/exist/xquery/functions/map/MapExpr.java
+  s_e5206c93453c00::t_a6b02ca4636cc1 109
+exist-core/src/test/java/org/exist/xquery/DependencyFocusTest.java
+  s_e5206c93453c00::t_bba50287c1325a 140-167
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "57bb29fa26f72a740d0590315c1a0a6b474d5b12",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
