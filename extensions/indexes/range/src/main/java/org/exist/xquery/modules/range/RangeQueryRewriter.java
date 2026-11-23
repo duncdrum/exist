@@ -93,7 +93,7 @@ public class RangeQueryRewriter extends QueryRewriter {
      * @return true if the expression has an operand that reads the focus
      */
     private static boolean keyReadsFocus(final Expression expression) {
-        return Optimizer.unwrapOperand(expression) instanceof final Optimizable optimizable && optimizable.keyReadsFocus();
+        return ExpressionUnwrap.unwrapOperand(expression) instanceof final Optimizable optimizable && optimizable.keyReadsFocus();
     }
 
     /**
