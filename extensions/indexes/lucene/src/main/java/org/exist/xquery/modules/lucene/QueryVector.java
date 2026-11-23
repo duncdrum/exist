@@ -73,7 +73,8 @@ public class QueryVector extends AbstractVectorQueryFunction {
                             + "collections whose field has the dimension of the query vector are searched. "
                             + "Raises EXXQDYFT0006 if the fields have other dimensions only, and EXXQDYFT0007 if "
                             + "more than one field has the dimension of the query vector: use ft:query-field-vector "
-                            + "to name the field.",
+                            + "to name the field. Raises EXXQDYFT0008 if the collections searched configure a field "
+                            + "of the query vector's dimension from different models.",
                     returnsOptMany(Type.NODE, RETURN_DESC),
                     FS_PARAM_NODES,
                     FS_PARAM_VECTOR),

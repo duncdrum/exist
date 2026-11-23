@@ -71,6 +71,9 @@ public class LuceneConfig {
     private Map<String, LuceneIndexConfig> namedIndexes = new TreeMap<>();
     
     private Map<String, FieldType> fieldTypes = new HashMap<>();
+
+    /** The dimension of each vector field name of this configuration, see {@link #checkVectorDimensions}. */
+    private Map<String, Integer> vectorDimensions = new HashMap<>();
     
     private Set<QName> inlineNodes = null;
     private Set<QName> ignoreNodes = null;
@@ -108,6 +111,7 @@ public class LuceneConfig {
     	this.wildcardPaths = other.wildcardPaths;
     	this.namedIndexes = other.namedIndexes;
     	this.fieldTypes = other.fieldTypes;
+    	this.vectorDimensions = other.vectorDimensions;
     	this.inlineNodes = other.inlineNodes;
     	this.ignoreNodes = other.ignoreNodes;
     	this.boost = other.boost;
@@ -550,6 +554,7 @@ public class LuceneConfig {
                                 // found an index definition
                                 Element elem = (Element) node;
                                 LuceneIndexConfig config = new LuceneIndexConfig(this, elem, namespaces, analyzers, fieldTypes);
+                                checkVectorDimensions(config);
                                 // if it is a named index, add it to the namedIndexes map
                                 if (config.getName() != null) {
                                     namedIndexes.put(config.getName(), config);
@@ -594,6 +599,31 @@ public class LuceneConfig {
 				}
             }
         }
+    }
+
+    /**
+     * A vector field name has one dimension in a collection's configuration. The same name at different dimensions
+     * in different collections is allowed, the query vector's dimension picks the space, but within one collection
+     * a second dimension would be a space no query vector reaches by mistake (385 for 384).
+     *
+     * @param config the index configuration just parsed
+     * @throws DatabaseConfigurationException if a vector field name is configured with two dimensions
+     */
+    private void checkVectorDimensions(final LuceneIndexConfig config) throws DatabaseConfigurationException {
+        final Map<String, Integer> found = new HashMap<>(vectorDimensions);
+        for (LuceneIndexConfig c = config; c != null; c = c.getNext()) {
+            for (final AbstractFieldConfig fc : c.getFacetsAndFields()) {
+                if (fc instanceof LuceneVectorFieldConfig vfc) {
+                    final Integer known = found.putIfAbsent(vfc.getName(), vfc.getDimension());
+                    if (known != null && known != vfc.getDimension()) {
+                        throw new DatabaseConfigurationException("vector-field '" + vfc.getName()
+                                + "' is configured with dimension " + known + " and with dimension " + vfc.getDimension()
+                                + " in one collection");
+                    }
+                }
+            }
+        }
+        vectorDimensions.putAll(found);
     }
 
     private class PathIterator implements Iterator<LuceneIndexConfig> {
