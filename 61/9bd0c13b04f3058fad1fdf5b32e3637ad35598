@@ -1,0 +1,47 @@
+exist-core/src/main/java/org/exist/xquery/ArrowOperator.java
+  s_e5206c93453c00::t_def93c3d14478f 203-205
+exist-core/src/main/java/org/exist/xquery/BindingExpression.java
+  s_e5206c93453c00::t_5bce98c2158d13 96-99
+exist-core/src/main/java/org/exist/xquery/CastableExpression.java
+  s_e5206c93453c00::t_1714c62d6f602f 72
+exist-core/src/main/java/org/exist/xquery/CombiningExpression.java
+  s_e5206c93453c00::t_bd5cd21cd1409c 47-50
+exist-core/src/main/java/org/exist/xquery/Dependency.java
+  s_e5206c93453c00::t_3e07e0469c8f13 119-120,129-132,141-144
+exist-core/src/main/java/org/exist/xquery/Function.java
+  s_e5206c93453c00::t_734860622d2afc 614-616,625-626
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_e5206c93453c00::t_bf6db08da368aa 306,308
+exist-core/src/main/java/org/exist/xquery/InstanceOfExpression.java
+  s_e5206c93453c00::t_af594783ff7682 117
+exist-core/src/main/java/org/exist/xquery/LogicalOp.java
+  s_e5206c93453c00::t_849a5222d3c95f 102
+exist-core/src/main/java/org/exist/xquery/SwitchExpression.java
+  s_e5206c93453c00::t_7bce563b9fcf93 126
+exist-core/src/main/java/org/exist/xquery/TypeswitchExpression.java
+  s_e5206c93453c00::t_72d8f93c7bd254 156
+exist-core/src/main/java/org/exist/xquery/functions/fn/FnDefaultLanguage.java
+  s_e5206c93453c00::t_e5267630d75ab9 51
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunCurrentDateTime.java
+  s_e5206c93453c00::t_120a646e40c82b 92
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunDefaultCollation.java
+  s_e5206c93453c00::t_038964b80776ab 65
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunImplicitTimezone.java
+  s_e5206c93453c00::t_7f8e16d381e8a2 64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "619bd0c13b04f3058fad1fdf5b32e3637ad35598",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
