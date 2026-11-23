@@ -1,0 +1,45 @@
+exist-core/src/test/java/org/exist/test/pathshapes/IndexUseGolden.java
+  s_ef2621e0b5f380::t_1a8140fd8707f6 1-160
+extensions/indexes/lucene/src/test/java/xquery/lucene/IndexUseGoldenTest.java
+  s_ef2621e0b5f380::t_dcaf7c51db1541 1-44
+extensions/indexes/ngram/src/test/java/xquery/ngram/IndexUseGoldenTest.java
+  s_ef2621e0b5f380::t_a2059e883efe38 1-44
+extensions/indexes/range/src/test/java/xquery/range/IndexUseGoldenTest.java
+  s_ef2621e0b5f380::t_c2e3e8f0430fe0 1-50
+extensions/indexes/range/src/test/xquery/range/path-shapes.index-use.golden
+  s_ef2621e0b5f380::t_7f6b48b7bccbb0 1-158,231-386
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.index-use.golden
+  s_ef2621e0b5f380::t_96fd17d7596ba2 1-336
+extensions/indexes/ngram/src/test/xquery/ngram/path-shapes.index-use.golden
+  s_ef2621e0b5f380::t_0236625a729df5 1-103
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.index-use.golden
+  s_ef2621e0b5f380::t_43fdefb447c525 1-129,202-276
+extensions/indexes/range/src/test/java/xquery/range/PathShapesOracleTest.java
+  s_ef2621e0b5f380::t_6182f9f701224a 1-239
+extensions/indexes/range/pom.xml
+  s_e5206c93453c00::t_b1da1b8bed963b 144-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d46d7117a8dd25dfcf39d310a0c7f4b02561a803",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
