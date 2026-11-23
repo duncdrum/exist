@@ -1,0 +1,63 @@
+exist-architecture-tests/AGENTS.md
+  s_e5206c93453c00::t_0354e75aaae4f6 1-34
+exist-architecture-tests/pom.xml
+  s_e5206c93453c00::t_5cf5294d0b37bf 1-337
+exist-architecture-tests/src/test/java/org/exist/architecture/ArchitectureTest.java
+  s_e5206c93453c00::t_c31309b330c2a1 1-45
+exist-architecture-tests/src/test/java/org/exist/architecture/LocaleRules.java
+  s_e5206c93453c00::t_6e9de757e94291 1-71
+exist-architecture-tests/src/test/java/org/exist/architecture/OptimizerRules.java
+  s_e5206c93453c00::t_34ed1467d8830a 1-138
+exist-architecture-tests/src/test/resources/archunit.properties
+  s_e5206c93453c00::t_1f104b86a97e29 1-27
+exist-architecture-tests/src/test/resources/archunit_store/036fc13f-0fbe-4ea6-bb6b-25319dcf06d4
+  s_e5206c93453c00::t_3187c21c99b595 1-42
+exist-architecture-tests/src/test/resources/archunit_store/25233bb7-728d-44f8-9a37-45c9b700c990
+  s_e5206c93453c00::t_fda9162457aaec 1-21
+exist-architecture-tests/src/test/resources/archunit_store/afd30334-9891-48d2-973d-bbe6dcb36611
+  s_e5206c93453c00::t_70132f17a06c96 1-117
+exist-architecture-tests/src/test/resources/archunit_store/ff3efee3-3713-4721-9f47-74297777c3ce
+  s_e5206c93453c00::t_e65f2bbf5e97df 1-12
+exist-architecture-tests/src/test/resources/archunit_store/stored.rules
+  s_e5206c93453c00::t_7b9146da8b51ef 1-6
+exist-core/src/main/java/org/exist/xquery/AndPredicateSplitter.java
+  s_e5206c93453c00::t_f7c5e631e4486c 1-93
+exist-core/src/main/java/org/exist/xquery/ConstantFalsePredicate.java
+  s_e5206c93453c00::t_dc2d759031d4cc 1-177
+exist-core/src/main/java/org/exist/xquery/ExpressionUnwrap.java
+  s_e5206c93453c00::t_7864057d7c6a49 1-75
+exist-core/src/main/java/org/exist/xquery/GlobalVariableInliner.java
+  s_e5206c93453c00::t_33337249795376 1-259
+exist-core/src/main/java/org/exist/xquery/Optimizer.java
+  s_e5206c93453c00::t_f7ea15bfcddcb0 34-36,158-159,165-169,186-187,194,322-323,353,359,475
+exist-core/src/main/java/org/exist/xquery/UnionStepDistribution.java
+  s_e5206c93453c00::t_a22c98b30a3c5f 1-272
+exist-core/src/main/java/org/exist/xquery/pragmas/Optimize.java
+  s_e5206c93453c00::t_2c722facdad6b2 91-92
+exist-core/src/test/java/org/exist/xquery/AndPredicateSplitterTest.java
+  s_e5206c93453c00::t_5946fcaf3c185d 1-156
+exist-core/src/test/java/org/exist/xquery/UnionStepDistributionOptimizerTest.java
+  s_e5206c93453c00::t_1952beb526cf74 502
+exist-core/src/test/java/org/exist/xquery/UnionStepDistributionTest.java
+  s_e5206c93453c00::t_b3fb50719fc52d 1-117
+exist-parent/pom.xml
+  s_e5206c93453c00::t_a5dced1f9b8cf4 156,613-628
+pom.xml
+  s_e5206c93453c00::t_a3d0f6d4cef751 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bd361d84c7bdc2a0a5d47a7f98d4abea32e9bd83",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
