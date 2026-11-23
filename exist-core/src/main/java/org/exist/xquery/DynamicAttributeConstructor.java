@@ -221,6 +221,11 @@ public class DynamicAttributeConstructor extends NodeConstructor {
         return "attribute " + "{" + qnameExpr.toString() + "} {" + valueExpr.toString() + "} ";
     } 
     
+    @Override
+    public int getDependencies() {
+        return super.getDependencies() | Dependency.focusOf(qnameExpr, valueExpr);
+    }
+
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         qnameExpr.resetState(postOptimization);

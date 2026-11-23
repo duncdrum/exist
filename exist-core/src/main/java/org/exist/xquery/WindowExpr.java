@@ -74,6 +74,15 @@ public class WindowExpr extends BindingExpression {
     }
 
     @Override
+    public int getDependencies() {
+        int deps = super.getDependencies() | Dependency.focusOf(windowStartCondition.getWhenExpression());
+        if (windowEndCondition != null) {
+            deps |= Dependency.focusOf(windowEndCondition.getWhenExpression());
+        }
+        return deps;
+    }
+
+    @Override
     public void analyze(final AnalyzeContextInfo contextInfo) throws XPathException {
         super.analyze(contextInfo);
         // Save the local variable stack

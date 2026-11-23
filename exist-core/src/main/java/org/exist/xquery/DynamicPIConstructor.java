@@ -148,6 +148,11 @@ public class DynamicPIConstructor extends NodeConstructor {
         return "processing-instruction {" + name.toString() + "} {" + content.toString() + "} ";
     }
 
+    @Override
+    public int getDependencies() {
+        return super.getDependencies() | Dependency.focusOf(name, content);
+    }
+
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         name.resetState(postOptimization);

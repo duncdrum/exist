@@ -117,6 +117,11 @@ public class DynamicCommentConstructor extends NodeConstructor {
         return "comment {" + content.toString() + "} ";
     }
 
+    @Override
+    public int getDependencies() {
+        return super.getDependencies() | Dependency.focusOf(content);
+    }
+
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         content.resetState(postOptimization);

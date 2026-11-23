@@ -198,7 +198,7 @@ public class QuantifiedExpression extends BindingExpression {
 	 * @see org.exist.xquery.AbstractExpression#getDependencies()
 	 */
 	public int getDependencies() {
-		return Dependency.CONTEXT_ITEM | Dependency.CONTEXT_SET;
+		return Dependency.CONTEXT_ITEM | Dependency.CONTEXT_SET | Dependency.focusOf(inputSequence, returnExpr);
 	}
 
 	@Override

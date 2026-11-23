@@ -479,6 +479,11 @@ public class WhereClause extends AbstractFLWORClause {
     }
 
     @Override
+    public int getDependencies() {
+        return super.getDependencies() | Dependency.focusOf(whereExpr);
+    }
+
+    @Override
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         whereExpr.resetState(postOptimization);

@@ -84,13 +84,15 @@ public abstract class AbstractExpression implements Expression {
     }
 
     /**
-     * Returns {@link Dependency#DEFAULT_DEPENDENCIES}.
+     * Returns {@link Dependency#CONSERVATIVE_DEPENDENCIES}: an expression that does not say what it reads is taken to read the
+     * focus. An expression with no operand that reads nothing returns {@link Dependency#DEFAULT_DEPENDENCIES}; one that holds
+     * operands reports what they read.
      *
      * @see org.exist.xquery.Expression#getDependencies()
      */
     @Override
     public int getDependencies() {
-        return Dependency.DEFAULT_DEPENDENCIES;
+        return Dependency.CONSERVATIVE_DEPENDENCIES;
     }
 
     @Override
