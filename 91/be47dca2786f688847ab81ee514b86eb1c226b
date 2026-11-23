@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_e5206c93453c00::t_d1b76ba092db2b 42-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "91be47dca2786f688847ab81ee514b86eb1c226b",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
