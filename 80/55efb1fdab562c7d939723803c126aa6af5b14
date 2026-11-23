@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/xquery/AbstractExpression.java
+  s_e5206c93453c00::t_0e44c3ef99327b 110
+exist-core/src/main/java/org/exist/xquery/Dependency.java
+  s_e5206c93453c00::t_3f6bf5f5454baf 125-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8055efb1fdab562c7d939723803c126aa6af5b14",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
