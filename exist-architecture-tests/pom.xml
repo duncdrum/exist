@@ -302,6 +302,15 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- the rules do not depend on the platform: run them with the unit tests, once, and not
+                         again in every integration job (-DskipUnitTests=true), as in exist-core -->
+                    <skip>${skipUnitTests}</skip>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
