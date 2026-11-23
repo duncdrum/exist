@@ -9,4 +9,4 @@ org.exist.xquery.Optimizer.visitFilteredExpr(org.exist.xquery.FilteredExpression
 org.exist.xquery.Optimizer.visitLocationStep(org.exist.xquery.LocationStep) calls org.exist.xquery.RewritableExpression.replace
 org.exist.xquery.Optimizer.visitLocationStep(org.exist.xquery.LocationStep) calls org.exist.xquery.RewritableExpression.replace
 org.exist.xquery.Optimizer.visitPathExpr(org.exist.xquery.PathExpr) calls org.exist.xquery.PathExpr.replace
-org.exist.xquery.modules.range.RangeQueryRewriter.rewriteLocationStep(org.exist.xquery.LocationStep) calls org.exist.xquery.Predicate.replace
+org.exist.xquery.modules.range.RangeQueryRewriter.rewritePredicates([Lorg.exist.xquery.Predicate;, org.exist.storage.NodePath, boolean) calls org.exist.xquery.Predicate.replace
