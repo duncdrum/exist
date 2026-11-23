@@ -1,0 +1,25 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_e5206c93453c00::t_29234f75005e62 302,306
+exist-core/src/test/xquery/focus-in-key.xqm
+  s_e5206c93453c00::t_e643e3587de63a 1-167
+exist-core/src/main/java/org/exist/xquery/Dependency.java
+  s_e5206c93453c00::t_d166ea2c39eae3 91-98,100-116
+exist-core/src/test/java/org/exist/xquery/DependencyFocusTest.java
+  s_e5206c93453c00::t_577474096988d8 146-147,170-171,187
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c5482236cc332a014f02b5e635276498ae6f6120",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

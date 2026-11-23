@@ -1,0 +1,60 @@
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_e5206c93453c00::t_e4b10345729c22 151-172
+  s_e5206c93453c00::t_ca48fe8a09edda 227-230
+extensions/indexes/range/src/test/xquery/range/key-reads-focus.xqm
+  s_e5206c93453c00::t_ad0d79bbac8155 1-166
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_e5206c93453c00::t_0fc51a00b0ef4a 33-36
+exist-core/src/main/java/org/exist/xquery/Dependency.java
+  s_e5206c93453c00::t_b28fffcfe49b94 76,78-82
+  s_e5206c93453c00::t_3e07e0469c8f13 119-120,129-132,141-144
+exist-core/src/main/java/org/exist/xquery/LocationStep.java
+  s_e5206c93453c00::t_3fe0c6a5d8fa80 79-85,126,421
+exist-core/src/main/java/org/exist/xquery/ArrowOperator.java
+  s_e5206c93453c00::t_def93c3d14478f 203-205
+exist-core/src/main/java/org/exist/xquery/BindingExpression.java
+  s_e5206c93453c00::t_5bce98c2158d13 96-99
+exist-core/src/main/java/org/exist/xquery/CastableExpression.java
+  s_e5206c93453c00::t_1714c62d6f602f 72
+exist-core/src/main/java/org/exist/xquery/CombiningExpression.java
+  s_e5206c93453c00::t_bd5cd21cd1409c 47-50
+exist-core/src/main/java/org/exist/xquery/Function.java
+  s_e5206c93453c00::t_734860622d2afc 614-616,625-626
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_e5206c93453c00::t_bf6db08da368aa 307,309
+  s_e5206c93453c00::t_14b5135768f8f8 303-305
+exist-core/src/main/java/org/exist/xquery/InstanceOfExpression.java
+  s_e5206c93453c00::t_af594783ff7682 117
+exist-core/src/main/java/org/exist/xquery/LogicalOp.java
+  s_e5206c93453c00::t_849a5222d3c95f 102
+exist-core/src/main/java/org/exist/xquery/SwitchExpression.java
+  s_e5206c93453c00::t_7bce563b9fcf93 126
+exist-core/src/main/java/org/exist/xquery/TypeswitchExpression.java
+  s_e5206c93453c00::t_72d8f93c7bd254 156
+exist-core/src/main/java/org/exist/xquery/functions/fn/FnDefaultLanguage.java
+  s_e5206c93453c00::t_e5267630d75ab9 51
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunCurrentDateTime.java
+  s_e5206c93453c00::t_120a646e40c82b 92
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunDefaultCollation.java
+  s_e5206c93453c00::t_038964b80776ab 65
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunImplicitTimezone.java
+  s_e5206c93453c00::t_7f8e16d381e8a2 64
+exist-core/src/test/java/org/exist/xquery/DependencyFocusTest.java
+  s_e5206c93453c00::t_3605f4c1b92496 37-41,53-58,60-61,63-66,68-78,80-104,106-111,113-115,117-128,130-134,136-140,143-145,148-169,179-184,207-211,213-216
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b2cf9950e71f65f4205985413cbb0adc552f31a3",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

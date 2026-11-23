@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/xquery/Optimizer.java
+  s_e5206c93453c00::t_28fbc1d2115063 706-711
+exist-core/src/test/xquery/focus-in-key.xqm
+  s_e5206c93453c00::t_81886f77b79146 141-168
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "aed8ff4447f1fdb144fa513402dc6f8d2bca08f3",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

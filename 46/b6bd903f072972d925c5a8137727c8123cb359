@@ -1,0 +1,83 @@
+exist-core/src/main/java/org/exist/xquery/Dependency.java
+  s_e5206c93453c00::t_bd8faad9896896 74-75,77,83-85
+  s_e5206c93453c00::t_83fc01a00ba46c 118,121-128,133-140,145-154
+exist-core/src/main/java/org/exist/xquery/FilteredExpression.java
+  s_e5206c93453c00::t_ccb366511f4d40 256-257
+exist-core/src/main/java/org/exist/xquery/LocationStep.java
+  s_e5206c93453c00::t_10e0759b0bedcf 127-128,131-132
+exist-core/src/main/java/org/exist/xquery/RootNode.java
+  s_e5206c93453c00::t_4e35ef7de7d8a2 68
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunLast.java
+  s_e5206c93453c00::t_fd220a6ba5c341 63-64
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunPosition.java
+  s_e5206c93453c00::t_78d843cbac3698 62
+exist-core/src/test/java/org/exist/xquery/DependencyFocusTest.java
+  s_e5206c93453c00::t_881e00c1e890fa 1-36,42-50,51-52,59,62,67,141-142,172-178,192-206,212,217-222
+  s_e5206c93453c00::t_becee42e36b9ad 79,105,112,116,129,135,185-186,188-191
+exist-core/src/main/java/org/exist/xquery/ArrowOperator.java
+  s_e5206c93453c00::t_ea2a30a8cb7516 201-202,206-207
+exist-core/src/main/java/org/exist/xquery/BindingExpression.java
+  s_e5206c93453c00::t_83abcf2965da52 100
+exist-core/src/main/java/org/exist/xquery/CombiningExpression.java
+  s_e5206c93453c00::t_987791ac41367a 51
+exist-core/src/main/java/org/exist/xquery/ConditionalExpression.java
+  s_e5206c93453c00::t_396e565799a1d7 53
+exist-core/src/main/java/org/exist/xquery/ElementConstructor.java
+  s_e5206c93453c00::t_e817b98bfc3f4a 452-456
+exist-core/src/main/java/org/exist/xquery/Function.java
+  s_e5206c93453c00::t_1acd5d0242c315 610-613,617-624,627-635
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_e5206c93453c00::t_26d10345514261 296-297
+exist-core/src/main/java/org/exist/xquery/LogicalOp.java
+  s_e5206c93453c00::t_4bae64caa6ba49 100,104
+exist-core/src/main/java/org/exist/xquery/QuantifiedExpression.java
+  s_e5206c93453c00::t_c0ac9f8a5736d1 201
+exist-core/src/main/java/org/exist/xquery/RangeExpression.java
+  s_e5206c93453c00::t_a648e196afab67 49-53
+exist-core/src/main/java/org/exist/xquery/SwitchExpression.java
+  s_e5206c93453c00::t_1b58b4524ff450 127-133
+exist-core/src/main/java/org/exist/xquery/TryCatchExpression.java
+  s_e5206c93453c00::t_fb968bf0dce0bf 93-97
+exist-core/src/main/java/org/exist/xquery/TypeswitchExpression.java
+  s_e5206c93453c00::t_95f939525a9330 157-163
+exist-core/src/main/java/org/exist/xquery/functions/array/ArrayConstructor.java
+  s_e5206c93453c00::t_30d3d86debbbbe 101-105
+exist-core/src/main/java/org/exist/xquery/functions/fn/FnDefaultLanguage.java
+  s_e5206c93453c00::t_9d60d98da3e3b6 49-50,52-54
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunBaseURI.java
+  s_e5206c93453c00::t_8357936816c988 89-94
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunCurrentDateTime.java
+  s_e5206c93453c00::t_b83aaa9e1c21df 90-91,93-95
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunDefaultCollation.java
+  s_e5206c93453c00::t_4965ab69dd8400 63-64,66-68
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunDocAvailable.java
+  s_e5206c93453c00::t_316402ad3f174a 71
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunElementWithId.java
+  s_e5206c93453c00::t_eb35ee4c69a579 181
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunId.java
+  s_e5206c93453c00::t_b41a0bcdbdf844 216
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunImplicitTimezone.java
+  s_e5206c93453c00::t_fa501f5659777b 62-63,65-67
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunMatches.java
+  s_e5206c93453c00::t_662eb779854232 347,349
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunRemove.java
+  s_e5206c93453c00::t_a1f62714ba73fd 117
+exist-core/src/main/java/org/exist/xquery/functions/map/MapExpr.java
+  s_e5206c93453c00::t_ca6ee741273f3b 107-115
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "46b6bd903f072972d925c5a8137727c8123cb359",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
