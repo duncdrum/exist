@@ -1,0 +1,14 @@
+exist-architecture-tests/src/test/resources/archunit_store/ff3efee3-3713-4721-9f47-74297777c3ce
+  h_ff0005bef58c9d 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "12cf672d9a4200ed969d1f46239149038e2c37fe",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
