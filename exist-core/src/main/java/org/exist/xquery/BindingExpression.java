@@ -94,6 +94,11 @@ public abstract class BindingExpression extends AbstractFLWORClause implements R
 	}
 
 	@Override
+	public int getDependencies() {
+		return super.getDependencies() | Dependency.focusOf(inputSequence, returnExpr);
+	}
+
+	@Override
 	public void resetState(final boolean postOptimization) {
 		super.resetState(postOptimization);
 		inputSequence.resetState(postOptimization);

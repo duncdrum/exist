@@ -69,7 +69,7 @@ public class CastableExpression extends AbstractExpression {
 	}
 	
 	public int getDependencies() {
-		return Dependency.CONTEXT_SET + Dependency.CONTEXT_ITEM;
+		return Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM | Dependency.focusOf(expression);
 	}
 	
 	/* (non-Javadoc)

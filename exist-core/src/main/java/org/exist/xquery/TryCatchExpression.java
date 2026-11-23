@@ -90,7 +90,11 @@ public class TryCatchExpression extends AbstractExpression {
 
     @Override
     public int getDependencies() {
-        return Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM;
+        int deps = Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM | Dependency.focusOf(tryTargetExpr);
+        for (final CatchClause catchClause : catchClauses) {
+            deps |= Dependency.focusOf((Expression) catchClause.getCatchExpr());
+        }
+        return deps;
     }
 
     public Expression getTryTargetExpr() {

@@ -97,10 +97,11 @@ public abstract class LogicalOp extends BinaryOp {
 	 * @see org.exist.xquery.PathExpr#getDependencies()
 	 */
 	public int getDependencies() {
+		final int focus = Dependency.focusOf(getLeft(), getRight());
 		if(!optimize)
-			{return Dependency.CONTEXT_SET + Dependency.CONTEXT_ITEM;}
+			{return Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM | focus;}
 		else
-			{return Dependency.CONTEXT_SET;}
+			{return Dependency.CONTEXT_SET | focus;}
 	}
 
     public Expression getParent() {

@@ -50,7 +50,7 @@ public class ConditionalExpression extends AbstractExpression implements Rewrita
      * @see org.exist.xquery.AbstractExpression#getDependencies()
      */
     public int getDependencies() {
-        return Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM;
+        return Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM | Dependency.focusOf(testExpr, thenExpr, elseExpr);
     }
 
     public Expression getTestExpr() {

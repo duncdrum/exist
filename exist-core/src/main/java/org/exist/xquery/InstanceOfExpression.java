@@ -114,7 +114,7 @@ public class InstanceOfExpression extends AbstractExpression {
 	 * @see org.exist.xquery.AbstractExpression#getDependencies()
 	 */
 	public int getDependencies() {
-		return Dependency.CONTEXT_SET + Dependency.CONTEXT_ITEM;
+		return Dependency.CONTEXT_SET | Dependency.CONTEXT_ITEM | Dependency.focusOf(expression);
 	}
 	
 	/* (non-Javadoc)

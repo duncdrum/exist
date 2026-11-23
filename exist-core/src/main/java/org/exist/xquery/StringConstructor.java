@@ -93,6 +93,17 @@ public class StringConstructor extends AbstractExpression {
     }
 
     @Override
+    public int getDependencies() {
+        int deps = Dependency.DEFAULT_DEPENDENCIES;
+        for (final StringConstructorPart part : content) {
+            if (part instanceof final StringConstructorInterpolation interpolation) {
+                deps |= Dependency.focusOf(interpolation.expression);
+            }
+        }
+        return deps;
+    }
+
+    @Override
     public void resetState(boolean postOptimization) {
         super.resetState(postOptimization);
         content.forEach(p -> p.resetState(postOptimization));
