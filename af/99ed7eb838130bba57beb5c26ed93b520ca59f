@@ -1,0 +1,17 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "af99ed7eb838130bba57beb5c26ed93b520ca59f",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
