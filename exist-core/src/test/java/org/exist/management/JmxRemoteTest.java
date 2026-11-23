@@ -83,6 +83,7 @@ public class JmxRemoteTest extends AbstractHttpTest {
         assertThat(jmxXml, hasXPath("//jmx:LockTable").withNamespaceContext(prefix2Uri));
         assertThat(jmxXml, hasXPath("//jmx:SanityReport").withNamespaceContext(prefix2Uri));
         assertThat(jmxXml, hasXPath("//jmx:Database").withNamespaceContext(prefix2Uri));
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups").withNamespaceContext(prefix2Uri));
 
         // Regression guard for https://github.com/eXist-db/exist/issues/6379:
         // PerInstanceMBean must expose InstanceId as a JMX attribute, which depends on the
@@ -95,6 +96,27 @@ public class JmxRemoteTest extends AbstractHttpTest {
         assertThat(jmxXml, hasXPath("//jmx:CollectionCache/jmx:InstanceId").withNamespaceContext(prefix2Uri));
         assertThat(jmxXml, hasXPath("//jmx:LockTable/jmx:InstanceId").withNamespaceContext(prefix2Uri));
         assertThat(jmxXml, hasXPath("//jmx:SanityReport/jmx:InstanceId").withNamespaceContext(prefix2Uri));
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups/jmx:InstanceId").withNamespaceContext(prefix2Uri));
+    }
+
+    /** Monex asks for one category at a time, as in {@code ?c=processes}: the category has to exist, the default one is a wildcard. */
+    @Test
+    void nodeLookupsCategoryIncludesNodeLookups() throws IOException {
+        final HttpRequest request = HttpRequest.newBuilder(URI.create(getServerUri() + "?c=nodelookups")).GET().build();
+        final String jmxXml = withHttpClient(client ->
+                AbstractHttpTest.executeForStatusAndBody(client, request).body());
+
+        final Map<String, String> prefix2Uri = new HashMap<>();
+        prefix2Uri.put(JMX_PREFIX, JMX_NAMESPACE);
+
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups").withNamespaceContext(prefix2Uri));
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups/jmx:IndexDepth").withNamespaceContext(prefix2Uri));
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups/jmx:IndexScanLimit").withNamespaceContext(prefix2Uri));
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups/jmx:Statistics/jmx:exactHits").withNamespaceContext(prefix2Uri));
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups/jmx:Statistics/jmx:buckets/jmx:beyondLimit").withNamespaceContext(prefix2Uri));
+        assertThat(jmxXml, hasXPath("//jmx:NodeLookups/jmx:DocumentStatistics").withNamespaceContext(prefix2Uri));
+        // the category holds the one bean, not the others
+        assertThat(jmxXml, org.hamcrest.Matchers.not(hasXPath("//jmx:LockTable").withNamespaceContext(prefix2Uri)));
     }
 
     @Test
