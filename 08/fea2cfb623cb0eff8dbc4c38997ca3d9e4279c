@@ -1,0 +1,25 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_e5206c93453c00::t_7c3808c24e6e17 290-294
+exist-core/src/main/java/org/exist/xquery/Optimizable.java
+  s_e5206c93453c00::t_c128a885db59e5 63-92
+exist-core/src/main/java/org/exist/xquery/Optimizer.java
+  s_e5206c93453c00::t_0db43a5b28acf3 809-812
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_e5206c93453c00::t_68e298f94ac722 154,160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "08fea2cfb623cb0eff8dbc4c38997ca3d9e4279c",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
