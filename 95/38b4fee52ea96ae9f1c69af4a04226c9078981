@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/xquery/DependencyFocusTest.java
+  s_e5206c93453c00::t_3605f4c1b92496 37-41,53-58,60-61,63-66,68-78,80-104,106-111,113-115,117-128,130-134,136-140,143-145,148-169,179-184,207-211,213-216
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9538b4fee52ea96ae9f1c69af4a04226c9078981",
+  "prompts": {},
+  "sessions": {
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
