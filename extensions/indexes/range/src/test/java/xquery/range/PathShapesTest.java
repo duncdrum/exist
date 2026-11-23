@@ -37,10 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class PathShapesTest {
 
-    private static final String KEY = "A wrong answer when the key depends on the item, see https://github.com/eXist-db/exist/issues/6956";
-
-    private static final String LAST = "A wrong answer when the key uses last(), see https://github.com/eXist-db/exist/issues/7068";
-
     @Test
     void rangeIsGenerated() throws IOException {
         final Path file = Path.of("src/test/xquery/range/path-shapes.xqm");
@@ -282,16 +278,7 @@ class PathShapesTest {
                 narrowed           10 4 6 8 #4
                 for                2 #1
                 doc-filter         #0
-                """)
-                .pending("child", KEY)
-                .pending("desc", KEY)
-                .pending("desc-after-child", KEY)
-                .pending("narrowed", KEY)
-                .pending("typed-argument", KEY)
-                .pending("self", KEY)
-                .pending("for", KEY)
-                .pending("wildcard", KEY)
-                .pending("wildcard-desc", KEY);
+                """);
         matrix.section("A key that depends on the item: a comparison on a child", "key-by-item-child", "t = (if (@n = (\"2\", \"5\", \"7\", \"9\")) then \"hit\" else \"miss\")", PathShapes.ARGUMENT, """
                 desc               10 2 4 6 8 #5
                 child              10 2 4 6 8 #5
@@ -311,16 +298,7 @@ class PathShapesTest {
                 narrowed           10 4 6 8 #4
                 for                2 #1
                 doc-filter         #0
-                """)
-                .pending("child", KEY)
-                .pending("desc", KEY)
-                .pending("desc-after-child", KEY)
-                .pending("narrowed", KEY)
-                .pending("typed-argument", KEY)
-                .pending("self", KEY)
-                .pending("for", KEY)
-                .pending("wildcard", KEY)
-                .pending("wildcard-desc", KEY);
+                """);
         matrix.section("A key that is another path of the item", "key-is-path-of-item", "t = @a", PathShapes.ARGUMENT, """
                 desc               1 10 2 3 4 5 6 7 8 9 #10
                 child              1 10 2 3 4 5 6 7 8 9 #10
@@ -340,15 +318,7 @@ class PathShapesTest {
                 narrowed           10 3 4 5 6 7 8 9 #8
                 for                1 2 #2
                 doc-filter         #0
-                """)
-                .pending("child", KEY)
-                .pending("desc", KEY)
-                .pending("desc-after-child", KEY)
-                .pending("narrowed", KEY)
-                .pending("typed-argument", KEY)
-                .pending("for", KEY)
-                .pending("wildcard", KEY)
-                .pending("wildcard-desc", KEY);
+                """);
         matrix.section("A key that depends on the size of the focus", "key-by-last", "@a = (if (last() = 1) then \"hit\" else \"miss\")", PathShapes.ARGUMENT, """
                 desc               1 2 3 #3
                 child              1 2 3 #3
@@ -368,14 +338,7 @@ class PathShapesTest {
                 narrowed           3 #1
                 for                1 2 #2
                 doc-filter         #0
-                """)
-                .pending("parent", KEY)
-                .pending("child", LAST)
-                .pending("desc", LAST)
-                .pending("desc-after-child", LAST)
-                .pending("narrowed", LAST)
-                .pending("self", LAST)
-                .pending("typed-argument", LAST);
+                """);
         matrix.partialSection("range:eq", "range-eq", "range:eq(., \"hit\")", """
                 desc               1 2 3 #3
                 child              1 2 3 #3
@@ -425,6 +388,20 @@ class PathShapesTest {
                 narrowed           3 #1
                 for                1 2 #2
                 doc-filter         #0
+                """);
+        matrix.partialSection("range:eq with a key that depends on the item", "range-eq-key-by-item", "range:eq(@a, (if (@n = (\"2\", \"5\", \"7\", \"9\")) then \"hit\" else \"miss\"))", """
+                desc               10 2 4 6 8 #5
+                child              10 2 4 6 8 #5
+                desc-after-child   10 2 4 6 8 #5
+                narrowed           10 4 6 8 #4
+                for                2 #1
+                """);
+        matrix.partialSection("range:eq with a key that depends on the size of the focus", "range-eq-key-by-last", "range:eq(@a, (if (last() = 1) then \"hit\" else \"miss\"))", """
+                desc               1 2 3 #3
+                child              1 2 3 #3
+                desc-after-child   1 2 3 #3
+                narrowed           3 #1
+                for                1 2 #2
                 """);
         matrix.partialSection("range:matches", "range-matches", "range:matches(., \"hit\")", """
                 desc               1 2 3 #3
@@ -827,13 +804,7 @@ class PathShapesTest {
                 narrowed           3 #1
                 for                1 2 #2
                 doc-filter         #0
-                """)
-                .pending("child", LAST)
-                .pending("desc", LAST)
-                .pending("desc-after-child", LAST)
-                .pending("narrowed", LAST)
-                .pending("self", LAST)
-                .pending("typed-argument", LAST);
+                """);
         matrix.section("After a sequence that was empty: a comparison on an attribute", "after-nothing-eq-attribute", "@a = \"hit\"", PathShapes.AFTER_NOTHING, """
                 empty-first            1 2 #2
                 empty-between          1 2 #2
