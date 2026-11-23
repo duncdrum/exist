@@ -1,0 +1,54 @@
+extensions/indexes/range/src/test/java/xquery/range/PathShapesTest.java
+  s_849c5b760f4834::t_97a9afd0d7a2f8 478-483,486,488-492,495,497-501,504,506-510,513,515-519,522
+  s_849c5b760f4834::t_485e194ee0c8fc 63-64,484-485,493-494,502-503,511-512,520-521
+  s_849c5b760f4834::t_db2cf13bf99e88 487,496,505,514,523,851-875
+  s_849c5b760f4834::t_e3d864f989bbbe 546-559,876-885
+  s_e5206c93453c00::t_f66c4125ca21e0 266-284,295-313,324-342,352-370,765-843
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  s_849c5b760f4834::t_ca1cb3e86ce077 52-58,73-76,79-80,99-102,715-716,727,737,748-749,759,770
+  s_849c5b760f4834::t_9f9b0189ac72cd 707-709,713-714,720-723,728-730,734-736,741-744,750-751,753,755-758,761,763-769
+  s_849c5b760f4834::t_88a24720537321 710-712,717-719,724-726,731-733,738-740,745-747,752,754,760,762
+  s_e5206c93453c00::t_3feb9496396505 409-544
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  s_849c5b760f4834::t_8fded57cfd57ca 139-150,154-167
+  s_849c5b760f4834::t_efbc1efc5acdde 30,36
+  s_849c5b760f4834::t_8ea8d99dddfea6 151-153,168-170,352,354,373-382,413-437,446,455-464,468,473-477,536,550-555,570-593
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  s_849c5b760f4834::t_45796c9bc8b162 534-535,546,556
+  s_849c5b760f4834::t_dc9aa6d4f37c7e 526-528,532-533,539-542,547-549,553-555
+  s_849c5b760f4834::t_7edc214605da7f 529-531,536-538,543-545,550-552,557-559
+  s_e5206c93453c00::t_a6017b2a08277c 390-525
+  s_e5206c93453c00::t_e31022c25e0004 389
+extensions/indexes/lucene/src/test/java/xquery/lucene/PathShapesTest.java
+  s_849c5b760f4834::t_046399be6218b2 51-52,397-424
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.xqm
+  s_849c5b760f4834::t_f2120c0b623161 50-56,86-89,92-93,112-115,618-657
+extensions/indexes/ngram/src/test/java/xquery/ngram/PathShapesTest.java
+  s_849c5b760f4834::t_5c05bf0d2b9251 51-52,154-162
+extensions/indexes/ngram/src/test/xquery/ngram/path-shapes.xqm
+  s_849c5b760f4834::t_12822fe60a673e 52-58,73-76,79-80,99-102,261-273
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "796286eabf6e27815d8cad52eb858c1c440008a9",
+  "prompts": {},
+  "sessions": {
+    "s_849c5b760f4834": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "29af98cb-55cf-4943-ba9b-1389a16f1bd6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
