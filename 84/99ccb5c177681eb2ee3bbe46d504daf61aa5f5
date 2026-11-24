@@ -1,0 +1,34 @@
+exist-core/src/main/java/org/exist/dom/persistent/AttrImpl.java
+  s_256fa431ac2c84::t_80d73a22724449 194,242
+exist-core/src/test/java/org/exist/storage/IdIndexDtdTypesTest.java
+  s_256fa431ac2c84::t_5a96ef7997c203 35-37,58,64,68,72-73
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunElementWithId.java
+  s_256fa431ac2c84::t_f5735f82512aa5 156
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunId.java
+  s_256fa431ac2c84::t_accc7710ca07d7 189
+exist-core/src/main/java/org/exist/xquery/functions/fn/IdMatches.java
+  s_256fa431ac2c84::t_aa2d8fccec88e6 1-59
+exist-core/src/test/xquery/xquery3/fnElementWithId.xqm
+  s_256fa431ac2c84::t_a2985da579a7f2 28-43,153-179
+exist-core/src/test/xquery/xquery3/fnId.xqm
+  s_256fa431ac2c84::t_cc4cf3b963b5cd 28-43,159-185
+exist-core/src/test/java/org/exist/storage/IdIndexRecoveryTest.java
+  s_256fa431ac2c84::t_f35d60ca55bc55 81
+  s_256fa431ac2c84::t_0ed62d9058478a 143,145,149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8499ccb5c177681eb2ee3bbe46d504daf61aa5f5",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
