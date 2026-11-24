@@ -1,0 +1,25 @@
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_3ccd4c392b82a6 591
+exist-core/src/main/java/org/exist/dom/persistent/BinaryDocument.java
+  s_256fa431ac2c84::t_f3f78b7ef1d93d 187,225
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_2a31d7d9fb3d95 882,909-935
+exist-core/src/test/java/org/exist/backup/SystemExportImportTest.java
+  s_256fa431ac2c84::t_bf094a002d8e39 58,66-67,103,125-128,141,187-193,265
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8f6dbae04896ab9a90d76ae6a0c6f5ae42284a41",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
