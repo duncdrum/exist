@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/validation/DtdGrammarCacheTest.java
+  s_256fa431ac2c84::t_4df466664c530e 38-40,42,108-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bd54b191c28ef3720ff38d455dfa5ad0687457f0",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
