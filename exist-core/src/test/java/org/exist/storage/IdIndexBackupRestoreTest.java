@@ -46,9 +46,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * IDs of a collection that is backed up, removed and restored. {@code xml:id} values are found again. The IDs and
- * references declared by a DTD are not (a behaviour that looks like a defect and is pinned as it is: the DTD-derived
- * type of an attribute is not part of what is backed up, and a restored document is not typed again).
+ * IDs of a collection that is backed up, removed and restored. {@code xml:id} values are found again, and so are the IDs
+ * and references declared by a DTD, as the backup carries the declarations of the internal subset and the restore
+ * types the attributes again.
  */
 public class IdIndexBackupRestoreTest {
 
@@ -104,8 +104,8 @@ public class IdIndexBackupRestoreTest {
     }
 
     @Test
-    void dtdDeclaredIdsAreLostOnBackupAndRestore() {
-        assertEquals("x=0 y=0", afterRestoreDtdIds, "the IDs declared by the DTD are not found after a restore");
-        assertEquals("x=0", afterRestoreDtdRefs, "nor the references");
+    void dtdDeclaredIdsSurviveBackupAndRestore() {
+        assertEquals("x=1 y=1", afterRestoreDtdIds, "the IDs declared by the DTD are found after a restore");
+        assertEquals("x=2", afterRestoreDtdRefs, "and the references");
     }
 }
