@@ -1,0 +1,21 @@
+exist-core/src/test/java/org/exist/validation/DtdGrammarSeedingTest.java
+  s_256fa431ac2c84::t_6aec68cda543e2 63
+exist-core/src/test/java/org/exist/validation/DtdInternalSubsetIsolationTest.java
+  s_256fa431ac2c84::t_7f8a1c550f27b7 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "17a71e242dab463cca335869fae99533adc6290b",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
