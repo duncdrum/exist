@@ -278,6 +278,40 @@ public class NativeValueIndex implements ContentLoadingObserver {
         storeAttribute(attr, attr.getValue(), spec.getType(), (spec.getQName() == null) ? IndexType.GENERIC : IndexType.QNAME, remove);
     }
 
+    /**
+     * Stores or removes the entries of an attribute that is declared as {@code ID}, {@code IDREF} or {@code IDREFS}:
+     * the entries are what {@code fn:id}, {@code fn:idref} and {@code fn:element-with-id} read. An {@code IDREFS}
+     * value gets one entry per token. An attribute of any other type is left alone.
+     *
+     * @param document the document of the attribute
+     * @param attr the attribute
+     * @param remove true to remove the entries, false to store them
+     */
+    void storeIdEntries(final DocumentImpl document, final AttrImpl attr, final boolean remove) {
+        switch (attr.getType()) {
+            case AttrImpl.ID:
+                setDocument(document);
+                storeAttribute(attr, attr.getValue(), Type.ID, IndexType.GENERIC, remove);
+                break;
+
+            case AttrImpl.IDREF:
+                setDocument(document);
+                storeAttribute(attr, attr.getValue(), Type.IDREF, IndexType.GENERIC, remove);
+                break;
+
+            case AttrImpl.IDREFS:
+                setDocument(document);
+                final StringTokenizer tokenizer = new StringTokenizer(attr.getValue(), " ");
+                while (tokenizer.hasMoreTokens()) {
+                    storeAttribute(attr, tokenizer.nextToken(), Type.IDREF, IndexType.GENERIC, remove);
+                }
+                break;
+
+            default:
+                // not an ID type
+        }
+    }
+
     public void storeAttribute(final AttrImpl attr, final String value, final int xpathType, final IndexType indexType, final boolean remove) {
         if (doc != null && doc.getDocId() != attr.getOwnerDocument().getDocId()) {
             throw new IllegalArgumentException("Document id ('" + doc.getDocId() + "') and proxy id ('" + attr.getOwnerDocument().getDocId() + "') differ !");
@@ -1520,25 +1554,7 @@ public class NativeValueIndex implements ContentLoadingObserver {
                 storeAttribute(attrib, path, qSpec, false);
             }
 
-            switch (attrib.getType()) {
-                case AttrImpl.ID:
-                    storeAttribute(attrib, attrib.getValue(), Type.ID, IndexType.GENERIC, false);
-                    break;
-
-                case AttrImpl.IDREF:
-                    storeAttribute(attrib, attrib.getValue(), Type.IDREF, IndexType.GENERIC, false);
-                    break;
-
-                case AttrImpl.IDREFS:
-                    final StringTokenizer tokenizer = new StringTokenizer(attrib.getValue(), " ");
-                    while (tokenizer.hasMoreTokens()) {
-                        storeAttribute(attrib, tokenizer.nextToken(), Type.IDREF, IndexType.GENERIC, false);
-                    }
-                    break;
-
-                default:
-                    // do nothing special
-            }
+            storeIdEntries(doc, attrib, false);
             super.attribute(transaction, attrib, path);
         }
 

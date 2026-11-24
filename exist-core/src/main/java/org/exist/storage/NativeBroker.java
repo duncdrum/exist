@@ -77,7 +77,6 @@ import org.apache.commons.io.output.UnsynchronizedByteArrayOutputStream;
 import org.exist.util.io.InputStreamUtil;
 import org.exist.xmldb.XmldbURI;
 import org.exist.xquery.TerminatedException;
-import org.exist.xquery.value.Type;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;
@@ -3710,25 +3709,7 @@ public class NativeBroker implements DBBroker {
                 //Strange : does it mean that the node is added 2 times under 2 different identities ?
                 final AttrImpl attr;
                 attr = (AttrImpl) node;
-                switch(attr.getType()) {
-                    case AttrImpl.ID:
-                        valueIndex.setDocument(doc);
-                        valueIndex.storeAttribute(attr, attr.getValue(), Type.ID, NativeValueIndex.IndexType.GENERIC, false);
-                        break;
-                    case AttrImpl.IDREF:
-                        valueIndex.setDocument(doc);
-                        valueIndex.storeAttribute(attr, attr.getValue(), Type.IDREF, NativeValueIndex.IndexType.GENERIC, false);
-                        break;
-                    case AttrImpl.IDREFS:
-                        valueIndex.setDocument(doc);
-                        final StringTokenizer tokenizer = new StringTokenizer(attr.getValue(), " ");
-                        while(tokenizer.hasMoreTokens()) {
-                            valueIndex.storeAttribute(attr, tokenizer.nextToken(),Type.IDREF, NativeValueIndex.IndexType.GENERIC, false);
-                        }
-                        break;
-                    default:
-                        // do nothing special
-                }
+                valueIndex.storeIdEntries(doc, attr, false);
                 final RangeIndexSpec spec2 = doc.getCollection().getIndexByPathConfiguration(this, currentPath);
                 if(spec2 != null) {
                     valueIndex.setDocument(doc);
@@ -4444,28 +4425,7 @@ public class NativeBroker implements DBBroker {
                     node.setQName(new QName(qname, ElementValue.ATTRIBUTE));
                     final AttrImpl attr = (AttrImpl) node;
                     attr.setIndexType(indexType);
-                    switch(attr.getType()) {
-                        case AttrImpl.ID:
-                            valueIndex.setDocument(doc);
-                            valueIndex.storeAttribute(attr, attr.getValue(), Type.ID, NativeValueIndex.IndexType.GENERIC, indexMode == IndexMode.REMOVE);
-                            break;
-
-                        case AttrImpl.IDREF:
-                            valueIndex.setDocument(doc);
-                            valueIndex.storeAttribute(attr, attr.getValue(), Type.IDREF, NativeValueIndex.IndexType.GENERIC, indexMode == IndexMode.REMOVE);
-                            break;
-
-                        case AttrImpl.IDREFS:
-                            valueIndex.setDocument(doc);
-                            final StringTokenizer tokenizer = new StringTokenizer(attr.getValue(), " ");
-                            while(tokenizer.hasMoreTokens()) {
-                                valueIndex.storeAttribute(attr, tokenizer.nextToken(), Type.IDREF, NativeValueIndex.IndexType.GENERIC, indexMode == IndexMode.REMOVE);
-                            }
-                            break;
-
-                        default:
-                            // do nothing special
-                    }
+                    valueIndex.storeIdEntries(doc, attr, indexMode == IndexMode.REMOVE);
                     if(currentPath != null) {
                         currentPath.removeLastComponent();
                     }
