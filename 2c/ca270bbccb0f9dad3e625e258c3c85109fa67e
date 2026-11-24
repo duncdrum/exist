@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRecoveryTest.java
+  s_256fa431ac2c84::t_cc34343443c7a6 50-55,85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2cca270bbccb0f9dad3e625e258c3c85109fa67e",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
