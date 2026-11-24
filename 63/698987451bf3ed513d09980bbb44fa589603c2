@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_dfe10c5eb74bd0 219,221,227-231,383-385,660-663
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_256fa431ac2c84::t_daef8486990008 71-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "63698987451bf3ed513d09980bbb44fa589603c2",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
