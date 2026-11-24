@@ -1,0 +1,88 @@
+exist-core-jmh/README.md
+  h_ff0005bef58c9d 19
+exist-core-jmh/src/main/java/org/exist/storage/dom/NodeLookupBenchmark.java
+  h_ff0005bef58c9d 1-213
+exist-core/pom.xml
+  h_ff0005bef58c9d 1399-1405
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  h_ff0005bef58c9d 378-380
+exist-core/src/main/java/org/exist/management/client/JMXtoXML.java
+  h_ff0005bef58c9d 32,138
+exist-core/src/main/java/org/exist/management/impl/JMXAgent.java
+  h_ff0005bef58c9d 95-96
+exist-core/src/main/java/org/exist/management/impl/NodeLookups.java
+  h_ff0005bef58c9d 1-115
+exist-core/src/main/java/org/exist/management/impl/NodeLookupsMXBean.java
+  h_ff0005bef58c9d 1-83
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  h_ff0005bef58c9d 53,135,138,151-152,204,230-255,272-275,3545,4481-4482
+exist-core/src/main/java/org/exist/storage/btree/BTree.java
+  h_ff0005bef58c9d 350-372,1710-1797
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  h_ff0005bef58c9d 31-32,34-35,195-231,579,583-584,1015,1049,1148,1152,1155-1156,1165-1280,1347,1350-1358,1360-1373,1375-1577,1590-1591,1594,1599,1601,1619-1621,1633-1634,1643,1657-1665,2020,2339-2340,2343,2345,2358,2376-2398,2422-2445,2447-2449,2451-2452,2454-2457,2459,2464-2465,2468-2470,2472-2544,3332,3343,3369-3370,3384-3385,3636,3661,3914-3915
+exist-core/src/main/java/org/exist/storage/dom/DocumentLookups.java
+  h_ff0005bef58c9d 1-35
+exist-core/src/main/java/org/exist/storage/dom/EntryPlanner.java
+  h_ff0005bef58c9d 1-79
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  h_ff0005bef58c9d 30-33,35-39,41-42,47,50,55-64,66,79,81,83-84,88,92,94
+exist-core/src/main/java/org/exist/storage/dom/LookupBuckets.java
+  h_ff0005bef58c9d 1-80
+exist-core/src/main/java/org/exist/storage/dom/LookupStatistics.java
+  h_ff0005bef58c9d 1-66
+exist-core/src/main/java/org/exist/storage/dom/RawNodeIterator.java
+  h_ff0005bef58c9d 73-90,108-110,115,121-127
+exist-core/src/main/java/org/exist/util/Configuration.java
+  h_ff0005bef58c9d 165,167,254-256,493-503,1271-1272
+exist-core/src/test/java/org/exist/management/JmxRemoteTest.java
+  h_ff0005bef58c9d 86,99-119
+exist-core/src/test/java/org/exist/management/NodeLookupsTest.java
+  h_ff0005bef58c9d 1-146
+exist-core/src/test/java/org/exist/storage/btree/BTreeFindFloorTest.java
+  h_ff0005bef58c9d 1-171
+exist-core/src/test/java/org/exist/storage/dom/AnchorsBackupRestoreTest.java
+  h_ff0005bef58c9d 1-138
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyScenarios.java
+  h_ff0005bef58c9d 1-312
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyStressTest.java
+  h_ff0005bef58c9d 1-72
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyTest.java
+  h_ff0005bef58c9d 1-81
+exist-core/src/test/java/org/exist/storage/dom/AnchorsRecoverTest.java
+  h_ff0005bef58c9d 1-189
+exist-core/src/test/java/org/exist/storage/dom/DebugPageContentsTest.java
+  h_ff0005bef58c9d 1-167
+exist-core/src/test/java/org/exist/storage/dom/DomAnchorsTest.java
+  h_ff0005bef58c9d 1-346
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  h_ff0005bef58c9d 44-45,60-61,63,89,93,117,119,122,124,130,132,135-136,138,144,146,149-150,162-163
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  h_ff0005bef58c9d 28,33-35,42,45,52-53,63,65,83,85,99-269
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  h_ff0005bef58c9d 27-28,33-34,43,45-46,48-56,72-73,78-87,90,94-108,121-155,165-177,182,222-329
+exist-core/src/test/java/org/exist/storage/dom/EntryPlannerTest.java
+  h_ff0005bef58c9d 1-84
+exist-core/src/test/java/org/exist/storage/dom/LookupStatisticsTest.java
+  h_ff0005bef58c9d 1-199
+exist-core/src/test/java/org/exist/storage/dom/StoredNodeStringValueTest.java
+  h_ff0005bef58c9d 1-213
+exist-core/src/test/java/org/exist/util/ConfigurationTest.java
+  h_ff0005bef58c9d 26,76-122
+exist-distribution/src/main/config/conf.xml
+  h_ff0005bef58c9d 61,535-542,552
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/FieldExpressionAnchorsTest.java
+  h_ff0005bef58c9d 1-201
+schema/conf.xsd
+  h_ff0005bef58c9d 11,742-754
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "27aaa87d3ce923addb1f7100d5c53e64baf062fe",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
