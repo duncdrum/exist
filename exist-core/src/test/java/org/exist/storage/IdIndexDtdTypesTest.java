@@ -32,11 +32,9 @@ import static org.exist.storage.IdIndexTestSupport.run;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * IDs and references declared by a DTD ({@code ID}, {@code IDREF}, {@code IDREFS}).
- * <p>
- * Two tests describe behaviour that looks like a defect and is pinned as it is, so that a change to the ID index stays
- * behaviour-preserving: an {@code IDREF} is not found after a collection copy or a reindex. The DTD-derived type of an
- * attribute is not part of what the database stores; the attribute is typed again only while its document is stored.
+ * IDs and references declared by a DTD ({@code ID}, {@code IDREF}, {@code IDREFS}): found when the document is stored
+ * and again after the nodes were read back from storage, which a collection copy and a reindex do. The type of an
+ * attribute is part of the stored node, so it must survive that round trip.
  */
 public class IdIndexDtdTypesTest {
 
@@ -57,21 +55,21 @@ public class IdIndexDtdTypesTest {
     }
 
     @Test
-    void idrefIsNotFoundAfterACollectionCopy() throws Exception {
+    void idrefIsFoundAfterACollectionCopy() throws Exception {
         store("dtd-copy-source");
         run(existEmbeddedServer, "xmldb:create-collection('/db', 'dtd-copy-target')");
         run(existEmbeddedServer, "xmldb:copy-collection('/db/dtd-copy-source', '/db/dtd-copy-target')");
         assertEquals("x=2 y=1", idrefCounts(existEmbeddedServer, "/db/dtd-copy-source", "x", "y"), "the source keeps its references");
         assertEquals("x=1 y=1", idCounts(existEmbeddedServer, "/db/dtd-copy-target", "x", "y"), "the copy has the IDs");
-        assertEquals("x=0 y=0", idrefCounts(existEmbeddedServer, "/db/dtd-copy-target", "x", "y"), "the copy has no references");
+        assertEquals("x=2 y=1", idrefCounts(existEmbeddedServer, "/db/dtd-copy-target", "x", "y"), "the copy has the references");
     }
 
     @Test
-    void idrefIsNotFoundAfterAReindex() throws Exception {
+    void idrefIsFoundAfterAReindex() throws Exception {
         store("dtd-reindex");
         assertEquals("x=2 y=1", idrefCounts(existEmbeddedServer, "/db/dtd-reindex", "x", "y"));
         run(existEmbeddedServer, "xmldb:reindex('/db/dtd-reindex')");
-        assertEquals("x=1 y=1", idCounts(existEmbeddedServer, "/db/dtd-reindex", "x", "y"), "the IDs are found again");
-        assertEquals("x=0 y=0", idrefCounts(existEmbeddedServer, "/db/dtd-reindex", "x", "y"), "the references are not");
+        assertEquals("x=1 y=1", idCounts(existEmbeddedServer, "/db/dtd-reindex", "x", "y"), "the IDs are found");
+        assertEquals("x=2 y=1", idrefCounts(existEmbeddedServer, "/db/dtd-reindex", "x", "y"), "and the references");
     }
 }

@@ -191,7 +191,7 @@ public class AttrImpl extends NamedNode<AttrImpl> implements Attr {
         int pos = start;
         final byte idSizeType = (byte) (data[pos] & 0x3);
         final boolean hasNamespace = (data[pos] & 0x10) == 0x10;
-        final int attrType = (data[pos] & 0x4) >> 0x2;
+        final int attrType = (data[pos] & 0xC) >> 0x2;
         pos += StoredNode.LENGTH_SIGNATURE_LENGTH;
         final int dlnLen = ByteConversion.byteToShort(data, pos);
         pos += NodeId.LENGTH_NODE_ID_UNITS;
@@ -239,7 +239,7 @@ public class AttrImpl extends NamedNode<AttrImpl> implements Attr {
         int pos = start;
         final byte idSizeType = (byte) (data[pos] & 0x3);
         final boolean hasNamespace = (data[pos] & 0x10) == 0x10;
-        final int attrType = (data[pos] & 0x4) >> 0x2;
+        final int attrType = (data[pos] & 0xC) >> 0x2;
         pos += StoredNode.LENGTH_SIGNATURE_LENGTH;
         final int dlnLen = ByteConversion.byteToShort(data, pos);
         pos += NodeId.LENGTH_NODE_ID_UNITS;
