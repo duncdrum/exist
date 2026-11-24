@@ -1,0 +1,82 @@
+exist-core/src/main/java/org/exist/DtdAttributeTypes.java
+  s_256fa431ac2c84::t_2d702662a7616c 1-119
+  s_256fa431ac2c84::t_c623c49e58f51c 68
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_eb2276b905ccf9 82-84,164-172,345-351,576,585-586,622-650,749,751-752,754,756,821-823,836-838,894-897
+exist-core/src/main/java/org/exist/backup/SystemExport.java
+  s_256fa431ac2c84::t_b54066b2f1ba8d 718
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_53d36a76a49e17 89-90
+  s_256fa431ac2c84::t_cac417cf2b4a98 892-909,962
+exist-core/src/main/java/org/exist/dom/persistent/DocumentTypeImpl.java
+  s_256fa431ac2c84::t_4ec2444074ff26 32,41,48-60,65,94,96,103-105,108,111-115,129,160-163
+  s_256fa431ac2c84::t_76eb2ab3f35503 109-110,127-128,130-140
+exist-core/src/main/java/org/exist/indexing/AbstractMatchListener.java
+  s_256fa431ac2c84::t_1e0a3f267321bd 150-154
+exist-core/src/main/java/org/exist/storage/serializers/AbstractChainOfReceivers.java
+  s_256fa431ac2c84::t_a7ae05f736bd86 173-179
+exist-core/src/main/java/org/exist/storage/serializers/NativeSerializer.java
+  s_256fa431ac2c84::t_d74858587ac0c8 354
+exist-core/src/main/java/org/exist/storage/serializers/XIncludeFilter.java
+  s_256fa431ac2c84::t_d2730a34940545 367-372
+exist-core/src/main/java/org/exist/util/serializer/AdaptiveWriter.java
+  s_256fa431ac2c84::t_85ac4950781146 303-304,307
+  s_256fa431ac2c84::t_2c66370c0010fa 305-306
+exist-core/src/main/java/org/exist/util/serializer/CharacterMappingWriter.java
+  s_256fa431ac2c84::t_0906d1d62d613d 203-207
+exist-core/src/main/java/org/exist/util/serializer/MicroXmlWriter.java
+  s_256fa431ac2c84::t_b35afa034ac31a 168-169,172
+  s_256fa431ac2c84::t_d610a065c41d0b 170-171
+exist-core/src/main/java/org/exist/util/serializer/Receiver.java
+  s_256fa431ac2c84::t_4f27e6ab9b9c6a 73-87
+exist-core/src/main/java/org/exist/util/serializer/ReceiverToSAX.java
+  s_256fa431ac2c84::t_92f10b8adf1939 171-181
+exist-core/src/main/java/org/exist/util/serializer/SAXSerializer.java
+  s_256fa431ac2c84::t_16bd8a32a17546 439-447
+exist-core/src/main/java/org/exist/util/serializer/SerializerWriter.java
+  s_256fa431ac2c84::t_2c6aff19bca31e 84-97
+exist-core/src/main/java/org/exist/util/serializer/TEXTWriter.java
+  s_256fa431ac2c84::t_a634f3d295189e 227-228,231
+  s_256fa431ac2c84::t_2de0ea2a2f184d 229-230
+exist-core/src/main/java/org/exist/util/serializer/XHTMLWriter.java
+  s_256fa431ac2c84::t_f90519da69bf35 810-811,814
+  s_256fa431ac2c84::t_50f1540815ef1e 812-813
+exist-core/src/main/java/org/exist/util/serializer/XMLWriter.java
+  s_256fa431ac2c84::t_f82b874dea45aa 697-698,703,710-713
+  s_256fa431ac2c84::t_8a6cb6131e3558 699-702,704-709,714-723
+exist-core/src/test/java/org/exist/DtdAttributeTypesTest.java
+  s_256fa431ac2c84::t_706fc88af7fa3c 1-91
+exist-core/src/test/java/org/exist/dom/persistent/DocumentTypeImplTest.java
+  s_256fa431ac2c84::t_89575b8a12b0f6 1-73,75-92
+  s_256fa431ac2c84::t_47447ae90807cb 74
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRestartTest.java
+  s_256fa431ac2c84::t_5a88fcca1eca53 1-23,24-25,26-27,28-31,32-61,63-65,67-82
+  s_256fa431ac2c84::t_73b32f41ca1d56 62,66
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRoundTripTest.java
+  s_256fa431ac2c84::t_8687f7c22ef531 1-30,31-37,38-64,66-67,68,70-114,127-173
+  s_256fa431ac2c84::t_ae62900e8c3cd4 65,69
+exist-core/src/test/java/org/exist/validation/DtdGrammarCacheTest.java
+  s_256fa431ac2c84::t_4df466664c530e 38-40,42,108-142
+exist-core/src/main/java/org/exist/dom/persistent/DocumentMetadata.java
+  s_256fa431ac2c84::t_093c6690b75ecb 115
+exist-core/src/test/java/org/exist/util/serializer/InternalSubsetWriterTest.java
+  s_256fa431ac2c84::t_e0a2dbc5da7daf 1-70,91-96
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesTestSupport.java
+  s_256fa431ac2c84::t_3a077173695f49 1-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dae0e923e8e5d0b18abdf378a52076772541b61e",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
