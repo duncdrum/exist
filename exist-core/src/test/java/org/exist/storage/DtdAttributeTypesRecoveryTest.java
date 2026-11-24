@@ -31,7 +31,6 @@ import org.exist.util.MimeType;
 import org.exist.util.StringInputSource;
 import org.exist.xmldb.XmldbURI;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
@@ -150,7 +149,6 @@ public class DtdAttributeTypesRecoveryTest {
      * read back from the stored attribute is IDREF. That is not the case until the type is decoded with both of its bits,
      * which is a separate change.
      */
-    @Disabled("After a crash an IDREF is read back as CDATA, until the attribute type is decoded with both bits, see #7070")
     @Test
     void idrefsAreFoundAfterACrash() throws Exception {
         BrokerPool.FORCE_CORRUPTION = true;
