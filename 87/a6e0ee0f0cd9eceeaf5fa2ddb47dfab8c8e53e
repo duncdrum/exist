@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/dom/persistent/AttrImpl.java
+  s_256fa431ac2c84::t_80d73a22724449 194,242
+exist-core/src/test/java/org/exist/storage/IdIndexDtdTypesTest.java
+  s_256fa431ac2c84::t_5a96ef7997c203 35-37,58,64,68,72-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "87a6e0ee0f0cd9eceeaf5fa2ddb47dfab8c8e53e",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
