@@ -1,0 +1,21 @@
+exist-distribution/src/main/config/conf.xml
+  s_256fa431ac2c84::t_f2a21b904b8a48 930-936
+schema/conf.xsd
+  s_256fa431ac2c84::t_a23fd33a456c9e 1200-1210
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d08157cf23bfe0a4c75b82ee93d8ab279791f596",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
