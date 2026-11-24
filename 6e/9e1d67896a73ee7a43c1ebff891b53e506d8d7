@@ -1,0 +1,35 @@
+exist-core/src/main/java/org/exist/DtdAttributeTypes.java
+  s_256fa431ac2c84::t_155d6f8e9f2922 31,35-37,40-42,49,61,69-70,78-79,90-92,94-96,99,102-105,107,115
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_32b826367e5cc8 60,166-167,222-225,355,596-598,648,659-661,898-900,905-907,913,915-926,932-934
+exist-core/src/main/java/org/exist/collections/IndexInfo.java
+  s_256fa431ac2c84::t_e581a928e4b09f 128
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_256fa431ac2c84::t_0c47447d87c7cf 41,64-79,90-92
+exist-core/src/test/java/org/exist/DtdAttributeTypesTest.java
+  s_256fa431ac2c84::t_12b0616dca4284 33,45-59,70,90,94-98,100-102
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRoundTripTest.java
+  s_256fa431ac2c84::t_28f83e6bcedb4e 123
+exist-core/src/test/java/org/exist/validation/DtdInternalSubsetIsolationTest.java
+  s_256fa431ac2c84::t_f8f31fd203862f 1-146
+exist-core/src/test/resources/org/exist/validation/catalog.xml
+  s_256fa431ac2c84::t_7d31f9abf779d6 32
+exist-core/src/test/resources/org/exist/validation/entities/attr-test.dtd
+  s_256fa431ac2c84::t_3134e90f292b9d 1-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6e9e1d67896a73ee7a43c1ebff891b53e506d8d7",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
