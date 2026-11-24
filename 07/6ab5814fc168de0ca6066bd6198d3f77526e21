@@ -1,0 +1,16 @@
+exist-core/src/main/java/org/exist/util/serializer/json/JSONWriter.java
+  h_ff0005bef58c9d 306-310
+exist-core/src/test/java/org/exist/util/serializer/InternalSubsetWriterTest.java
+  h_ff0005bef58c9d 71-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "076ab5814fc168de0ca6066bd6198d3f77526e21",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
