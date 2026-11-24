@@ -1,0 +1,25 @@
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_cac417cf2b4a98 907-924,950
+exist-core/src/main/java/org/exist/dom/persistent/DocumentMetadata.java
+  s_256fa431ac2c84::t_093c6690b75ecb 115
+exist-core/src/main/java/org/exist/dom/persistent/DocumentTypeImpl.java
+  s_256fa431ac2c84::t_76eb2ab3f35503 109-110,127-128,130-140
+exist-core/src/test/java/org/exist/dom/persistent/DocumentTypeImplTest.java
+  s_256fa431ac2c84::t_47447ae90807cb 74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e2ac88af90574c786a0898126c6bc4ced4eb7e2d",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
