@@ -140,9 +140,12 @@ public class IdIndexRecoveryTest {
         store(true, "s1.xml", "<r xml:id=\"c1\"/>");
         store(false, "s2.xml", "<r xml:id=\"u1\"/>");
         final String ids = "string-join(for $i in ('x','y','c1','u1') return $i || ':' || count(for $d in collection('/db/test') return id($i, $d)), ',')";
+        final String refs = "string-join(for $i in ('x','y') return $i || ':' || count(for $d in collection('/db/test') return idref($i, $d)), ',')";
         assertEquals("x:1,y:1,c1:1,u1:1", run(existEmbeddedServer, ids));
+        assertEquals("x:2,y:1", run(existEmbeddedServer, refs));
 
         crashAndRecover();
         assertEquals("x:1,y:1,c1:1,u1:0", run(existEmbeddedServer, ids), "after recovery the committed DTD document is found by its IDs");
+        assertEquals("x:2,y:1", run(existEmbeddedServer, refs), "and by its references: recovery rebuilds the entries from the stored attributes, which keep their IDREF and IDREFS type");
     }
 }
