@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_256fa431ac2c84::t_14666d06a8ab53 3712,4428
+exist-core/src/main/java/org/exist/storage/NativeValueIndex.java
+  s_256fa431ac2c84::t_fb6bbd1db93e9a 281-314,1557
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ddeafbc512c435554635a8d0f81cc65bda7622d9",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
