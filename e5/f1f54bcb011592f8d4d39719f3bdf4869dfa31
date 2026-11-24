@@ -1,0 +1,33 @@
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_03cb63d1473bdb 206-208,957-959
+  s_256fa431ac2c84::t_3ccd4c392b82a6 600
+  s_256fa431ac2c84::t_dfe10c5eb74bd0 221,227-231,658-661
+exist-core/src/main/java/org/exist/backup/SystemExport.java
+  s_256fa431ac2c84::t_86a5cc029ccd2b 170,172-173,179,187,201,213,220,240,339
+exist-core/src/main/java/org/exist/util/serializer/SAXSerializer.java
+  s_256fa431ac2c84::t_98bc383c5d33ed 119,123-127,137,147-149,151-152,155-156,205-207
+exist-core/src/main/java/org/exist/dom/persistent/BinaryDocument.java
+  s_256fa431ac2c84::t_f3f78b7ef1d93d 187,225
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_2a31d7d9fb3d95 882,909-935
+exist-core/src/test/java/org/exist/backup/SystemExportImportTest.java
+  s_256fa431ac2c84::t_bf094a002d8e39 58,66-67,103,125-128,141,187-193,265
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_256fa431ac2c84::t_daef8486990008 112,123,155-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e5f1f54bcb011592f8d4d39719f3bdf4869dfa31",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

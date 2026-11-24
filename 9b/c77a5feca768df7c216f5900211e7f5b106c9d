@@ -1,0 +1,25 @@
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_e6c260b92005ac 712-716,1330,1508,1685,1769,1810,1851,1861,1907
+exist-core/src/main/java/org/exist/dom/persistent/DocumentTypeImpl.java
+  s_256fa431ac2c84::t_fe69b8c8398d2c 60
+exist-core/src/main/java/org/exist/storage/serializers/NativeSerializer.java
+  s_256fa431ac2c84::t_dab92e5d23e669 126-128,169-170
+exist-core/src/main/java/org/exist/util/serializer/XMLWriter.java
+  s_256fa431ac2c84::t_a17f9328d46e5f 268,873-874,999
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9bc77a5feca768df7c216f5900211e7f5b106c9d",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
