@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/validation/DtdGrammarSeedingTest.java
+  s_256fa431ac2c84::t_5141f120a21037 121-123,126,145-194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "799ee02b11e87d9f6be755e730692cebc1e31d81",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
