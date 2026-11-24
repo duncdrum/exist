@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunElementWithId.java
+  s_256fa431ac2c84::t_f5735f82512aa5 156
+exist-core/src/main/java/org/exist/xquery/functions/fn/FunId.java
+  s_256fa431ac2c84::t_accc7710ca07d7 189
+exist-core/src/main/java/org/exist/xquery/functions/fn/IdMatches.java
+  s_256fa431ac2c84::t_aa2d8fccec88e6 1-59
+exist-core/src/test/xquery/xquery3/fnElementWithId.xqm
+  s_256fa431ac2c84::t_a2985da579a7f2 28-43,153-179
+exist-core/src/test/xquery/xquery3/fnId.xqm
+  s_256fa431ac2c84::t_cc4cf3b963b5cd 28-43,159-185
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2ae21fea1f016e78e56d574b51b4f6ac89161aec",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
