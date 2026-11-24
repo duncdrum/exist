@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/collections/CollectionConfiguration.java
+  s_256fa431ac2c84::t_776d16efe57e7d 211-216
+exist-core/src/main/java/org/exist/collections/MutableCollection.java
+  s_256fa431ac2c84::t_81d0f6c6423c8a 2039-2040
+exist-core/src/main/java/org/exist/util/XMLReaderObjectFactory.java
+  s_256fa431ac2c84::t_8b026546c717e8 215-221
+exist-core/src/test/java/org/exist/collections/CollectionValidationModeTest.java
+  s_256fa431ac2c84::t_aa9086bbca486e 42-44
+exist-core/src/test/java/org/exist/validation/Xsd11StoreTimeValidationTest.java
+  s_256fa431ac2c84::t_8bfb773c41e149 159-160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dde9887cc9c0112bbd83c5b659a740d8794d26ee",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
