@@ -1,0 +1,40 @@
+exist-core/src/main/java/org/exist/collections/MutableCollection.java
+  s_256fa431ac2c84::t_70657f251cbf9b 2053-2055,2059,2061-2063
+  s_256fa431ac2c84::t_81d0f6c6423c8a 2039-2040
+exist-core/src/test/java/org/exist/collections/CollectionValidationModeTest.java
+  s_256fa431ac2c84::t_a9088dfb806afa 1-38,40-42,46-88,89-91,93-94
+  s_256fa431ac2c84::t_aa9086bbca486e 43-45
+  h_ff0005bef58c9d 39,92
+exist-core/src/test/java/org/exist/validation/DatabaseInsertResourcesNoValidationTest.java
+  s_256fa431ac2c84::t_b4d51491c4981a 55
+exist-core/src/test/java/org/exist/validation/Xsd11StoreTimeValidationTest.java
+  s_256fa431ac2c84::t_650e8f5bb2767a 95
+  s_256fa431ac2c84::t_8bfb773c41e149 159-160
+exist-core/src/main/java/org/exist/collections/CollectionConfiguration.java
+  s_256fa431ac2c84::t_776d16efe57e7d 211-216
+exist-core/src/main/java/org/exist/util/XMLReaderObjectFactory.java
+  s_256fa431ac2c84::t_8b026546c717e8 215-221
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRecoveryTest.java
+  s_256fa431ac2c84::t_cc34343443c7a6 50-55,85
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "23641c21a9accc0ca15789fac7d596244521859d",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  },
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
