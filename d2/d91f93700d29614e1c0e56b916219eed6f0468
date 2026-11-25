@@ -1,0 +1,116 @@
+exist-core/src/main/java/org/exist/DtdAttributeTypes.java
+  h_ff0005bef58c9d 1-126
+exist-core/src/main/java/org/exist/Indexer.java
+  h_ff0005bef58c9d 60,83-85,163-173,206-208,218-226,356-362,368-372,589,598-600,635-667,765-766,768-769,771,773,838-840,853-855,911-918,957-959
+exist-core/src/main/java/org/exist/backup/SystemExport.java
+  h_ff0005bef58c9d 170,172-173,179,187,201,213,220,240,339,719
+exist-core/src/main/java/org/exist/collections/CollectionConfiguration.java
+  h_ff0005bef58c9d 211-216
+exist-core/src/main/java/org/exist/collections/IndexInfo.java
+  h_ff0005bef58c9d 128
+exist-core/src/main/java/org/exist/collections/MutableCollection.java
+  h_ff0005bef58c9d 2070-2071,2084-2086,2090,2092-2094
+exist-core/src/main/java/org/exist/dom/persistent/BinaryDocument.java
+  h_ff0005bef58c9d 187,225
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  h_ff0005bef58c9d 89-90,712-716,882,891-925,961,1330,1508,1685,1769,1810,1851,1861,1907
+exist-core/src/main/java/org/exist/dom/persistent/DocumentMetadata.java
+  h_ff0005bef58c9d 115
+exist-core/src/main/java/org/exist/dom/persistent/DocumentTypeImpl.java
+  h_ff0005bef58c9d 31,40,47-60,64,93,95,102-104,107-114,129-141,159-162
+exist-core/src/main/java/org/exist/indexing/AbstractMatchListener.java
+  h_ff0005bef58c9d 150-154
+exist-core/src/main/java/org/exist/storage/serializers/AbstractChainOfReceivers.java
+  h_ff0005bef58c9d 173-179
+exist-core/src/main/java/org/exist/storage/serializers/NativeSerializer.java
+  h_ff0005bef58c9d 126-128,169-170,353
+exist-core/src/main/java/org/exist/storage/serializers/XIncludeFilter.java
+  h_ff0005bef58c9d 367-372
+exist-core/src/main/java/org/exist/util/XMLReaderObjectFactory.java
+  h_ff0005bef58c9d 215-221
+exist-core/src/main/java/org/exist/util/XMLReaderPool.java
+  h_ff0005bef58c9d 25-26,33-34,45-46,104,113-127
+exist-core/src/main/java/org/exist/util/serializer/AdaptiveWriter.java
+  h_ff0005bef58c9d 303-307
+exist-core/src/main/java/org/exist/util/serializer/CharacterMappingWriter.java
+  h_ff0005bef58c9d 203-207
+exist-core/src/main/java/org/exist/util/serializer/MicroXmlWriter.java
+  h_ff0005bef58c9d 168-172
+exist-core/src/main/java/org/exist/util/serializer/Receiver.java
+  h_ff0005bef58c9d 73-87
+exist-core/src/main/java/org/exist/util/serializer/ReceiverToSAX.java
+  h_ff0005bef58c9d 171-181
+exist-core/src/main/java/org/exist/util/serializer/SAXSerializer.java
+  h_ff0005bef58c9d 119,123-127,137,147-149,151-152,155-156,205-207,436-444
+exist-core/src/main/java/org/exist/util/serializer/SerializerWriter.java
+  h_ff0005bef58c9d 84-97
+exist-core/src/main/java/org/exist/util/serializer/TEXTWriter.java
+  h_ff0005bef58c9d 227-231
+exist-core/src/main/java/org/exist/util/serializer/XHTMLWriter.java
+  h_ff0005bef58c9d 810-814
+exist-core/src/main/java/org/exist/util/serializer/XMLWriter.java
+  h_ff0005bef58c9d 268,698-724,873-874,999
+exist-core/src/main/java/org/exist/util/serializer/json/JSONWriter.java
+  h_ff0005bef58c9d 306-310
+exist-core/src/main/java/org/exist/validation/DtdEntityRestorer.java
+  h_ff0005bef58c9d 65-66,69,72,79,84,94
+exist-core/src/main/java/org/exist/validation/GrammarPool.java
+  h_ff0005bef58c9d 35,61-67,87,99-110,164-166,231-241,257,283-293
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  h_ff0005bef58c9d 24-27,31-41,46,50-57,61-65,69-78,100-182,193-199,222-233
+exist-core/src/main/java/org/exist/xquery/functions/validation/Jaxp.java
+  h_ff0005bef58c9d 59,236-237
+exist-core/src/test/java/org/exist/DtdAttributeTypesTest.java
+  h_ff0005bef58c9d 1-114
+exist-core/src/test/java/org/exist/backup/SystemExportImportTest.java
+  h_ff0005bef58c9d 58,66-67,103,125-128,141,187-193,265
+exist-core/src/test/java/org/exist/collections/CollectionValidationModeTest.java
+  h_ff0005bef58c9d 1-94
+exist-core/src/test/java/org/exist/dom/persistent/DocumentTypeImplTest.java
+  h_ff0005bef58c9d 1-92
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRecoveryTest.java
+  h_ff0005bef58c9d 1-164
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRestartTest.java
+  h_ff0005bef58c9d 1-82
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRoundTripTest.java
+  h_ff0005bef58c9d 1-173
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesTestSupport.java
+  h_ff0005bef58c9d 1-70
+exist-core/src/test/java/org/exist/util/serializer/InternalSubsetWriterTest.java
+  h_ff0005bef58c9d 1-96
+exist-core/src/test/java/org/exist/validation/DatabaseInsertResourcesNoValidationTest.java
+  h_ff0005bef58c9d 55
+exist-core/src/test/java/org/exist/validation/DtdGrammarCacheTest.java
+  h_ff0005bef58c9d 38-40,42,108-142
+exist-core/src/test/java/org/exist/validation/DtdGrammarSeedingTest.java
+  h_ff0005bef58c9d 1-282
+exist-core/src/test/java/org/exist/validation/DtdInternalSubsetIsolationTest.java
+  h_ff0005bef58c9d 1-146
+exist-core/src/test/java/org/exist/validation/ReaderGrammarPoolTest.java
+  h_ff0005bef58c9d 1-57
+exist-core/src/test/java/org/exist/validation/Xsd11StoreTimeValidationTest.java
+  h_ff0005bef58c9d 95,159-160
+exist-core/src/test/resources/org/exist/validation/catalog.xml
+  h_ff0005bef58c9d 32
+exist-core/src/test/resources/org/exist/validation/entities/attr-test.dtd
+  h_ff0005bef58c9d 1-4
+exist-distribution/src/main/config/collection.xconf.init
+  h_ff0005bef58c9d 2
+exist-distribution/src/main/config/conf.xml
+  h_ff0005bef58c9d 61,892-899,939-945
+schema/collection.xconf.xsd
+  h_ff0005bef58c9d 9,328-334
+schema/conf.xsd
+  h_ff0005bef58c9d 11,1209-1219,1258-1264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d2d91f93700d29614e1c0e56b916219eed6f0468",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
