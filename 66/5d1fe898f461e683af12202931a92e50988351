@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/util/serializer/SAXSerializer.java
+  s_d6c73a8978e367::t_0601826cee0f00 166,169,195-199,201,225-226,228
+exist-core/src/test/java/org/exist/util/serializer/SAXSerializerNamespacesTest.java
+  s_d6c73a8978e367::t_2e47046aa5360f 27-28,32-33,89-121,154,156,160-173
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "665d1fe898f461e683af12202931a92e50988351",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
