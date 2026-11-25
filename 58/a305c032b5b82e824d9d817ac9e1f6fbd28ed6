@@ -1,0 +1,45 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_d6c73a8978e367::t_e7e85be111a3d6 254-258,264-315,868-869
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  s_d6c73a8978e367::t_aa8103f2da6675 1-178
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_d6c73a8978e367::t_6c58c08ca07c5b 140-149
+exist-core/src/test/java/org/exist/xmldb/CollectionConfigurationTest.java
+  s_d6c73a8978e367::t_e8d2fcfc663689 34,1042-1052,1071,1076
+exist-core/src/test/java/org/exist/xquery/IndexKeyTypingTest.java
+  s_d6c73a8978e367::t_7bdb1ca62aa6e0 1-137
+exist-core/src/test/java/org/exist/xquery/ValueIndexTest.java
+  s_d6c73a8978e367::t_9a37e211484f6a 46-47,138,147,154,406-418
+exist-core/src/test/xquery/dates/dates.xml
+  s_d6c73a8978e367::t_00be58245a06bb 67,72,77,82,87,92,97,102,107,112,117-138,141-145
+exist-core/src/test/xquery/indexing/range.xml
+  s_d6c73a8978e367::t_157fde116bb98b 106-107
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_d6c73a8978e367::t_69089e205526b2 530-531,579-609
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_d6c73a8978e367::t_d9c513071ea756 305-308,318-341
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_d6c73a8978e367::t_3a7c16309ed200 216-230
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_d6c73a8978e367::t_4237544f74583a 1-223
+extensions/indexes/range/src/test/xquery/range/types.xql
+  s_d6c73a8978e367::t_5cef4e3788bfde 173-181,216-224,386,389-390,392
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_d6c73a8978e367::t_fe3d03ea8f8d16 10-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "58a305c032b5b82e824d9d817ac9e1f6fbd28ed6",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
