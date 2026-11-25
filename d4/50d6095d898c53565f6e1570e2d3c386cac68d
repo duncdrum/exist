@@ -1,0 +1,23 @@
+exist-core/src/test/java/org/exist/backup/SystemExportIncrementalTest.java
+  s_d6c73a8978e367::t_a6b3fa7c2fceda 1-142
+exist-core/src/main/java/org/exist/backup/SystemExport.java
+  s_d6c73a8978e367::t_f2197c1ecb1c86 82,175-177,179,216-275
+exist-core/src/main/java/org/exist/storage/serializers/NativeSerializer.java
+  s_d6c73a8978e367::t_640fe394ffa817 171-218,247-265,267-287,289-322,326-327,329,336-346,348-350,352-357,359-369,371-379,381-398,404-413,416-451
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d450d6095d898c53565f6e1570e2d3c386cac68d",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
