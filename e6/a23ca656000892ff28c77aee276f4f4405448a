@@ -1,0 +1,45 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_d6c73a8978e367::t_d014184ea8fc43 255-256,262-313,866-867
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  s_d6c73a8978e367::t_deb668810c60bf 1-178
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_d6c73a8978e367::t_6a578dc82541f9 140-149
+exist-core/src/test/java/org/exist/xmldb/CollectionConfigurationTest.java
+  s_d6c73a8978e367::t_0790f24e8920fc 34,1042-1052,1071,1076
+exist-core/src/test/java/org/exist/xquery/IndexKeyTypingTest.java
+  s_d6c73a8978e367::t_8ee449ef379828 1-137
+exist-core/src/test/java/org/exist/xquery/ValueIndexTest.java
+  s_d6c73a8978e367::t_f00dc2fac596b2 46-47,138,147,154,406-418
+exist-core/src/test/xquery/dates/dates.xml
+  s_d6c73a8978e367::t_fa1d646f0ac68d 67,72,77,82,87,92,97,102,107,112,117-138,141-145
+exist-core/src/test/xquery/indexing/range.xml
+  s_d6c73a8978e367::t_3ccac29ae71cab 106-107
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_d6c73a8978e367::t_b59f13a0f710e7 530-531,579-609
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_d6c73a8978e367::t_6d6ca494d83d41 305-308,318-341
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_d6c73a8978e367::t_f760b369ab8ac8 300-314
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_d6c73a8978e367::t_7da74a1b5dbf4e 1-223
+extensions/indexes/range/src/test/xquery/range/types.xql
+  s_d6c73a8978e367::t_d6bf048640930d 172-180,215-223,385,388-389,391
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_d6c73a8978e367::t_68172c8a7f588f 10-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e6a23ca656000892ff28c77aee276f4f4405448a",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
