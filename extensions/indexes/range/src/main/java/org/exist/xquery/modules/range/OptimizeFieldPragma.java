@@ -327,7 +327,7 @@ public class OptimizeFieldPragma extends AbstractPragma {
     private boolean keyTypeAgrees(final RangeIndexConfigField field, final Expression expression,
             final Sequence contextSequence) {
         final GeneralComparison comparison = RangeQueryRewriter.comparisonOf(expression);
-        if (comparison == null || comparison.indexKeyKind() == null) {
+        if (comparison == null) {
             return true;
         }
         try {

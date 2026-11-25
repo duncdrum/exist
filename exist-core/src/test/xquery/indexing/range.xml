@@ -103,8 +103,8 @@
         </xpath>
     </test>
     <test output="xml" trace="yes">
-        <task>Greater than on xs:string</task>
-        <code>doc("/db/test/text1.xml")//b[. > "1"]</code>
+        <task>Greater than on xs:string cast to xs:integer</task>
+        <code>doc("/db/test/text1.xml")//b[. > xs:integer("1")]</code>
         <xpath xmlns:prof="http://exist-db.org/xquery/profiling">
             //prof:index[@type eq 'range'][@optimization-level eq 'OPTIMIZED']
         </xpath>

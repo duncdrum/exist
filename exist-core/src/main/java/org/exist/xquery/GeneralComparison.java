@@ -49,7 +49,6 @@ import org.exist.xquery.value.SequenceIterator;
 import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 
-import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -250,9 +249,11 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
 
     @Override
     public Sequence canOptimizeSequence(final Sequence contextSequence) {
-        if (contextQName != null && Optimize.getQNameIndexType(context, contextSequence, contextQName) != Type.ITEM
+        final int indexType = contextQName == null ? Type.ITEM
+                : Optimize.getQNameIndexType(context, contextSequence, contextQName);
+        if (indexType != Type.ITEM
                 && !collationPreventsIndex(contextSequence)
-                && !keyTypePreventsIndex(contextSequence)) {
+                && !keyTypePreventsIndex(contextSequence, indexType)) {
             return contextSequence;
         }
         return Sequence.EMPTY_SEQUENCE;
@@ -262,10 +263,10 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
      * How the comparison compares untyped text, which decides whether a typed index may answer it (see
      * {@link IndexKeyTyping}).
      *
-     * @return the kind, or null if no rule applies and an index answers as it always did
+     * @return the kind of a comparison with truncation or a general comparison; a value comparison overrides this
      */
-    public @Nullable IndexKeyTyping.Kind indexKeyKind() {
-        return null;
+    public IndexKeyTyping.Kind indexKeyKind() {
+        return truncation == StringTruncationOperator.NONE ? IndexKeyTyping.Kind.GENERAL : IndexKeyTyping.Kind.TRUNCATION;
     }
 
     /**
@@ -273,20 +274,33 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
      * index compares the text as its own type, and the comparison may not.
      *
      * @param contextSequence the context set, to evaluate the key against
+     * @param indexType the type of the index of the context nodes
      * @return true if the comparison has to be evaluated without the index
      */
-    private boolean keyTypePreventsIndex(final Sequence contextSequence) {
-        final IndexKeyTyping.Kind kind = indexKeyKind();
-        if (kind == null) {
-            return false;
-        }
+    private boolean keyTypePreventsIndex(final Sequence contextSequence, final int indexType) {
         try {
-            return keysPreventIndex(kind, Optimize.getQNameIndexType(context, contextSequence, contextQName),
-                    Atomize.atomize(getRight().eval(contextSequence, null)));
+            return keysPreventIndex(indexKeyKind(), indexType, Atomize.atomize(getRight().eval(contextSequence, null)));
         } catch (final XPathException e) {
             // the comparison reports the error when it is evaluated; the index is no reason to say so here
             return true;
         }
+    }
+
+    /**
+     * The type of the legacy index of the nodes, or {@link Type#ITEM}, which means no index, if the index may not answer
+     * this comparison with these keys.
+     *
+     * @param nodes the nodes to compare
+     * @param keys the evaluated right operand
+     * @return the type of the index that may answer, or {@link Type#ITEM}
+     * @throws XPathException if the keys cannot be atomized
+     */
+    private int indexTypeThatMayAnswer(final NodeSet nodes, final Sequence keys) throws XPathException {
+        final int indexType = nodes.getIndexType();
+        if (indexType != Type.ITEM && keysPreventIndex(indexKeyKind(), indexType, Atomize.atomize(keys))) {
+            return Type.ITEM;
+        }
+        return indexType;
     }
 
     private boolean keysPreventIndex(final IndexKeyTyping.Kind kind, final int indexType, final Sequence keys) {
@@ -838,8 +852,8 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
             return( Sequence.EMPTY_SEQUENCE );
         }
 
-        //get the type of a possible index
-        final int indexType = nodes.getIndexType();
+        //get the type of a possible index, Type.ITEM if the keys keep it from answering
+        final int indexType = indexTypeThatMayAnswer( nodes, rightSeq );
 
         //See if we have a range index defined on the nodes in this sequence
         //remember that Type.ITEM means... no index ;-)
@@ -847,11 +861,6 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
 
             if( LOG.isTraceEnabled() ) {
                 LOG.trace("found an index of type: {}", Type.getTypeName(indexType));
-            }
-
-            final IndexKeyTyping.Kind keyKind = indexKeyKind();
-            if( keyKind != null && keysPreventIndex( keyKind, indexType, Atomize.atomize( rightSeq ) ) ) {
-                return( nodeSetCompare( nodes, contextSequence ) );
             }
 
             boolean indexScan = false;
