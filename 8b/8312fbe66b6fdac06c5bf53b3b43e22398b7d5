@@ -1,0 +1,23 @@
+exist-core/src/test/java/org/exist/xmldb/CollectionConfigurationTest.java
+  s_d6c73a8978e367::t_5004a771251335 34,1042-1052,1071,1076
+exist-core/src/test/java/org/exist/xquery/ValueIndexTest.java
+  s_d6c73a8978e367::t_4958a89793e91c 46-47,138,147,154,406-418
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_d6c73a8978e367::t_d4231eee7b0d70 10-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b8312fbe66b6fdac06c5bf53b3b43e22398b7d5",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
