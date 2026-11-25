@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_5e34de9e897872::t_72a8f53db44052 28-30,40,84-139
+extensions/indexes/range/src/test/xquery/range/eq-cardinality.xqm
+  s_5e34de9e897872::t_39b3cdeefa10e5 1-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c1671e023d7f47ffdd6879147aa4bd48ff9d948f",
+  "prompts": {},
+  "sessions": {
+    "s_5e34de9e897872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1ea269f3-fb71-4a92-bd7f-c0feda020567",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
