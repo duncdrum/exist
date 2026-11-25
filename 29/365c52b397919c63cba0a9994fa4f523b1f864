@@ -1,0 +1,39 @@
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_3394bb92eb415c 164,216,365-369,903,920
+exist-core/src/main/java/org/exist/util/XMLReaderPool.java
+  s_256fa431ac2c84::t_adaf3158c9d25e 25-26,33-34,45-46,104,113-127
+exist-core/src/main/java/org/exist/validation/DtdEntityRestorer.java
+  s_256fa431ac2c84::t_efb269b66a69d7 65-66,69,72,79,84,94
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_256fa431ac2c84::t_a7d7dfcf52b6b0 24-25,31-41,46,50-57,61-65,68-77,101-107,109-110,119,123-132,134-164,167-180,193-197,222-233
+exist-core/src/main/java/org/exist/xquery/functions/validation/Jaxp.java
+  s_256fa431ac2c84::t_ffc5d99cd321c6 59,236-237
+exist-core/src/test/java/org/exist/validation/DtdGrammarSeedingTest.java
+  s_256fa431ac2c84::t_cc179f459569ff 1-37,40,42,44-62,64-119,263-282
+exist-core/src/test/java/org/exist/validation/ReaderGrammarPoolTest.java
+  s_256fa431ac2c84::t_18b42e8798afba 1-57
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_e6c260b92005ac 712-716,1330,1508,1685,1769,1810,1851,1861,1907
+exist-core/src/main/java/org/exist/dom/persistent/DocumentTypeImpl.java
+  s_256fa431ac2c84::t_fe69b8c8398d2c 60
+exist-core/src/main/java/org/exist/storage/serializers/NativeSerializer.java
+  s_256fa431ac2c84::t_dab92e5d23e669 126-128,169-170
+exist-core/src/main/java/org/exist/util/serializer/XMLWriter.java
+  s_256fa431ac2c84::t_a17f9328d46e5f 268,873-874,999
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "29365c52b397919c63cba0a9994fa4f523b1f864",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

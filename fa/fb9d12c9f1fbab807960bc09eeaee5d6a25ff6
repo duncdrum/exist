@@ -1,0 +1,42 @@
+exist-distribution/src/main/config/conf.xml
+  s_256fa431ac2c84::t_d901a4a7c7d724 892-899
+  s_256fa431ac2c84::t_f2a21b904b8a48 939-945
+schema/conf.xsd
+  s_256fa431ac2c84::t_5e076dcb796385 1258-1264
+  s_256fa431ac2c84::t_a23fd33a456c9e 1209-1219
+exist-distribution/src/main/config/collection.xconf.init
+  s_256fa431ac2c84::t_cfddfecef158b3 2
+schema/collection.xconf.xsd
+  s_256fa431ac2c84::t_6f1d7a7df87850 9,328-334
+exist-core/src/main/java/org/exist/validation/GrammarPool.java
+  s_256fa431ac2c84::t_dd0118577c3265 35,61-67,87,99-110,164-166,231-241,257,283-293
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_256fa431ac2c84::t_ab5de6ee566774 26-27,111-118
+exist-core/src/test/java/org/exist/validation/DtdGrammarSeedingTest.java
+  s_256fa431ac2c84::t_210f7271a9613a 120-183
+exist-core/src/main/java/org/exist/util/serializer/json/JSONWriter.java
+  h_ff0005bef58c9d 306-310
+exist-core/src/test/java/org/exist/util/serializer/InternalSubsetWriterTest.java
+  h_ff0005bef58c9d 71-90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fafb9d12c9f1fbab807960bc09eeaee5d6a25ff6",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  },
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
