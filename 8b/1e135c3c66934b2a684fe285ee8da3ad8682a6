@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/storage/btree/BTreeFindFloorTest.java
+  s_ef2621e0b5f380::t_fc5b1b26921efb 123,134,152-153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b1e135c3c66934b2a684fe285ee8da3ad8682a6",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
