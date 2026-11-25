@@ -1,0 +1,121 @@
+exist-core/src/main/java/org/exist/DtdAttributeTypes.java
+  s_d6c73a8978e367::t_1088a2a15b815e 1-126
+exist-core/src/main/java/org/exist/Indexer.java
+  s_d6c73a8978e367::t_da49d9a3cada2f 60,83-85,163-173,206-208,218-226,356-362,368-372,589,598-600,635-667,765-766,768-769,771,773,838-840,853-855,911-918,957-959
+exist-core/src/main/java/org/exist/backup/SystemExport.java
+  s_d6c73a8978e367::t_1ffb12b8df7fc2 170,172-173,179,187,201,213,220,240,339,719
+exist-core/src/main/java/org/exist/collections/CollectionConfiguration.java
+  s_d6c73a8978e367::t_163d2425fd28c1 211-216
+exist-core/src/main/java/org/exist/collections/IndexInfo.java
+  s_d6c73a8978e367::t_b00c3e04665061 128
+exist-core/src/main/java/org/exist/collections/MutableCollection.java
+  s_d6c73a8978e367::t_66f81fcfa740fb 2070-2071,2084-2086,2090,2092-2094
+exist-core/src/main/java/org/exist/dom/persistent/BinaryDocument.java
+  s_d6c73a8978e367::t_bb23db8c394fa1 187,225
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_d6c73a8978e367::t_ede24a677e4dd2 89-90,712-716,882,891-925,961,1330,1508,1685,1769,1810,1851,1861,1907
+exist-core/src/main/java/org/exist/dom/persistent/DocumentMetadata.java
+  s_d6c73a8978e367::t_15c9e7d55878ae 115
+exist-core/src/main/java/org/exist/dom/persistent/DocumentTypeImpl.java
+  s_d6c73a8978e367::t_c3f673c7652ebb 31,40,47-60,64,93,95,102-104,107-114,129-141,159-162
+exist-core/src/main/java/org/exist/indexing/AbstractMatchListener.java
+  s_d6c73a8978e367::t_88229f5107466c 150-154
+exist-core/src/main/java/org/exist/storage/serializers/AbstractChainOfReceivers.java
+  s_d6c73a8978e367::t_dd5a26755b2361 173-179
+exist-core/src/main/java/org/exist/storage/serializers/NativeSerializer.java
+  s_d6c73a8978e367::t_7de53780f13ed5 126-128,169-170,353
+exist-core/src/main/java/org/exist/storage/serializers/XIncludeFilter.java
+  s_d6c73a8978e367::t_f6e47b15df68fd 367-372
+exist-core/src/main/java/org/exist/util/XMLReaderObjectFactory.java
+  s_d6c73a8978e367::t_749575d221de04 215-221
+exist-core/src/main/java/org/exist/util/XMLReaderPool.java
+  s_d6c73a8978e367::t_e59cf9d2098378 25-26,33-34,45-46,104,113-127
+exist-core/src/main/java/org/exist/util/serializer/AdaptiveWriter.java
+  s_d6c73a8978e367::t_723356fda40a81 303-307
+exist-core/src/main/java/org/exist/util/serializer/CharacterMappingWriter.java
+  s_d6c73a8978e367::t_704f8b24253352 203-207
+exist-core/src/main/java/org/exist/util/serializer/MicroXmlWriter.java
+  s_d6c73a8978e367::t_74542541fadffc 168-172
+exist-core/src/main/java/org/exist/util/serializer/Receiver.java
+  s_d6c73a8978e367::t_2d80280f7515ee 73-87
+exist-core/src/main/java/org/exist/util/serializer/ReceiverToSAX.java
+  s_d6c73a8978e367::t_4c2178c658ca88 171-181
+exist-core/src/main/java/org/exist/util/serializer/SAXSerializer.java
+  s_d6c73a8978e367::t_ae3e210db05117 119,123-127,137,147-149,151-152,155-156,205-207,436-444
+exist-core/src/main/java/org/exist/util/serializer/SerializerWriter.java
+  s_d6c73a8978e367::t_b5ca29ad457677 84-97
+exist-core/src/main/java/org/exist/util/serializer/TEXTWriter.java
+  s_d6c73a8978e367::t_0650063b464ae2 227-231
+exist-core/src/main/java/org/exist/util/serializer/XHTMLWriter.java
+  s_d6c73a8978e367::t_82c832bf77e1fa 810-814
+exist-core/src/main/java/org/exist/util/serializer/XMLWriter.java
+  s_d6c73a8978e367::t_25e2e198f47976 268,698-724,873-874,999
+exist-core/src/main/java/org/exist/util/serializer/json/JSONWriter.java
+  s_d6c73a8978e367::t_f0ca09f97e76a5 306-310
+exist-core/src/main/java/org/exist/validation/DtdEntityRestorer.java
+  s_d6c73a8978e367::t_c3a2118d1b5bed 65-66,69,72,79,84,94
+exist-core/src/main/java/org/exist/validation/GrammarPool.java
+  s_d6c73a8978e367::t_784694eaa25845 35,61-67,87,99-110,164-166,231-241,257,283-293
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_d6c73a8978e367::t_bf29dc401d42e0 24-27,31-41,46,50-57,61-65,69-78,100-182,193-199,222-233
+exist-core/src/main/java/org/exist/xquery/functions/validation/Jaxp.java
+  s_d6c73a8978e367::t_0d3940e4c8c0e8 59,236-237
+exist-core/src/test/java/org/exist/DtdAttributeTypesTest.java
+  s_d6c73a8978e367::t_bbd74393942f61 1-114
+exist-core/src/test/java/org/exist/backup/SystemExportImportTest.java
+  s_d6c73a8978e367::t_9eb9d7a20de063 58,66-67,103,125-128,141,187-193,265
+exist-core/src/test/java/org/exist/collections/CollectionValidationModeTest.java
+  s_d6c73a8978e367::t_efbd3d0243629f 1-94
+exist-core/src/test/java/org/exist/dom/persistent/DocumentTypeImplTest.java
+  s_d6c73a8978e367::t_c1b018fe639581 1-92
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRecoveryTest.java
+  s_d6c73a8978e367::t_9f41ae51fcd488 1-164
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRestartTest.java
+  s_d6c73a8978e367::t_f98ae3a640694b 1-82
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRoundTripTest.java
+  s_d6c73a8978e367::t_8698276f2f0c9e 1-173
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesTestSupport.java
+  s_d6c73a8978e367::t_a3ca8faa8df6ff 1-70
+exist-core/src/test/java/org/exist/util/serializer/InternalSubsetWriterTest.java
+  s_d6c73a8978e367::t_f51a9837d8e250 1-96
+exist-core/src/test/java/org/exist/validation/DatabaseInsertResourcesNoValidationTest.java
+  s_d6c73a8978e367::t_f204e758db6056 55
+exist-core/src/test/java/org/exist/validation/DtdGrammarCacheTest.java
+  s_d6c73a8978e367::t_ffd9ca9479b9be 38-40,42,108-142
+exist-core/src/test/java/org/exist/validation/DtdGrammarSeedingTest.java
+  s_d6c73a8978e367::t_d01c28b311c942 1-282
+exist-core/src/test/java/org/exist/validation/DtdInternalSubsetIsolationTest.java
+  s_d6c73a8978e367::t_4679722a887f55 1-146
+exist-core/src/test/java/org/exist/validation/ReaderGrammarPoolTest.java
+  s_d6c73a8978e367::t_9ed25199b3b2e8 1-57
+exist-core/src/test/java/org/exist/validation/Xsd11StoreTimeValidationTest.java
+  s_d6c73a8978e367::t_6426cd71878fb8 95,159-160
+exist-core/src/test/resources/org/exist/validation/catalog.xml
+  s_d6c73a8978e367::t_f4b8f7d9ae5be7 32
+exist-core/src/test/resources/org/exist/validation/entities/attr-test.dtd
+  s_d6c73a8978e367::t_d7f935a7b1371e 1-4
+exist-distribution/src/main/config/collection.xconf.init
+  s_d6c73a8978e367::t_f1f1a164d03bb6 2
+exist-distribution/src/main/config/conf.xml
+  s_d6c73a8978e367::t_f108abdea82fa6 61,892-899,939-945
+schema/collection.xconf.xsd
+  s_d6c73a8978e367::t_7c18f3968e3a84 9,328-334
+schema/conf.xsd
+  s_d6c73a8978e367::t_f164dc4bebf029 11,1209-1219,1258-1264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "08232e7f1f8022b3d32dd5daf0c805d4d2d8a7ae",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
