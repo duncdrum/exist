@@ -1,0 +1,93 @@
+exist-core-jmh/README.md
+  s_d6c73a8978e367::t_43b2a838ba127e 19
+exist-core-jmh/src/main/java/org/exist/storage/dom/NodeLookupBenchmark.java
+  s_d6c73a8978e367::t_1f5f03b2926b21 1-213
+exist-core/pom.xml
+  s_d6c73a8978e367::t_4c4597b0b33b8b 1399-1405
+exist-core/src/main/java/org/exist/backup/ConsistencyCheck.java
+  s_d6c73a8978e367::t_65366871aa4233 378-380
+exist-core/src/main/java/org/exist/management/client/JMXtoXML.java
+  s_d6c73a8978e367::t_6a188429fbfd81 32,138
+exist-core/src/main/java/org/exist/management/impl/JMXAgent.java
+  s_d6c73a8978e367::t_363254a6b212e4 95-96
+exist-core/src/main/java/org/exist/management/impl/NodeLookups.java
+  s_d6c73a8978e367::t_7db25a81377e4b 1-115
+exist-core/src/main/java/org/exist/management/impl/NodeLookupsMXBean.java
+  s_d6c73a8978e367::t_e03ca3a4f34737 1-83
+exist-core/src/main/java/org/exist/storage/NativeBroker.java
+  s_d6c73a8978e367::t_7f23e65317627f 53,135,138,151-152,204,230-255,272-275,3545,4481-4482
+exist-core/src/main/java/org/exist/storage/btree/BTree.java
+  s_d6c73a8978e367::t_6b4ba99133ece7 350-372,1710-1797
+exist-core/src/main/java/org/exist/storage/dom/DOMFile.java
+  s_d6c73a8978e367::t_9d3d9d0149a5da 31-32,34-35,195-231,579,583-584,1015,1049,1148,1152,1155-1156,1165-1280,1347,1350-1358,1360-1373,1375-1577,1590-1591,1594,1599,1601,1619-1621,1633-1634,1643,1657-1665,2020,2339-2340,2343,2345,2358,2376-2398,2422-2445,2447-2449,2451-2452,2454-2457,2459,2464-2465,2468-2470,2472-2544,3332,3343,3369-3370,3384-3385,3636,3661,3914-3915
+exist-core/src/main/java/org/exist/storage/dom/DocumentLookups.java
+  s_d6c73a8978e367::t_8488d8ec4b65a7 1-35
+exist-core/src/main/java/org/exist/storage/dom/EntryPlanner.java
+  s_d6c73a8978e367::t_185f598761cfdb 1-79
+exist-core/src/main/java/org/exist/storage/dom/EntryPolicy.java
+  s_d6c73a8978e367::t_48cc675c8c838d 30-33,35-39,41-42,47,50,55-64,66,79,81,83-84,88,92,94
+exist-core/src/main/java/org/exist/storage/dom/LookupBuckets.java
+  s_d6c73a8978e367::t_e19b2b6a31dcf4 1-80
+exist-core/src/main/java/org/exist/storage/dom/LookupStatistics.java
+  s_d6c73a8978e367::t_cb045f0b7bfd30 1-66
+exist-core/src/main/java/org/exist/storage/dom/RawNodeIterator.java
+  s_d6c73a8978e367::t_23874a62f567cc 73-90,108-110,115,121-127
+exist-core/src/main/java/org/exist/util/Configuration.java
+  s_d6c73a8978e367::t_598b80fab77bf7 165,167,254-256,493-503,1272-1273
+exist-core/src/test/java/org/exist/management/JmxRemoteTest.java
+  s_d6c73a8978e367::t_74fb9ac8102481 86,99-119
+exist-core/src/test/java/org/exist/management/NodeLookupsTest.java
+  s_d6c73a8978e367::t_a417ac672b2d3b 1-146
+exist-core/src/test/java/org/exist/storage/btree/BTreeFindFloorTest.java
+  s_d6c73a8978e367::t_525c7ce76a732b 1-171
+exist-core/src/test/java/org/exist/storage/dom/AnchorsBackupRestoreTest.java
+  s_d6c73a8978e367::t_8bb9ecd61cb93b 1-138
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyScenarios.java
+  s_d6c73a8978e367::t_99e2af324aa3e6 1-312
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyStressTest.java
+  s_d6c73a8978e367::t_c7169affefd62e 1-72
+exist-core/src/test/java/org/exist/storage/dom/AnchorsConcurrencyTest.java
+  s_d6c73a8978e367::t_9199a404aeccf9 1-81
+exist-core/src/test/java/org/exist/storage/dom/AnchorsRecoverTest.java
+  s_d6c73a8978e367::t_f90f8e329be491 1-189
+exist-core/src/test/java/org/exist/storage/dom/DebugPageContentsTest.java
+  s_d6c73a8978e367::t_52b08863a8e9a8 1-167
+exist-core/src/test/java/org/exist/storage/dom/DomAnchorsTest.java
+  s_d6c73a8978e367::t_e7d1f1b0a152e3 1-346
+exist-core/src/test/java/org/exist/storage/dom/DomEntriesTest.java
+  s_d6c73a8978e367::t_30d493d001b424 44-45,60-61,63,89,93,117,119,122,124,130,132,135-136,138,144,146,149-150,162-163
+exist-core/src/test/java/org/exist/storage/dom/DomLookupTest.java
+  s_d6c73a8978e367::t_ef8452ff4fefc0 28,33-35,42,45,52-53,63,65,83,85,99-269
+exist-core/src/test/java/org/exist/storage/dom/DomTestDocuments.java
+  s_d6c73a8978e367::t_83ad2774bff2d5 27-28,33-34,43,45-46,48-56,72-73,78-87,90,94-108,121-155,165-177,182,222-329
+exist-core/src/test/java/org/exist/storage/dom/EntryPlannerTest.java
+  s_d6c73a8978e367::t_d74cad3c4c0d53 1-84
+exist-core/src/test/java/org/exist/storage/dom/LookupStatisticsTest.java
+  s_d6c73a8978e367::t_a8dd2990015bed 1-199
+exist-core/src/test/java/org/exist/storage/dom/StoredNodeStringValueTest.java
+  s_d6c73a8978e367::t_6d512e529df680 1-213
+exist-core/src/test/java/org/exist/util/ConfigurationTest.java
+  s_d6c73a8978e367::t_c61893ed9936f3 26,76-122
+exist-distribution/src/main/config/conf.xml
+  s_d6c73a8978e367::t_3cd63c5b134641 61,544-551,561
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/FieldExpressionAnchorsTest.java
+  s_d6c73a8978e367::t_83aa5bd67933c5 1-201
+schema/conf.xsd
+  s_d6c73a8978e367::t_0d8ef314b8e0ba 11,751-763
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b92004d48c87eb9f99916306369360de891bdaae",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
