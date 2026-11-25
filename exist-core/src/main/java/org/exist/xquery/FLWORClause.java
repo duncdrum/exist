@@ -87,6 +87,22 @@ public interface FLWORClause extends Expression {
     Sequence preEval(Sequence seq) throws XPathException;
 
     /**
+     * Sets up the state this clause keeps between {@link #eval} and {@link #postEval}: a frame on its stack, a counter.
+     * Called once for every evaluation of a FLWOR expression, by the clause that starts it (see
+     * {@link AbstractFLWORClause#beginEvaluation(Expression, boolean)}), whether that is a {@code for}, a {@code window}
+     * or a {@code let}, and whether or not {@link #preEval} is called on this clause. Initializing in {@code preEval}
+     * is not enough: only an outer {@code for} or {@code window} calls it, and a {@code where} that evaluates in a
+     * single step does not pass it on.
+     * <p>
+     * Only this clause's own state; the caller walks the chain.
+     *
+     * @throws XPathException if an error occurs
+     */
+    default void beginEvaluation() throws XPathException {
+        // no state by default
+    }
+
+    /**
      * Called by the top FLWOR expression when it finished iteration.
      * Implemented by {@link GroupByClause}, which first collects
      * tuples into groups, then processes them in this method.

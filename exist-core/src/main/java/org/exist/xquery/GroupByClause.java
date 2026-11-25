@@ -73,9 +73,8 @@ public class GroupByClause extends AbstractFLWORClause {
     }
 
     @Override
-    public Sequence preEval(final Sequence seq) throws XPathException {
+    public void beginEvaluation() {
         stack.push(new GroupByData(new DeepEqualKeysHashStrategy(groupSpecs)));
-        return super.preEval(seq);
     }
 
     @Override
@@ -131,7 +130,9 @@ public class GroupByClause extends AbstractFLWORClause {
         }
 
         data.initialized = true;
-        return contextSequence;
+        // the groups are returned by postEval, like OrderByClause; the context sequence is null at the top level, and a
+        // let clause that starts the FLWOR expression takes a null result for no result and skips postEval
+        return Sequence.EMPTY_SEQUENCE;
     }
 
     @Override

@@ -90,10 +90,9 @@ public class CountClause extends AbstractFLWORClause {
     }
 
     @Override
-    public Sequence preEval(final Sequence seq) throws XPathException {
+    public void beginEvaluation() {
         this.step = 1;
         this.count = 0;
-        return super.preEval(seq);
     }
 
     @Override

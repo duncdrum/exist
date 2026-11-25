@@ -171,6 +171,8 @@ public class ForExpr extends BindingExpression {
             // This is possible if the input sequence is a node set and has no
             // dependencies on the current context item.
             if (isOuterFor) {
+                // the state of the clauses behind this one, whether or not preEval reaches them
+                beginEvaluation(returnExpr, false);
                 if (returnExpr instanceof WhereClause clause1) {
                     if (at == null) {
                         in = clause1.preEval(in);

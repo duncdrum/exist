@@ -55,6 +55,28 @@ public abstract class AbstractFLWORClause extends AbstractExpression implements 
         return seq;
     }
 
+    /**
+     * Calls {@link FLWORClause#beginEvaluation()} on the clause chain that starts at the given expression.
+     * <p>
+     * A {@code for} or {@code window} that is the first iterating clause walks the whole chain behind it. A {@code let}
+     * that starts the FLWOR expression stops at the first {@code for} or {@code window}: that one is the outer
+     * iterating clause and begins the chain behind it itself, when it is evaluated.
+     *
+     * @param first the return expression of the clause that starts the chain
+     * @param stopAtIterating true to stop at the first {@code for} or {@code window} clause
+     * @throws XPathException if an error occurs
+     */
+    static void beginEvaluation(final Expression first, final boolean stopAtIterating) throws XPathException {
+        Expression next = first;
+        while (next instanceof FLWORClause clause) {
+            if (stopAtIterating && (clause instanceof ForExpr || clause instanceof WindowExpr)) {
+                return;
+            }
+            clause.beginEvaluation();
+            next = clause.getReturnExpression();
+        }
+    }
+
     @Override
     public Sequence postEval(Sequence seq) throws XPathException {
         // reset variable after evaluation has completed

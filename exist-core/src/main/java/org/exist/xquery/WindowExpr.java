@@ -146,6 +146,7 @@ public class WindowExpr extends BindingExpression {
 
         // pre-eval the return expr if it is a FLWORClause and we are the outer for-loop
         if (isOuterFor && returnExpr instanceof FLWORClause flworClause) {
+            beginEvaluation(returnExpr, false);
             in = flworClause.preEval(in);
         }
 

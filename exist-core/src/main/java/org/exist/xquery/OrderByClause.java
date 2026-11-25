@@ -101,7 +101,7 @@ public class OrderByClause extends AbstractFLWORClause {
     }
 
     @Override
-    public Sequence preEval(final Sequence seq) throws XPathException {
+    public void beginEvaluation() {
         final OrderByData data = new OrderByData(orderSpecs.size());
         // Snapshot lastVar at preEval time.  data.mark is used in eval() as a reference
         // to rootClause.getStartVariable() (which equals or precedes data.mark in the chain).
@@ -110,7 +110,6 @@ public class OrderByClause extends AbstractFLWORClause {
         // variable via startVar.before.after (see eval()).
         data.mark = context.markLocalVariables(false);
         stack.push(data);
-        return super.preEval(seq);  // chains to returnExpr.preEval()
     }
 
     /**
