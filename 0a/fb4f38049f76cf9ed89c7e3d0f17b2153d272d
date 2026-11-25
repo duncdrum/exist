@@ -1,0 +1,58 @@
+exist-architecture-tests/AGENTS.md
+  h_ff0005bef58c9d 1-34
+exist-architecture-tests/pom.xml
+  h_ff0005bef58c9d 1-337
+exist-architecture-tests/src/test/java/org/exist/architecture/ArchitectureTest.java
+  h_ff0005bef58c9d 1-45
+exist-architecture-tests/src/test/java/org/exist/architecture/LocaleRules.java
+  h_ff0005bef58c9d 1-71
+exist-architecture-tests/src/test/java/org/exist/architecture/OptimizerRules.java
+  h_ff0005bef58c9d 1-138
+exist-architecture-tests/src/test/resources/archunit.properties
+  h_ff0005bef58c9d 1-27
+exist-architecture-tests/src/test/resources/archunit_store/036fc13f-0fbe-4ea6-bb6b-25319dcf06d4
+  h_ff0005bef58c9d 1-42
+exist-architecture-tests/src/test/resources/archunit_store/25233bb7-728d-44f8-9a37-45c9b700c990
+  h_ff0005bef58c9d 1-21
+exist-architecture-tests/src/test/resources/archunit_store/afd30334-9891-48d2-973d-bbe6dcb36611
+  h_ff0005bef58c9d 1-117
+exist-architecture-tests/src/test/resources/archunit_store/ff3efee3-3713-4721-9f47-74297777c3ce
+  h_ff0005bef58c9d 1-12
+exist-architecture-tests/src/test/resources/archunit_store/stored.rules
+  h_ff0005bef58c9d 1-6
+exist-core/src/main/java/org/exist/xquery/AndPredicateSplitter.java
+  h_ff0005bef58c9d 1-93
+exist-core/src/main/java/org/exist/xquery/ConstantFalsePredicate.java
+  h_ff0005bef58c9d 1-177
+exist-core/src/main/java/org/exist/xquery/ExpressionUnwrap.java
+  h_ff0005bef58c9d 1-75
+exist-core/src/main/java/org/exist/xquery/GlobalVariableInliner.java
+  h_ff0005bef58c9d 1-259
+exist-core/src/main/java/org/exist/xquery/Optimizer.java
+  h_ff0005bef58c9d 34-36,158-159,165-169,186-187,194,322-323,353,359,479
+exist-core/src/main/java/org/exist/xquery/UnionStepDistribution.java
+  h_ff0005bef58c9d 1-272
+exist-core/src/main/java/org/exist/xquery/pragmas/Optimize.java
+  h_ff0005bef58c9d 91-92
+exist-core/src/test/java/org/exist/xquery/AndPredicateSplitterTest.java
+  h_ff0005bef58c9d 1-156
+exist-core/src/test/java/org/exist/xquery/UnionStepDistributionOptimizerTest.java
+  h_ff0005bef58c9d 502
+exist-core/src/test/java/org/exist/xquery/UnionStepDistributionTest.java
+  h_ff0005bef58c9d 1-117
+exist-parent/pom.xml
+  h_ff0005bef58c9d 156,613-628
+pom.xml
+  h_ff0005bef58c9d 52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0afb4f38049f76cf9ed89c7e3d0f17b2153d272d",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
