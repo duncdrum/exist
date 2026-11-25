@@ -1,0 +1,21 @@
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRecoveryTest.java
+  s_d6c73a8978e367::t_c1ce9c691b3547 25-26,106
+exist-core/src/test/java/org/exist/util/serializer/InternalSubsetWriterTest.java
+  s_d6c73a8978e367::t_d1a68ba19fbc03 24,75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b9626d29421aef8e58f0d41b299e7eb4c5ffcc65",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
