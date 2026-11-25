@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/backup/SystemExport.java
+  s_d6c73a8978e367::t_f2197c1ecb1c86 82,175-177,179,216-275
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "45a1a369fe894de508c4b26a1e3b0b68cc5247bc",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
