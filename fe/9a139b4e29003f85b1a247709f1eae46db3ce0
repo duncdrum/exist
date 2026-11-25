@@ -1,0 +1,33 @@
+extensions/indexes/range/src/test/xquery/range/variable-filter.xqm
+  s_ef2621e0b5f380::t_97f00fa0ee7b6f 192
+  s_ef2621e0b5f380::t_0c8b4f2f280d0f 1-191,196,201
+  s_ef2621e0b5f380::t_fb2346ccea8a30 193-195,197-200,202-262
+exist-core/src/main/java/org/exist/xquery/QueryRewriter.java
+  s_ef2621e0b5f380::t_ee90364723f360 51-64
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_ef2621e0b5f380::t_20c5ea4f4322bd 48-51
+extensions/indexes/range/src/test/xquery/range/path-shapes.index-use.golden
+  s_ef2621e0b5f380::t_b31496bd410172 4-12,45,130,148
+exist-core/src/main/java/org/exist/xquery/Optimizer.java
+  s_ef2621e0b5f380::t_42a8a7ddc29bd2 245-257,265-266,281-283,291
+  s_ef2621e0b5f380::t_fe28ca0a581215 287-290
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_ef2621e0b5f380::t_138dcab36ea03e 73-74,76-85,99-111,113-133,135-143,145-156,158-169,171-173,175-177,180-189,191-192,195-223,225,229,237-240,243
+  s_ef2621e0b5f380::t_f9a8326243e52c 224,226-227,230-236,241-242
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fe9a139b4e29003f85b1a247709f1eae46db3ce0",
+  "prompts": {},
+  "sessions": {
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
