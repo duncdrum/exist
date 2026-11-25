@@ -1,0 +1,57 @@
+extensions/indexes/range/src/test/xquery/range/collation-default.xqm
+  s_5e34de9e897872::t_35fcadd96ee66a 1-183
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/IndexCollation.java
+  s_5e34de9e897872::t_86d15b9aa46f7f 63,75-87,93-94,98,115,119
+  s_5e34de9e897872::t_06e4b3f50fa7f4 1-62,64-74,88-92,95-97,99-114,116-118,120-121
+extensions/indexes/range/src/test/xquery/range/collation-filter.xqm
+  s_5e34de9e897872::t_7a5c440ee4a7a9 1-108
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_5e34de9e897872::t_33cdc1e0ad2972 38,82-83,252-253,259-283,291-322,445,536,899,1328-1359,1382-1394
+  s_5e34de9e897872::t_89a461911d60dc 287
+  s_5e34de9e897872::t_fa104995a920d4 288-290
+  s_5e34de9e897872::t_42a1b1dc692205 284-286
+extensions/indexes/range/src/test/xquery/range/collation-case-no.xqm
+  s_e5206c93453c00::t_96c24bbe15df63 1-87
+extensions/indexes/range/src/test/xquery/range/collation.xqm
+  s_e5206c93453c00::t_1ec5a35b862146 1-161
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_5e34de9e897872::t_2a1e3632c9f9ce 209,287-289,308-313
+  s_5e34de9e897872::t_b9bcf6ab806793 290-307
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_5e34de9e897872::t_7605d86df66e56 529-530,553-569,571-577
+  s_5e34de9e897872::t_91e3c129b53e05 570
+exist-core/src/main/java/org/exist/xquery/FunctionFactory.java
+  s_e5206c93453c00::t_8e29f344156600 199
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexConfigElement.java
+  s_5e34de9e897872::t_1e673556d24957 330-346
+  s_5e34de9e897872::t_de2234adcb85c5 24,42,64,99,319-329,347-348
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_5e34de9e897872::t_5c42c8ca50c4b0 5-9,101
+  s_5e34de9e897872::t_6cbc82122fd0c9 99-100
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexAnalyzer.java
+  s_5e34de9e897872::t_c4fb7acc02b90b 38,99-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4e0f8cf26e1381a29bfefc6f59ed81024fdbfcd4",
+  "prompts": {},
+  "sessions": {
+    "s_5e34de9e897872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1ea269f3-fb71-4a92-bd7f-c0feda020567",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
