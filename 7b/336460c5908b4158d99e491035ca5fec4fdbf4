@@ -1,0 +1,45 @@
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_03cb63d1473bdb 206-208,957-959
+  s_256fa431ac2c84::t_3ccd4c392b82a6 600
+  s_256fa431ac2c84::t_dfe10c5eb74bd0 221,227-231,658-661
+exist-core/src/main/java/org/exist/backup/SystemExport.java
+  s_256fa431ac2c84::t_86a5cc029ccd2b 170,172-173,179,187,201,213,220,240,339
+exist-core/src/main/java/org/exist/util/serializer/SAXSerializer.java
+  s_256fa431ac2c84::t_98bc383c5d33ed 119,123-127,137,147-149,151-152,155-156,205-207
+exist-core/src/main/java/org/exist/dom/persistent/BinaryDocument.java
+  s_256fa431ac2c84::t_f3f78b7ef1d93d 187,225
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_2a31d7d9fb3d95 882,909-935
+exist-core/src/test/java/org/exist/backup/SystemExportImportTest.java
+  s_256fa431ac2c84::t_bf094a002d8e39 58,66-67,103,125-128,141,187-193,265
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_256fa431ac2c84::t_daef8486990008 122,133,165-166
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRecoveryTest.java
+  s_256fa431ac2c84::t_cfee8ed6165b7c 1-24,27-33,35-51,58-86,88-98,99-105,107-110,113-115,127-128,130-135,142,143,159,162-163,165-166
+  s_256fa431ac2c84::t_76e2ad604c8db0 34,111-112,116-126,129,136-141,144-158,160-161,164
+exist-core/src/test/java/org/exist/storage/DtdAttributeTypesRoundTripTest.java
+  s_256fa431ac2c84::t_32419f78f42eb1 115-126
+exist-core/src/test/java/org/exist/validation/DtdGrammarSeedingTest.java
+  s_256fa431ac2c84::t_f27897fe5a2121 38-39,41,43,184,188-189,191-208,259-262
+  s_256fa431ac2c84::t_5141f120a21037 187,190,209-258
+  s_256fa431ac2c84::t_2c2c0cf047c3b9 185-186
+  s_256fa431ac2c84::t_6aec68cda543e2 63
+exist-core/src/test/java/org/exist/validation/DtdInternalSubsetIsolationTest.java
+  s_256fa431ac2c84::t_7f8a1c550f27b7 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7b336460c5908b4158d99e491035ca5fec4fdbf4",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
