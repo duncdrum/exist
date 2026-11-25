@@ -1,0 +1,76 @@
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  s_d6c73a8978e367::t_035017db8589a4 1-140
+exist-core/src/test/java/org/exist/xquery/IndexKeyTypingTest.java
+  s_d6c73a8978e367::t_cc54c77958db9c 1-137
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_d6c73a8978e367::t_f695513d54b74d 74,78-79,82-83
+exist-core/src/main/java/org/exist/dom/persistent/DocumentTypeImpl.java
+  s_256fa431ac2c84::t_4ec2444074ff26 101
+  s_256fa431ac2c84::t_76eb2ab3f35503 99-100
+exist-core/src/main/java/org/exist/util/serializer/XHTMLWriter.java
+  s_256fa431ac2c84::t_f90519da69bf35 904,923
+exist-core/src/main/java/org/exist/Indexer.java
+  s_256fa431ac2c84::t_3394bb92eb415c 830,840
+  s_256fa431ac2c84::t_dfe10c5eb74bd0 202-206
+  s_d6c73a8978e367::t_50b774c9e2039a 728
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_256fa431ac2c84::t_a7d7dfcf52b6b0 41
+exist-core/src/main/java/org/exist/dom/persistent/DocumentImpl.java
+  s_256fa431ac2c84::t_2a31d7d9fb3d95 895-904
+exist-core/src/main/java/org/exist/storage/serializers/NativeSerializer.java
+  s_d6c73a8978e367::t_acafdfc6e70522 145
+  s_d6c73a8978e367::t_640fe394ffa817 324
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f737143a0f15492319581bb9d9ea77e4130c0fc7",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  },
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_62dba22bee4c1d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "baaec269-c1fa-400a-96c1-cec90b99f3af",
+        "model": "default"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_e5206c93453c00": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "91285408-4d6c-4cd6-9ef8-568e634eef07",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_ef2621e0b5f380": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7acbff4d-42b5-4337-8320-e69c4258fcf6",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
