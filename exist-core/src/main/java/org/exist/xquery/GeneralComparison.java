@@ -49,6 +49,7 @@ import org.exist.xquery.value.SequenceIterator;
 import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -250,10 +251,50 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
     @Override
     public Sequence canOptimizeSequence(final Sequence contextSequence) {
         if (contextQName != null && Optimize.getQNameIndexType(context, contextSequence, contextQName) != Type.ITEM
-                && !collationPreventsIndex(contextSequence)) {
+                && !collationPreventsIndex(contextSequence)
+                && !keyTypePreventsIndex(contextSequence)) {
             return contextSequence;
         }
         return Sequence.EMPTY_SEQUENCE;
+    }
+
+    /**
+     * How the comparison compares untyped text, which decides whether a typed index may answer it (see
+     * {@link IndexKeyTyping}).
+     *
+     * @return the kind, or null if no rule applies and an index answers as it always did
+     */
+    public @Nullable IndexKeyTyping.Kind indexKeyKind() {
+        return null;
+    }
+
+    /**
+     * Whether the type of the key keeps the legacy index of the context nodes from answering this comparison: the
+     * index compares the text as its own type, and the comparison may not.
+     *
+     * @param contextSequence the context set, to evaluate the key against
+     * @return true if the comparison has to be evaluated without the index
+     */
+    private boolean keyTypePreventsIndex(final Sequence contextSequence) {
+        final IndexKeyTyping.Kind kind = indexKeyKind();
+        if (kind == null) {
+            return false;
+        }
+        try {
+            return keysPreventIndex(kind, Optimize.getQNameIndexType(context, contextSequence, contextQName),
+                    Atomize.atomize(getRight().eval(contextSequence, null)));
+        } catch (final XPathException e) {
+            // the comparison reports the error when it is evaluated; the index is no reason to say so here
+            return true;
+        }
+    }
+
+    private boolean keysPreventIndex(final IndexKeyTyping.Kind kind, final int indexType, final Sequence keys) {
+        if (IndexKeyTyping.answers(kind, indexType, keys)) {
+            return false;
+        }
+        IndexKeyTyping.reportDeclined(this, "Range index");
+        return true;
     }
 
     /**
@@ -806,6 +847,11 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
 
             if( LOG.isTraceEnabled() ) {
                 LOG.trace("found an index of type: {}", Type.getTypeName(indexType));
+            }
+
+            final IndexKeyTyping.Kind keyKind = indexKeyKind();
+            if( keyKind != null && keysPreventIndex( keyKind, indexType, Atomize.atomize( rightSeq ) ) ) {
+                return( nodeSetCompare( nodes, contextSequence ) );
             }
 
             boolean indexScan = false;

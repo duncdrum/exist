@@ -31,6 +31,7 @@ import static org.exist.TestUtils.*;
 import static org.exist.collections.CollectionConfiguration.DEFAULT_COLLECTION_CONFIG_FILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -1038,6 +1039,17 @@ public class CollectionConfigurationTest {
         assertTrue(exceptionCaught);
     }
 
+    /**
+     * A value comparison compares the text as a string, so a number as its key is a type error, with the index too.
+     *
+     * @param service the query service
+     * @param query a query with such a value comparison
+     */
+    private static void assertValueComparisonFails(final XPathQueryService service, final String query) {
+        final XMLDBException e = assertThrows(XMLDBException.class, () -> service.query(query));
+        assertTrue(e.getMessage().contains("XPTY0004"), e.getMessage());
+    }
+
     @Test
     void rangeIndexOverAttributes() throws XMLDBException {
        Collection testCollection = DatabaseManager.getCollection(XmldbURI.LOCAL_DB + "/" + TEST_COLLECTION);
@@ -1056,14 +1068,12 @@ public class CollectionConfigurationTest {
        ResourceSet result = service.query("//test[@x = 0]");
        assertEquals(1, result.getSize());
 
-       result = service.query("//test[@x eq 0]");
-       assertEquals(1, result.getSize());
+       assertValueComparisonFails(service, "//test[@x eq 0]");
 
        result = service.query("//test[(# exist:force-index-use #) { @x = 0 }]");
        assertEquals(1, result.getSize());
 
-       result = service.query("//test[(# exist:force-index-use #) { @x eq 0 }]");
-       assertEquals(1, result.getSize());
+       assertValueComparisonFails(service, "//test[(# exist:force-index-use #) { @x eq 0 }]");
 
        result = service.query("util:index-key-occurrences(/test//@c, xs:dateTime(\"2002-12-07T12:20:46.275+01:00\") )");
        assertEquals(1, result.getSize());

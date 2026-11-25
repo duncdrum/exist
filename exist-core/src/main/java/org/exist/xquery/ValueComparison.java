@@ -67,6 +67,16 @@ public class ValueComparison extends GeneralComparison {
 		super(context, left, right, relation);
 	}
 
+	/**
+	 * A value comparison compares untyped text as {@code xs:string}, whatever the key is.
+	 *
+	 * @return {@link IndexKeyTyping.Kind#VALUE}
+	 */
+	@Override
+	public IndexKeyTyping.Kind indexKeyKind() {
+		return IndexKeyTyping.Kind.VALUE;
+	}
+
 	protected Sequence genericCompare(Sequence contextSequence, Item contextItem) throws XPathException {
         if (context.getProfiler().isEnabled())
             {context.getProfiler().message(this, Profiler.OPTIMIZATION_FLAGS, "OPTIMIZATION CHOICE", "genericCompare");}  

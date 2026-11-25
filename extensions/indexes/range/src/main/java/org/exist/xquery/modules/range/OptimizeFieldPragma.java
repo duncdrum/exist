@@ -302,6 +302,10 @@ public class OptimizeFieldPragma extends AbstractPragma {
         if (field == null) {
             return null;
         }
+        if (!keyTypeAgrees(field, expression, contextSequence)) {
+            IndexKeyTyping.reportDeclined(expression, "Range index field " + field.getName());
+            return null;
+        }
         final GeneralComparison comparison = IndexCollation.namingCollation(expression);
         if (comparison == null || IndexCollation.answers(comparison, contextSequence, config.getCollator(),
                 field.isCaseSensitive(), config.hasFilters(), RangeQueryRewriter.getOperator(expression))) {
@@ -309,6 +313,30 @@ public class OptimizeFieldPragma extends AbstractPragma {
         }
         IndexCollation.reportDeclined(expression, "Range index field " + field.getName());
         return null;
+    }
+
+    /**
+     * Whether a field compares in the type the comparison compares in, for the keys it has now. The field's lookup
+     * evaluates its key the same way, against the whole context.
+     *
+     * @param field the field that matches the predicate's path
+     * @param expression the predicate's expression
+     * @param contextSequence the context, to evaluate the key against
+     * @return true if the field may answer the comparison
+     */
+    private boolean keyTypeAgrees(final RangeIndexConfigField field, final Expression expression,
+            final Sequence contextSequence) {
+        final GeneralComparison comparison = RangeQueryRewriter.comparisonOf(expression);
+        if (comparison == null || comparison.indexKeyKind() == null) {
+            return true;
+        }
+        try {
+            return IndexKeyTyping.answers(comparison.indexKeyKind(), field.getType(),
+                    Atomize.atomize(comparison.getRight().eval(contextSequence, null)));
+        } catch (final XPathException e) {
+            // the comparison reports the error when it is evaluated; the index is no reason to say so here
+            return false;
+        }
     }
 
     private @Nullable Expression getKeyArg(final Expression expression) {

@@ -7,6 +7,12 @@ collation-default.xqm: eq-field-same-collation-uses-index
 collation.xqm: eq-without-collation-collated-range-uses-index
 collation.xqm: equals-without-collation-range-uses-index
 collation.xqm: starts-with-codepoint-range-uses-index
+comparison-typing.xqm: fields-answer-a-general-comparison
+comparison-typing.xqm: fields-answer-a-string-key
+comparison-typing.xqm: legacy-answers-a-general-comparison
+comparison-typing.xqm: legacy-answers-a-string-key
+comparison-typing.xqm: range-answers-a-general-comparison
+comparison-typing.xqm: range-answers-a-string-key
 conditions.xql: multiple-conditions
 conditions.xql: multiple-conditions-inbetween
 conditions.xql: optimize-contains

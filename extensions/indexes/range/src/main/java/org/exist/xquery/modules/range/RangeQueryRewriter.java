@@ -201,6 +201,21 @@ public class RangeQueryRewriter extends QueryRewriter {
         return null;
     }
 
+    /**
+     * The comparison a predicate's expression stands for: the comparison itself, or the one a {@link Lookup} replaced.
+     *
+     * @param expression a predicate's expression
+     * @return the comparison, or null if the expression is not a comparison or a lookup that replaced one
+     */
+    protected static @Nullable GeneralComparison comparisonOf(final Expression expression) {
+        Expression candidate = expression;
+        if (expression instanceof final InternalFunctionCall call) {
+            final Function function = call.getFunction();
+            candidate = function instanceof final Lookup lookup ? lookup.getFallback() : function;
+        }
+        return candidate instanceof final GeneralComparison comparison ? comparison : null;
+    }
+
     protected static List<LocationStep> getStepsToOptimize(Expression expr) {
         if (expr instanceof GeneralComparison comparison) {
             return BasicExpressionVisitor.findLocationSteps(comparison.getLeft());

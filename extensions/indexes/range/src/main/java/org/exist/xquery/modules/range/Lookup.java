@@ -527,7 +527,8 @@ public class Lookup extends Function implements Optimizable, IndexUseReporter {
         }
 
         canOptimize = optimizables != null && optimizables.getItemCount() == contextSequence.getItemCount()
-                && collationsAgree(contextSequence, configs.values());
+                && collationsAgree(contextSequence, configs.values())
+                && keyTypesAgree(contextSequence, configs.values());
         usesCollation = usesCollationCount == contextSequence.getItemCount();
 
         if (canOptimize && isRewrittenMatches() && getOperator() == RangeIndex.Operator.MATCH) {
@@ -569,6 +570,37 @@ public class Lookup extends Function implements Optimizable, IndexUseReporter {
             if (config.isPresent() && !IndexCollation.answers(comparison, contextSequence, config.get().getCollator(),
                     config.get().isCaseSensitive(null), config.get().hasFilters(), getOperator())) {
                 IndexCollation.reportDeclined(this, "New range index");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Whether every index found compares in the type the comparison this lookup replaced compares in, for the keys it
+     * has now. An explicit {@code range:} function has no such comparison: it types its key by the index, by design.
+     *
+     * @param contextSequence the context, to evaluate the keys against
+     * @param configs the index configurations found for the context's collections
+     * @return true if the index may answer the comparison
+     */
+    private boolean keyTypesAgree(final Sequence contextSequence,
+            final Iterable<Optional<RangeIndexConfigElement>> configs) {
+        final IndexKeyTyping.Kind kind = fallback instanceof final GeneralComparison comparison
+                ? comparison.indexKeyKind() : null;
+        if (kind == null) {
+            return true;
+        }
+        final Sequence keys;
+        try {
+            keys = Atomize.atomize(getArgument(1).eval(contextSequence, null));
+        } catch (final XPathException e) {
+            // the comparison reports the error when it is evaluated; the index is no reason to say so here
+            return false;
+        }
+        for (final Optional<RangeIndexConfigElement> config : configs) {
+            if (config.isPresent() && !IndexKeyTyping.answers(kind, config.get().getType(), keys)) {
+                IndexKeyTyping.reportDeclined(this, "New range index");
                 return false;
             }
         }

@@ -21,6 +21,9 @@
  */
 package org.exist.xquery;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.Type;
 
 /**
@@ -52,6 +55,8 @@ public final class IndexKeyTyping {
         TRUNCATION
     }
 
+    private static final Logger LOG = LogManager.getLogger(IndexKeyTyping.class);
+
     private IndexKeyTyping() {
         // static helpers only
     }
@@ -73,6 +78,39 @@ public final class IndexKeyTyping {
             case VALUE -> keyTypes.length <= 1 && isString(indexType) && allStringLike(keyTypes);
             case GENERAL -> allAgree(indexType, keyTypes);
         };
+    }
+
+    /**
+     * Whether an index of the given type may answer a comparison with the given keys.
+     *
+     * @param kind how the comparison compares untyped text
+     * @param indexType the type the index was configured with; {@link Type#ITEM} if it has none, which converts no key
+     * @param keys the atomized keys
+     * @return true if the index may answer the comparison, false if the comparison has to be evaluated as written
+     */
+    public static boolean answers(final Kind kind, final int indexType, final Sequence keys) {
+        final int[] keyTypes = new int[keys.getItemCount()];
+        for (int i = 0; i < keyTypes.length; i++) {
+            keyTypes[i] = keys.itemAt(i).getType();
+        }
+        return answers(kind, indexType, keyTypes);
+    }
+
+    /**
+     * Reports that an index steps aside because of the type of the key, so that a slower query can be explained.
+     *
+     * @param expression the expression the message is about
+     * @param what the index, as the message names it
+     */
+    public static void reportDeclined(final Expression expression, final String what) {
+        final String message = what + " not used: the comparison does not compare in the type of the index";
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("{}: {}", message, expression);
+        }
+        final Profiler profiler = expression.getContext().getProfiler();
+        if (profiler.isEnabled()) {
+            profiler.message(expression, Profiler.OPTIMIZATIONS, "OPTIMIZATION", message);
+        }
     }
 
     private static boolean allStringLike(final int[] keyTypes) {
