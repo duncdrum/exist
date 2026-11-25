@@ -1,0 +1,21 @@
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  s_d6c73a8978e367::t_035017db8589a4 1-140
+exist-core/src/test/java/org/exist/xquery/IndexKeyTypingTest.java
+  s_d6c73a8978e367::t_cc54c77958db9c 1-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2ae92004da8351696da571ed73917c57471302b3",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
