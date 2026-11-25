@@ -1,0 +1,27 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_d6c73a8978e367::t_4f554b18a3a47c 847
+  s_d6c73a8978e367::t_62c12be95a7149 264,266-267
+  s_d6c73a8978e367::t_a0ec42211be94e 279
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_d6c73a8978e367::t_3f7bcc9a8d3cd3 330
+extensions/indexes/range/src/test/xquery/range/types.xql
+  s_d6c73a8978e367::t_e6afccbd4788ed 173-181,216-224,386,389-390,392
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_d6c73a8978e367::t_81dce6c7017470 25-29,152-171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b9c182cab5331ef281128f59cf60d0afe21a63d9",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
