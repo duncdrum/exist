@@ -1,0 +1,35 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_d6c73a8978e367::t_62c12be95a7149 264,266-267
+  s_d6c73a8978e367::t_a0ec42211be94e 279
+  s_d6c73a8978e367::t_021b109cfb830e 287-303,853-854
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_d6c73a8978e367::t_3f7bcc9a8d3cd3 330
+extensions/indexes/range/src/test/xquery/range/types.xql
+  s_d6c73a8978e367::t_e6afccbd4788ed 173-181,216-224,386,389-390,392
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_d6c73a8978e367::t_81dce6c7017470 25-29,152-171
+exist-core/src/test/java/org/exist/xmldb/CollectionConfigurationTest.java
+  s_d6c73a8978e367::t_5004a771251335 34,1042-1052,1071,1076
+exist-core/src/test/java/org/exist/xquery/ValueIndexTest.java
+  s_d6c73a8978e367::t_4958a89793e91c 46-47,138,147,154,406-418
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_d6c73a8978e367::t_d4231eee7b0d70 10-15
+exist-core/src/test/xquery/indexing/range.xml
+  s_d6c73a8978e367::t_b25c80ac9ab0f9 106-107
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ba7388b7eac0419b7cbe571202256fab1ce37091",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
