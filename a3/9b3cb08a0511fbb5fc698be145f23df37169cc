@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/backup/SystemExportIncrementalTest.java
+  s_d6c73a8978e367::t_a6b3fa7c2fceda 1-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a39b3cb08a0511fbb5fc698be145f23df37169cc",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
