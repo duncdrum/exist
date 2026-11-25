@@ -1,0 +1,29 @@
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexAnalyzer.java
+  s_5e34de9e897872::t_c4fb7acc02b90b 38,90,99-116
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexConfigElement.java
+  s_5e34de9e897872::t_1e673556d24957 330,332-333,335-336,340-341,343,345-346
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_5e34de9e897872::t_91e3c129b53e05 570
+extensions/indexes/range/src/test/xquery/range/collation-filter.xqm
+  s_5e34de9e897872::t_7a5c440ee4a7a9 1-108
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/IndexCollation.java
+  s_5e34de9e897872::t_86d15b9aa46f7f 75,80-87
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_5e34de9e897872::t_b9bcf6ab806793 290-291,306-307
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9311de0cf03c59d7cad1905d33ad1e44ca6e2561",
+  "prompts": {},
+  "sessions": {
+    "s_5e34de9e897872": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1ea269f3-fb71-4a92-bd7f-c0feda020567",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
