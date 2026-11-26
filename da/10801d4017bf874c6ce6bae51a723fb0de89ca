@@ -1,0 +1,43 @@
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndexWorker.java
+  s_545f96ebe4ea56::t_31485de04b4c96 2653
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneUtil.java
+  s_545f96ebe4ea56::t_ab3851d3bd46ca 24-25,52-64
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexWorker.java
+  s_545f96ebe4ea56::t_e1dedaed6fb7b9 575
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/LuceneNodeIdTermsTest.java
+  s_545f96ebe4ea56::t_87d3bc0d23563e 167-173
+extensions/indexes/range/src/test/java/org/exist/indexing/range/RangeNodeIdTermsTest.java
+  s_545f96ebe4ea56::t_896ca732b5b31d 165-171
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/LuceneRemovalTest.java
+  s_545f96ebe4ea56::t_6d05ca54e58cfd 1-160,186-216
+  s_545f96ebe4ea56::t_2740416aa18487 161-185
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/LuceneWildcardNameScanTest.java
+  s_545f96ebe4ea56::t_bc4532e816f828 1-128
+extensions/indexes/lucene/src/test/xquery/lucene/index-keys-scan.xqm
+  s_545f96ebe4ea56::t_e19cd2d11d72a2 1-115
+extensions/indexes/range/src/test/java/org/exist/indexing/range/RangeRemovalTest.java
+  s_545f96ebe4ea56::t_5017275de209b4 1-156,159-191
+  s_545f96ebe4ea56::t_92378941bbc24a 157-158
+extensions/indexes/range/src/test/java/org/exist/indexing/range/RangeWildcardNameScanTest.java
+  s_545f96ebe4ea56::t_d8f0c52fef42d9 1-129
+extensions/indexes/range/src/test/xquery/range/index-keys-scan.xqm
+  s_545f96ebe4ea56::t_d7a7328dffcae5 1-115
+extensions/indexes/lucene/src/test/java/xquery/lucene/ReindexScopeVectorTest.java
+  s_545f96ebe4ea56::t_f2db42c905c91e 146-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "da10801d4017bf874c6ce6bae51a723fb0de89ca",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
