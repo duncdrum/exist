@@ -1,0 +1,21 @@
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/XMLToQuery.java
+  s_545f96ebe4ea56::t_d3f0157142c656 261
+extensions/indexes/lucene/src/test/xquery/lucene/xml-span-first.xqm
+  s_545f96ebe4ea56::t_7bf6cfd88fa6e9 1-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "6f5447378115f598e4080e5e1898bd92eec8e5a8",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

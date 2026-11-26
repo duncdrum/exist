@@ -1,0 +1,21 @@
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/XMLToQuery.java
+  s_545f96ebe4ea56::t_583c97e2723113 27,54,122-130,132,168-171,173-174,177-186,192-195
+extensions/indexes/lucene/src/test/xquery/lucene/xml-phrase-positions.xqm
+  s_545f96ebe4ea56::t_050e7bc2c58f4c 1-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "abfd7bb0f95d0e2c2b5f6bf885ae3dd38a0add8f",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
