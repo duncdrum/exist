@@ -1,0 +1,47 @@
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  s_545f96ebe4ea56::t_2d42e572766f16 1-599
+extensions/indexes/lucene/src/test/java/xquery/lucene/PathShapesTest.java
+  s_545f96ebe4ea56::t_dab3e467e28089 1-444
+extensions/indexes/lucene/src/test/xquery/lucene/ft-query-forms.xqm
+  s_545f96ebe4ea56::t_30d62bb1cb1622 211,221
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.xqm
+  s_545f96ebe4ea56::t_e655e80006ca8b 1-672
+extensions/indexes/lucene/src/test/xquery/lucene/vector-embed.xqm
+  s_545f96ebe4ea56::t_1f4bc1e4540e0a 61,64,90,93
+extensions/indexes/lucene/src/test/xquery/unoptimized-known-failures.lst
+  s_545f96ebe4ea56::t_41f14e084ca38c 4-15
+extensions/indexes/ngram/src/test/java/xquery/ngram/PathShapesTest.java
+  s_545f96ebe4ea56::t_5783e7c486db15 1-171
+extensions/indexes/ngram/src/test/xquery/ngram/path-shapes.xqm
+  s_545f96ebe4ea56::t_9cb3b683c3a5a4 1-277
+extensions/indexes/ngram/src/test/xquery/unoptimized-known-failures.lst
+  s_545f96ebe4ea56::t_176132c66f8017 6-9
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_545f96ebe4ea56::t_198f520621948a 262-264
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/LiteralFlagsRewriteTest.java
+  s_545f96ebe4ea56::t_9003432451a720 1-132
+extensions/indexes/range/src/test/java/xquery/range/PathShapesTest.java
+  s_545f96ebe4ea56::t_cb118d12722285 1-864
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  s_545f96ebe4ea56::t_51eeace741e74f 1-559
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  s_545f96ebe4ea56::t_b0a2d930d0bd39 1-790
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_545f96ebe4ea56::t_54d68ffe133d5c 168-177
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "41881e77913a29e9d353232432daf9fb2586cc37",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
