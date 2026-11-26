@@ -68,6 +68,22 @@ final class NumericKey {
     }
 
     /**
+     * The point that a converter made of a key: the value of the Lucene field it returned.
+     *
+     * @param numericValue the value of the field, one of the four kinds
+     * @return the point, or null if the field holds no number
+     */
+    static @Nullable NumericKey of(@Nullable final Number numericValue) {
+        return switch (numericValue) {
+            case final Long l -> new NumericKey(l);
+            case final Integer i -> new NumericKey(i);
+            case final Double d -> new NumericKey(d);
+            case final Float f -> new NumericKey(f);
+            case null, default -> null;
+        };
+    }
+
+    /**
      * The query for the nodes that hold exactly this value.
      *
      * @param field the Lucene field

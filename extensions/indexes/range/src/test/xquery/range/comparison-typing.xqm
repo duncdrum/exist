@@ -340,3 +340,36 @@ declare %test:assertEquals("l1,l2") function ct:converter-string-field-steps-asi
 declare %test:assertEquals("l1,l2") function ct:converter-string-steps-aside-for-the-default-collation() {
     string-join(util:eval("declare default collation 'http://www.w3.org/2013/collation/UCA?lang=en;strength=primary'; collection('/db/ct-converter')//ctl[cls = 'FOO']/@id/string()"), ",")
 };
+
+(:
+ : The key goes through the converter as the stored text did: the index holds "foo" for Foo, foo and " foo ", so the key
+ : Foo, FOO or " foo " finds all three, whichever operator asks. A pattern is not text and is not converted.
+ :)
+
+declare %test:assertEquals("l1,l2,l4") function ct:converter-string-key-is-converted() {
+    string-join(collection("/db/ct-converter")//ctl[cls = "Foo"]/@id/string(), ",")
+};
+
+declare %test:assertEquals("l1,l2,l4") function ct:converter-string-field-key-is-converted() {
+    string-join(collection("/db/ct-converter")//ctl[clf = " FOO "]/@id/string(), ",")
+};
+
+declare %test:assertEquals("l3") function ct:converter-string-key-is-converted-for-not-equal() {
+    string-join(collection("/db/ct-converter")//ctl[cls != "FOO"]/@id/string(), ",")
+};
+
+declare %test:assertEquals("l1,l2,l4") function ct:converter-string-key-is-converted-for-starts-with() {
+    string-join(collection("/db/ct-converter")//ctl[starts-with(cls, "Fo")]/@id/string(), ",")
+};
+
+declare %test:assertEquals("l1,l2,l4") function ct:converter-string-key-is-converted-for-contains() {
+    string-join(collection("/db/ct-converter")//ctl[contains(cls, "OO")]/@id/string(), ",")
+};
+
+declare %test:assertEquals("l1,l2,l4") function ct:converter-string-key-is-converted-for-ends-with() {
+    string-join(collection("/db/ct-converter")//ctl[ends-with(cls, "OO")]/@id/string(), ",")
+};
+
+declare %test:assertEquals("l3") function ct:converter-string-key-is-converted-for-less-than() {
+    string-join(collection("/db/ct-converter")//ctl[cls < "FOO"]/@id/string(), ",")
+};

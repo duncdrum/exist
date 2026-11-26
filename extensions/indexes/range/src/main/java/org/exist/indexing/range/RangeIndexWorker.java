@@ -47,6 +47,7 @@ import org.apache.lucene.util.automaton.TooComplexToDeterminizeException;
 import org.exist.collections.Collection;
 import org.exist.indexing.*;
 import org.exist.indexing.StreamListener.ReindexMode;
+import org.exist.indexing.range.conversion.TypeConverter;
 import org.exist.indexing.lucene.BinaryTokenStream;
 import org.exist.indexing.lucene.LuceneFieldNames;
 import org.exist.indexing.lucene.LuceneIndexWorker;
@@ -142,6 +143,27 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
      */
     public Query toQuery(String field, QName qname, AtomicValue content, RangeIndex.Operator operator, DocumentSet docs, int matchFlags,
             boolean xpathSyntax) throws XPathException {
+        // a converter defines what the index holds for a text, so the key goes through it as the stored text did;
+        // a pattern is not text
+        final TypeConverter converter = operator == RangeIndex.Operator.MATCH ? null : getTypeConverter(qname, field, docs);
+        if (converter == null) {
+            return toQueryForKey(field, qname, content, operator, docs, matchFlags, xpathSyntax);
+        }
+        final org.apache.lucene.document.Field converted = converter.toField(field, content.getStringValue());
+        if (converted == null) {
+            // a text the converter does not index: no stored text is equal to it
+            return new MatchNoDocsQuery();
+        }
+        final NumericKey point = NumericKey.of(converted.numericValue());
+        if (point != null) {
+            return pointQuery(field, point, operator);
+        }
+        final AtomicValue text = converted.stringValue() != null ? new StringValue(converted.stringValue()) : content;
+        return toQueryForKey(field, qname, text, operator, docs, matchFlags, xpathSyntax);
+    }
+
+    private Query toQueryForKey(String field, QName qname, AtomicValue content, RangeIndex.Operator operator, DocumentSet docs, int matchFlags,
+            boolean xpathSyntax) throws XPathException {
         final int type = content.getType();
         BytesRefBuilder bytes;
         BytesRef key = null;
@@ -201,13 +223,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         // numbers, dates and times are Lucene points, asked for by NumericKey; everything else is a term
         final NumericKey numeric = NumericKey.of(content);
         if (numeric != null) {
-            if (operator == RangeIndex.Operator.EQ) {
-                return numeric.exact(field);
-            }
-            if (operator == RangeIndex.Operator.NE) {
-                return not(numeric.exact(field));
-            }
-            return numeric.range(field, operator);
+            return pointQuery(field, numeric, operator);
         }
         if (operator == RangeIndex.Operator.EQ) {
             return new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
@@ -225,6 +241,16 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         } else {
             return new TermRangeQuery(field, key, null, includeLower, includeUpper);
         }
+    }
+
+    private static Query pointQuery(final String field, final NumericKey point, final RangeIndex.Operator operator) {
+        if (operator == RangeIndex.Operator.EQ) {
+            return point.exact(field);
+        }
+        if (operator == RangeIndex.Operator.NE) {
+            return not(point.exact(field));
+        }
+        return point.range(field, operator);
     }
 
     /** Every node that the query does not match. */
@@ -887,6 +913,22 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
      * Return the analyzer to be used for the given field or qname. Either field
      * or qname should be specified.
      */
+    private TypeConverter getTypeConverter(QName qname, String fieldName, DocumentSet docs) {
+        for (Iterator<Collection> i = docs.getCollectionIterator(); i.hasNext(); ) {
+            final IndexSpec idxConf = i.next().getIndexConfiguration(broker);
+            if (idxConf != null) {
+                final RangeIndexConfig config = (RangeIndexConfig) idxConf.getCustomIndexSpec(RangeIndex.ID);
+                if (config != null) {
+                    final TypeConverter converter = config.getTypeConverter(qname, fieldName);
+                    if (converter != null) {
+                        return converter;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     private boolean isCaseSensitive(QName qname, String fieldName, DocumentSet docs) {
         for (Iterator<Collection> i = docs.getCollectionIterator(); i.hasNext(); ) {
             Collection collection = i.next();

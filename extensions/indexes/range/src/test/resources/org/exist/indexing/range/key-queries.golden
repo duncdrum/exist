@@ -218,6 +218,56 @@ ktime | xs:time 23:59:59+01:00 | ends-with | ktime:[94690799000 TO 9223372036854
 ktime | xs:time 23:59:59+01:00 | starts-with | ktime:[94690799000 TO 9223372036854775807]
 ktime | xs:time 23:59:59+01:00 | contains | ktime:[94690799000 TO 9223372036854775807]
 ktime | xs:time 23:59:59+01:00 | matches | ktime:[94690799000 TO 9223372036854775807]
+kconvstring | xs:string Foo | gt | kconvstring:{foo TO *}
+kconvstring | xs:string Foo | lt | kconvstring:{* TO foo}
+kconvstring | xs:string Foo | eq | kconvstring:foo
+kconvstring | xs:string Foo | ge | kconvstring:[foo TO *}
+kconvstring | xs:string Foo | le | kconvstring:{* TO foo]
+kconvstring | xs:string Foo | ne | +kconvstring:* -kconvstring:foo
+kconvstring | xs:string Foo | ends-with | kconvstring:*foo
+kconvstring | xs:string Foo | starts-with | kconvstring:foo*
+kconvstring | xs:string Foo | contains | kconvstring:*foo*
+kconvstring | xs:string Foo | matches | kconvstring:/Foo/
+kconvstring | xs:string  FOO  | gt | kconvstring:{foo TO *}
+kconvstring | xs:string  FOO  | lt | kconvstring:{* TO foo}
+kconvstring | xs:string  FOO  | eq | kconvstring:foo
+kconvstring | xs:string  FOO  | ge | kconvstring:[foo TO *}
+kconvstring | xs:string  FOO  | le | kconvstring:{* TO foo]
+kconvstring | xs:string  FOO  | ne | +kconvstring:* -kconvstring:foo
+kconvstring | xs:string  FOO  | ends-with | kconvstring:*foo
+kconvstring | xs:string  FOO  | starts-with | kconvstring:foo*
+kconvstring | xs:string  FOO  | contains | kconvstring:*foo*
+kconvstring | xs:string  FOO  | matches | kconvstring:/ FOO /
+kconvstring | xs:string  | gt | kconvstring:{ TO *}
+kconvstring | xs:string  | lt | kconvstring:{* TO }
+kconvstring | xs:string  | eq | kconvstring:
+kconvstring | xs:string  | ge | kconvstring:[ TO *}
+kconvstring | xs:string  | le | kconvstring:{* TO ]
+kconvstring | xs:string  | ne | +kconvstring:* -kconvstring:
+kconvstring | xs:string  | ends-with | kconvstring:*
+kconvstring | xs:string  | starts-with | kconvstring:*
+kconvstring | xs:string  | contains | kconvstring:**
+kconvstring | xs:string  | matches | kconvstring://
+kconvdate | xs:date 1918-01-01 | gt | kconvdate:[125698306 TO 9223372036854775807]
+kconvdate | xs:date 1918-01-01 | lt | kconvdate:[-9223372036854775808 TO 125698304]
+kconvdate | xs:date 1918-01-01 | eq | kconvdate:[125698305 TO 125698305]
+kconvdate | xs:date 1918-01-01 | ge | kconvdate:[125698305 TO 9223372036854775807]
+kconvdate | xs:date 1918-01-01 | le | kconvdate:[-9223372036854775808 TO 125698305]
+kconvdate | xs:date 1918-01-01 | ne | +*:* -kconvdate:[125698305 TO 125698305]
+kconvdate | xs:date 1918-01-01 | ends-with | kconvdate:[125698305 TO 9223372036854775807]
+kconvdate | xs:date 1918-01-01 | starts-with | kconvdate:[125698305 TO 9223372036854775807]
+kconvdate | xs:date 1918-01-01 | contains | kconvdate:[125698305 TO 9223372036854775807]
+kconvdate | xs:date 1918-01-01 | matches | kconvdate:[125698305 TO 9223372036854775807]
+kconvdate | xs:date 0800-12-01 | gt | kconvdate:[52431874 TO 9223372036854775807]
+kconvdate | xs:date 0800-12-01 | lt | kconvdate:[-9223372036854775808 TO 52431872]
+kconvdate | xs:date 0800-12-01 | eq | kconvdate:[52431873 TO 52431873]
+kconvdate | xs:date 0800-12-01 | ge | kconvdate:[52431873 TO 9223372036854775807]
+kconvdate | xs:date 0800-12-01 | le | kconvdate:[-9223372036854775808 TO 52431873]
+kconvdate | xs:date 0800-12-01 | ne | +*:* -kconvdate:[52431873 TO 52431873]
+kconvdate | xs:date 0800-12-01 | ends-with | kconvdate:[52431873 TO 9223372036854775807]
+kconvdate | xs:date 0800-12-01 | starts-with | kconvdate:[52431873 TO 9223372036854775807]
+kconvdate | xs:date 0800-12-01 | contains | kconvdate:[52431873 TO 9223372036854775807]
+kconvdate | xs:date 0800-12-01 | matches | kconvdate:[52431873 TO 9223372036854775807]
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | gt | kdatetime:{20120120100000000 TO *}
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | lt | kdatetime:{* TO 20120120100000000}
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | eq | kdatetime:20120120100000000
