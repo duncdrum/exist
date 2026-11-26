@@ -407,9 +407,13 @@ public class NGramSearch extends Function implements Optimizable {
                 expressions.add(wildcard);
             } else {
                 if (token.startsWith("[")) {
-                    Set<String> strings = new HashSet<>(token.length() - 2);
-                    for (int i = 1; i < token.length() - 1; i++)
-                        strings.add(Character.toString(token.charAt(i)));
+                    final String characters = token.substring(1, token.length() - 1);
+                    final Set<String> strings = new HashSet<>(characters.length());
+                    for (int i = 0; i < characters.length(); ) {
+                        final int codePoint = characters.codePointAt(i);
+                        strings.add(Character.toString(codePoint));
+                        i += Character.charCount(codePoint);
+                    }
                     expressions.add(new AlternativeStrings(this, strings));
                 } else {
                     expressions.add(new FixedString(this, unescape(token)));

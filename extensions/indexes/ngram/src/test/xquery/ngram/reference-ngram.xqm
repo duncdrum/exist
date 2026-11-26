@@ -50,7 +50,8 @@ declare variable $rn:STRINGS := (
 );
 
 declare variable $rn:LITERALS := ("a", "ab", "ham", codepoints-to-string(128512), "日本", "x y", "b");
-declare variable $rn:WILDCARDS := (".", ".?", ".*", ".+", ".{1,2}", "[ab]");
+declare variable $rn:WILDCARDS := (".", ".?", ".*", ".+", ".{1,2}", "[ab]",
+    "[a" || codepoints-to-string(128512) || "]", "[" || codepoints-to-string(128512) || "b]");
 
 declare function rn:patterns() as xs:string* {
     distinct-values((
