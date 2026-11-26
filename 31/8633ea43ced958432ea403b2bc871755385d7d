@@ -1,0 +1,19 @@
+extensions/indexes/ngram/src/test/xquery/ngram/reference-ngram.xqm
+  s_545f96ebe4ea56::t_d973778b94818e 53-54
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "318633ea43ced958432ea403b2bc871755385d7d",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
