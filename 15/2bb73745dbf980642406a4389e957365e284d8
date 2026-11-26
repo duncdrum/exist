@@ -1,0 +1,42 @@
+exist-core/src/test/java/org/exist/test/pathshapes/PathShapes.java
+  h_ff0005bef58c9d 1-599
+extensions/indexes/lucene/src/test/java/xquery/lucene/PathShapesTest.java
+  h_ff0005bef58c9d 1-444
+extensions/indexes/lucene/src/test/xquery/lucene/ft-query-forms.xqm
+  h_ff0005bef58c9d 211,221
+extensions/indexes/lucene/src/test/xquery/lucene/path-shapes.xqm
+  h_ff0005bef58c9d 1-672
+extensions/indexes/lucene/src/test/xquery/lucene/vector-embed.xqm
+  h_ff0005bef58c9d 61,64,90,93
+extensions/indexes/lucene/src/test/xquery/unoptimized-known-failures.lst
+  h_ff0005bef58c9d 4-15
+extensions/indexes/ngram/src/test/java/xquery/ngram/PathShapesTest.java
+  h_ff0005bef58c9d 1-171
+extensions/indexes/ngram/src/test/xquery/ngram/path-shapes.xqm
+  h_ff0005bef58c9d 1-277
+extensions/indexes/ngram/src/test/xquery/unoptimized-known-failures.lst
+  h_ff0005bef58c9d 6-9
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  h_ff0005bef58c9d 178-180
+extensions/indexes/range/src/test/java/org/exist/xquery/modules/range/LiteralFlagsRewriteTest.java
+  h_ff0005bef58c9d 1-132
+extensions/indexes/range/src/test/java/xquery/range/PathShapesTest.java
+  h_ff0005bef58c9d 1-864
+extensions/indexes/range/src/test/xquery/range/path-shapes-noindex.xqm
+  h_ff0005bef58c9d 1-559
+extensions/indexes/range/src/test/xquery/range/path-shapes.xqm
+  h_ff0005bef58c9d 1-790
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  h_ff0005bef58c9d 161-170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "152bb73745dbf980642406a4389e957365e284d8",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
