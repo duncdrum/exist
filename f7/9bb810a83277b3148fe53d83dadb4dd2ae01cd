@@ -1,0 +1,50 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_d6c73a8978e367::t_03403769156b30 254-255,261-298
+  s_d6c73a8978e367::t_100467f519fd59 52
+  s_d6c73a8978e367::t_ca4915a426d482 852-856
+  s_62dba22bee4c1d::t_6cf5f1e52e8201 299
+exist-core/src/test/xquery/dates/dates.xml
+  s_62dba22bee4c1d::t_7dfac62ac701e9 67,72,77,82,87,92,97,102,107,112,117-138,141-145
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_d6c73a8978e367::t_b9c2b0daf5d283 305-308
+  s_d6c73a8978e367::t_89e1b4878a325e 318-328,331-333,336-341
+  s_d6c73a8978e367::t_332e687d9c69f5 329-330
+  s_d6c73a8978e367::t_30a9ba4bafbcab 334-335
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_d6c73a8978e367::t_c3cf58c276bbff 530-531
+  s_d6c73a8978e367::t_c7ee924e653121 579-609
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_d6c73a8978e367::t_f695513d54b74d 70-79
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  s_d6c73a8978e367::t_137b14ff24c386 83-115
+  s_d6c73a8978e367::t_448223c35d2cb6 24-26
+  s_d6c73a8978e367::t_ff52231e7a2c67 58-59
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_d6c73a8978e367::t_4cdcde14287631 204-218
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_d6c73a8978e367::t_26561514e7abed 1-202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f79bb810a83277b3148fe53d83dadb4dd2ae01cd",
+  "prompts": {},
+  "sessions": {
+    "s_62dba22bee4c1d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "baaec269-c1fa-400a-96c1-cec90b99f3af",
+        "model": "default"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    },
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
