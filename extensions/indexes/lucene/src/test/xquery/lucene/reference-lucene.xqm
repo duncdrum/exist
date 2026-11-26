@@ -27,6 +27,11 @@ xquery version "3.1";
  : the standard analyzer (lower-cased, split on spaces) in one collection, the keyword analyzer (the whole value, as
  : it is) in another, queried together so that each collection is searched with its own configuration. Each indexed
  : query is compiled with literal arguments, so that the optimizer rewrites it when it can.
+ :
+ : A third collection has an analyzer that removes stop words, and its values have stop words between the words.
+ : The analyzer drops them from the index but keeps their positions, so a phrase of two words with g stop words
+ : between them finds the values in which the second word is g + 1 items after the first, whatever stands between.
+ : The phrase is written four ways, as an XML phrase, as a query string, as an XML near query of text and as one of terms.
  :)
 module namespace rl = "http://exist-db.org/xquery/test/lucene/reference-lucene";
 
@@ -41,6 +46,20 @@ declare %private function rl:words($i as xs:integer) as xs:string* {
     for $j in 0 to $i mod 4
     return $rl:WORDS[(($i * 7 + $j * 3) mod count($rl:WORDS)) + 1]
 };
+
+declare variable $rl:STOP-COLLECTION := "/db/reference-lucene-stop";
+declare variable $rl:STOPS := ("the", "and", "of");
+
+(: the items of value $i of the stop-word collection: one to four words, with 0 to 2 stop words before each but the first :)
+declare %private function rl:stop-items($i as xs:integer) as xs:string* {
+    for $j in 0 to $i mod 4
+    return (
+        if ($j gt 0) then $rl:STOPS[position() le (($i + $j) mod 3)] else (),
+        lower-case($rl:WORDS[(($i * 7 + $j * 3) mod count($rl:WORDS)) + 1])
+    )
+};
+
+declare variable $rl:STOP := (1 to 60) ! <sp n="{ . }">{ string-join(rl:stop-items(.), " ") }</sp>;
 
 declare variable $rl:STD := (1 to 40) ! <p n="{ . }">{ string-join(rl:words(.), " ") }</p>;
 declare variable $rl:KW := (1 to 40) ! <p n="{ 100 + . }">{ string-join(rl:words(.)[position() le 2], " ") }</p>;
@@ -64,6 +83,16 @@ function rl:setup() {
                 <text qname="p" analyzer="kw"/>
             </lucene></index>
         </collection>)
+    let $_ := xmldb:create-collection("/db", "reference-lucene-stop")
+    let $_ := xmldb:create-collection("/db/system/config/db", "reference-lucene-stop")
+    let $_ := xmldb:store("/db/system/config" || $rl:STOP-COLLECTION, "collection.xconf",
+        <collection xmlns="http://exist-db.org/collection-config/1.0">
+            <index><lucene>
+                <analyzer class="org.exist.indexing.lucene.analyzers.EnglishStopwordsStandardAnalyzer"/>
+                <text qname="sp"/>
+            </lucene></index>
+        </collection>)
+    let $_ := xmldb:store($rl:STOP-COLLECTION, "values.xml", <values>{ $rl:STOP }</values>)
     return (
         xmldb:store($rl:COLLECTION || "/std", "values.xml", <values>{ $rl:STD }</values>),
         xmldb:store($rl:COLLECTION || "/kw", "values.xml", <values>{ $rl:KW }</values>)
@@ -74,7 +103,9 @@ declare
     %test:tearDown
 function rl:teardown() {
     xmldb:remove($rl:COLLECTION),
-    xmldb:remove("/db/system/config" || $rl:COLLECTION)
+    xmldb:remove("/db/system/config" || $rl:COLLECTION),
+    xmldb:remove($rl:STOP-COLLECTION),
+    xmldb:remove("/db/system/config" || $rl:STOP-COLLECTION)
 };
 
 (: the queries: kind, first word, second word :)
@@ -176,6 +207,61 @@ function rl:highlight-marks-what-it-found() {
         "|")
     where $marked ne $expected
     return string-join((rl:syntax($q), string($hit/@n), $marked, $expected), " | ")
+};
+
+(: the query of a phrase of two words and g stop words between them, in one of the four forms, as XQuery text :)
+declare %private function rl:stop-query($form as xs:string, $w1 as xs:string, $w2 as xs:string, $g as xs:integer) as xs:string {
+    let $words := ($w1, $rl:STOPS[position() le $g], $w2)
+    let $text := string-join($words, " ")
+    return switch ($form)
+        case "xml-phrase" return "<query><phrase>" || $text || "</phrase></query>"
+        case "string-phrase" return rl:literal('"' || $text || '"')
+        case "xml-near-text" return '<query><near slop="0">' || $text || "</near></query>"
+        default return '<query><near slop="0">' || string-join($words ! ("<term>" || . || "</term>"), "") || "</near></query>"
+};
+
+declare %private function rl:stop-indexed($form as xs:string, $w1 as xs:string, $w2 as xs:string, $g as xs:integer) as xs:string {
+    try {
+        rl:show(util:eval("collection(" || rl:literal($rl:STOP-COLLECTION) || ")//sp[ft:query(., "
+            || rl:stop-query($form, $w1, $w2, $g) || ")]/@n"))
+    } catch * {
+        "error " || local-name-from-QName($err:code)
+    }
+};
+
+(: the values in which the second word is g + 1 items after the first: the stop words keep their positions :)
+declare %private function rl:stop-reference($w1 as xs:string, $w2 as xs:string, $g as xs:integer) as xs:string {
+    rl:show(
+        for $p in $rl:STOP
+        let $items := tokenize(string($p), " ")
+        where (some $i in 1 to count($items) satisfies ($items[$i] eq $w1 and $items[$i + 1 + $g] eq $w2))
+        return $p/@n
+    )
+};
+
+declare %private function rl:stop-pairs() as array(*)* {
+    for $a in $rl:WORDS[position() le 6] ! lower-case(.), $b in $rl:WORDS[position() le 6] ! lower-case(.)[. ne $a], $g in 0 to 2
+    return [$a, $b, $g]
+};
+
+(: the differences, as "form | words | stop words between | index | reference" :)
+declare
+    %test:assertEmpty
+function rl:stop-word-phrases-have-the-positions-of-the-text() {
+    for $form in ("xml-phrase", "string-phrase", "xml-near-text", "xml-near-terms"), $q in rl:stop-pairs()
+    let $indexed := rl:stop-indexed($form, $q(1), $q(2), $q(3))
+    let $reference := rl:stop-reference($q(1), $q(2), $q(3))
+    where $indexed ne $reference
+    return string-join(($form, $q(1) || " " || $q(2), string($q(3)), $indexed, $reference), " | ")
+};
+
+(: not vacuous: with stop words between the words the phrases find values, and not the same ones for each count :)
+declare
+    %test:assertTrue
+function rl:the-stop-word-reference-is-not-trivial() {
+    let $answers := for $q in rl:stop-pairs() return rl:stop-reference($q(1), $q(2), $q(3))
+    let $with-stop-words := for $q in rl:stop-pairs()[?3 gt 0] return rl:stop-reference($q(1), $q(2), $q(3))
+    return count(distinct-values($answers)) gt 10 and count($with-stop-words[. ne "[]"]) gt 5
 };
 
 (: not vacuous :)
