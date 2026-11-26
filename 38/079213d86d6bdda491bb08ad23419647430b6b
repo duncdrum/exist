@@ -1,0 +1,19 @@
+exist-core/src/test/java/org/exist/storage/IdIndexBackupRestoreTest.java
+  s_256fa431ac2c84::t_01d6390436ab6b 49-51,107-109
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "38079213d86d6bdda491bb08ad23419647430b6b",
+  "prompts": {},
+  "sessions": {
+    "s_256fa431ac2c84": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5e921159-6ba0-446d-ac90-e43a2e227a13",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
