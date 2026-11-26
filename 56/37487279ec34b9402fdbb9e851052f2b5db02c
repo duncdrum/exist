@@ -1,0 +1,25 @@
+exist-core/src/main/java/org/exist/Indexer.java
+  s_d6c73a8978e367::t_50b774c9e2039a 664,666,670-677,679-683,685,687-701,703-716,718-760,762,764,766-772,776-796,798-799,803-804,806-807,815,823-825
+exist-core/src/main/java/org/exist/util/serializer/SAXSerializer.java
+  s_d6c73a8978e367::t_0601826cee0f00 166,169,195-199,201,225-226,228
+exist-core/src/test/java/org/exist/util/serializer/SAXSerializerNamespacesTest.java
+  s_d6c73a8978e367::t_2e47046aa5360f 27-28,32-33,89-121,154,156,160-173
+exist-core/src/test/java/org/exist/backup/SystemExportNamespaceTest.java
+  s_d6c73a8978e367::t_b8033bbf3185c8 1-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5637487279ec34b9402fdbb9e851052f2b5db02c",
+  "prompts": {},
+  "sessions": {
+    "s_d6c73a8978e367": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ab159da-4527-4105-88cc-2773ddae7785",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

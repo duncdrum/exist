@@ -1,0 +1,25 @@
+exist-core/src/main/java/org/exist/validation/GrammarPool.java
+  s_545f96ebe4ea56::t_98e33a92c0c339 242-252
+exist-core/src/main/java/org/exist/validation/ReaderGrammarPool.java
+  s_545f96ebe4ea56::t_aa5271f933ebcf 157,168-176
+exist-core/src/test/java/org/exist/validation/ReaderGrammarPoolTest.java
+  s_545f96ebe4ea56::t_5b9b59441c3627 29,31-33,36-37,40,64-106
+exist-core/src/main/java/org/exist/Indexer.java
+  s_545f96ebe4ea56::t_df5bdba3451268 808-814,816-822
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0bbc04becd5cea5ae467a8c5534920c7a860a413",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
