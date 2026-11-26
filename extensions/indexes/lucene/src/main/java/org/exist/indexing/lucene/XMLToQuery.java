@@ -24,6 +24,7 @@ package org.exist.indexing.lucene;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.Term;
@@ -50,6 +51,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.QueryBuilder;
 import org.apache.lucene.util.automaton.Automaton;
 import org.apache.lucene.util.automaton.ByteRunAutomaton;
 import org.apache.lucene.util.automaton.LevenshteinAutomata;
@@ -117,24 +119,18 @@ public class XMLToQuery {
     private Query phraseQuery(String field, Element node, Analyzer analyzer) throws XPathException {
         NodeList termList = node.getElementsByTagName("term");
         if (termList.getLength() == 0) {
-            // Use PhraseQuery.Builder in Lucene 10
-            PhraseQuery.Builder builder = new PhraseQuery.Builder();
-            String qstr = getText(node);
-            try (TokenStream stream = analyzer.tokenStream(field, new StringReader(qstr))) {
-                CharTermAttribute termAttr = stream.addAttribute(CharTermAttribute.class);
-                stream.reset();
-                int pos = 0;
-                while (stream.incrementToken()) {
-                    builder.add(new Term(field, termAttr.toString()), pos++);
+            final String qstr = getText(node);
+            final int slop = Math.max(getSlop(node), 0);
+            try {
+                final Query query = new QueryBuilder(analyzer).createPhraseQuery(field, qstr, slop);
+                // a text without a token, the stop words only, matches nothing
+                return query != null ? query : new PhraseQuery.Builder().build();
+            } catch (final RuntimeException e) {
+                if (e.getCause() instanceof IOException) {
+                    throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
                 }
-                stream.end();
-            } catch (IOException e) {
-                throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
+                throw e;
             }
-            int slop = getSlop(node);
-            if (slop > -1)
-                builder.setSlop(slop);
-            return builder.build();
         }
         MultiPhraseQuery.Builder builder = new MultiPhraseQuery.Builder();
         for (int i = 0; i < termList.getLength(); i++) {
@@ -169,22 +165,45 @@ public class XMLToQuery {
             inOrder = "yes".equals(node.getAttribute("ordered"));
 
         if (!hasElementContent(node)) {
-            String qstr = getText(node);
-            List<SpanTermQuery> list = new ArrayList<>(8);
-            try (TokenStream stream = analyzer.tokenStream(field, new StringReader(qstr))) {
-                CharTermAttribute termAttr = stream.addAttribute(CharTermAttribute.class);
-                stream.reset();
-                while (stream.incrementToken()) {
-                    list.add(new SpanTermQuery(new Term(field, termAttr.toString())));
-                }
-                stream.end();
-            } catch (IOException e) {
-                throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
-            }
-            return spanNearOrSingle(list.toArray(new SpanTermQuery[0]), slop, inOrder);
+            return spanNearOfText(field, getText(node), analyzer, slop, inOrder);
         }
         SpanQuery[] children = parseSpanChildren(field, node, analyzer);
         return spanNearOrSingle(children, slop, inOrder);
+    }
+
+    /**
+     * The near query of a text: its tokens in the order of the text, with a gap where the analyzer removed words.
+     */
+    private SpanQuery spanNearOfText(final String field, final String qstr, final Analyzer analyzer, final int slop,
+            final boolean inOrder) throws XPathException {
+        final SpanNearQuery.Builder builder = new SpanNearQuery.Builder(field, inOrder).setSlop(slop);
+        SpanTermQuery first = null;
+        int clauses = 0;
+        try (TokenStream stream = analyzer.tokenStream(field, new StringReader(qstr))) {
+            final CharTermAttribute termAttr = stream.addAttribute(CharTermAttribute.class);
+            final PositionIncrementAttribute increment = stream.addAttribute(PositionIncrementAttribute.class);
+            stream.reset();
+            while (stream.incrementToken()) {
+                final SpanTermQuery term = new SpanTermQuery(new Term(field, termAttr.toString()));
+                if (clauses > 0 && increment.getPositionIncrement() > 1) {
+                    // the analyzer removed words between the two: the text has positions that nothing holds
+                    builder.addGap(increment.getPositionIncrement() - 1);
+                }
+                builder.addClause(term);
+                if (clauses == 0) {
+                    first = term;
+                }
+                clauses++;
+            }
+            stream.end();
+        } catch (IOException e) {
+            throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
+        }
+        if (clauses == 0) {
+            return null;
+        }
+        return clauses == 1 ? first : builder.build();
+    
     }
 
     /** SpanNearQuery requires at least 2 clauses; return single span or null for 0. */
