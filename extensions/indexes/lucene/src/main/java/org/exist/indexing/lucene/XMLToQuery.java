@@ -164,57 +164,81 @@ public class XMLToQuery {
         if (node.hasAttribute("ordered"))
             inOrder = "yes".equals(node.getAttribute("ordered"));
 
-        if (!hasElementContent(node)) {
-            return spanNearOfText(field, getText(node), analyzer, slop, inOrder);
+        final SpanClauses clauses = new SpanClauses(field, slop, inOrder);
+        if (hasElementContent(node)) {
+            parseSpanChildren(field, node, analyzer, clauses);
+        } else {
+            addTokensOfText(clauses, field, getText(node), analyzer);
         }
-        SpanQuery[] children = parseSpanChildren(field, node, analyzer);
-        return spanNearOrSingle(children, slop, inOrder);
+        return clauses.build();
     }
 
     /**
-     * The near query of a text: its tokens in the order of the text, with a gap where the analyzer removed words.
+     * The clauses of a near query: terms and nested queries in order, and the gaps that removed words leave between
+     * them. A gap has no meaning before the first and after the last clause, and an unordered near query cannot have one.
      */
-    private SpanQuery spanNearOfText(final String field, final String qstr, final Analyzer analyzer, final int slop,
-            final boolean inOrder) throws XPathException {
-        final SpanNearQuery.Builder builder = new SpanNearQuery.Builder(field, inOrder).setSlop(slop);
-        SpanTermQuery first = null;
-        int clauses = 0;
+    private static final class SpanClauses {
+        private final SpanNearQuery.Builder builder;
+        private final boolean ordered;
+        private SpanQuery first;
+        private int count;
+        private int gap;
+        private boolean matchesNothing;
+
+        SpanClauses(final String field, final int slop, final boolean ordered) {
+            this.builder = new SpanNearQuery.Builder(field, ordered).setSlop(slop);
+            this.ordered = ordered;
+        }
+
+        void add(final SpanQuery clause) {
+            if (count > 0 && gap > 0 && ordered) {
+                builder.addGap(gap);
+            }
+            gap = 0;
+            builder.addClause(clause);
+            if (count == 0) {
+                first = clause;
+            }
+            count++;
+        }
+
+        /** @param width the number of positions that the analyzer removed after the last clause */
+        void gap(final int width) {
+            gap += width;
+        }
+
+        /** A part of the query that can match nothing makes the whole query match nothing. */
+        void matchNothing() {
+            matchesNothing = true;
+        }
+
+        /** @return the query, the single clause for one, null for none or for a part that matches nothing */
+        SpanQuery build() {
+            if (matchesNothing || count == 0) {
+                return null;
+            }
+            return count == 1 ? first : builder.build();
+        }
+    }
+
+    /** The tokens of a text, in the order of the text, with a gap where the analyzer removed words. */
+    private void addTokensOfText(final SpanClauses clauses, final String field, final String qstr, final Analyzer analyzer)
+            throws XPathException {
         try (TokenStream stream = analyzer.tokenStream(field, new StringReader(qstr))) {
             final CharTermAttribute termAttr = stream.addAttribute(CharTermAttribute.class);
             final PositionIncrementAttribute increment = stream.addAttribute(PositionIncrementAttribute.class);
             stream.reset();
             while (stream.incrementToken()) {
-                final SpanTermQuery term = new SpanTermQuery(new Term(field, termAttr.toString()));
-                if (clauses > 0 && increment.getPositionIncrement() > 1) {
-                    // the analyzer removed words between the two: the text has positions that nothing holds
-                    builder.addGap(increment.getPositionIncrement() - 1);
-                }
-                builder.addClause(term);
-                if (clauses == 0) {
-                    first = term;
-                }
-                clauses++;
+                clauses.gap(increment.getPositionIncrement() - 1);
+                clauses.add(new SpanTermQuery(new Term(field, termAttr.toString())));
             }
             stream.end();
         } catch (IOException e) {
             throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
         }
-        if (clauses == 0) {
-            return null;
-        }
-        return clauses == 1 ? first : builder.build();
-    
     }
 
-    /** SpanNearQuery requires at least 2 clauses; return single span or null for 0. */
-    private SpanQuery spanNearOrSingle(SpanQuery[] clauses, int slop, boolean inOrder) {
-        if (clauses.length == 0) return null;
-        if (clauses.length == 1) return clauses[0];
-        return new SpanNearQuery(clauses, slop, inOrder);
-    }
-
-    private SpanQuery[] parseSpanChildren(String field, Element node, Analyzer analyzer) throws XPathException {
-        List<SpanQuery> list = new ArrayList<>(8);
+    private void parseSpanChildren(String field, Element node, Analyzer analyzer, SpanClauses clauses) throws XPathException {
         Node child = node.getFirstChild();
         while (child != null) {
             if (child.getNodeType() == Node.ELEMENT_NODE) {
@@ -222,18 +246,24 @@ public class XMLToQuery {
                 if (null != localName) {
                     switch (localName) {
                         case "term":
-                            getSpanTerm(list, field, (Element) child, analyzer);
+                            getSpanTerm(clauses, field, (Element) child, analyzer);
                             break;
                         case "near": {
                             SpanQuery sq = nearQuery(field, (Element) child, analyzer);
-                            if (sq != null) list.add(sq);
+                            if (sq != null) clauses.add(sq);
                             break;
                         }
-                        case "first":
-                            list.add(getSpanFirst(field, (Element) child, analyzer));
+                        case "first": {
+                            final SpanQuery sq = getSpanFirst(field, (Element) child, analyzer);
+                            if (sq != null) {
+                                clauses.add(sq);
+                            } else {
+                                clauses.matchNothing();
+                            }
                             break;
+                        }
                         case "regex":
-                            list.add(getSpanRegex(field, (Element) child));
+                            clauses.add(getSpanRegex(field, (Element) child));
                             break;
                         default:
                             throw new XPathException((Expression) null, "Unknown query element: " + child.getNodeName());
@@ -242,13 +272,16 @@ public class XMLToQuery {
             }
             child = child.getNextSibling();
         }
-        return list.toArray(new SpanQuery[0]);
     }
 
-    private void getSpanTerm(List<SpanQuery> list, String field, Element node, Analyzer analyzer) throws XPathException {
-    	String termStr = getTerm(field, getText(node), analyzer);
-    	if (termStr != null)
-    		list.add(new SpanTermQuery(new Term(field, termStr)));
+    /** A term that the analyzer removes keeps its position as a gap. */
+    private void getSpanTerm(SpanClauses clauses, String field, Element node, Analyzer analyzer) throws XPathException {
+        String termStr = getTerm(field, getText(node), analyzer);
+        if (termStr != null) {
+            clauses.add(new SpanTermQuery(new Term(field, termStr)));
+        } else {
+            clauses.gap(1);
+        }
     }
 
     private SpanQuery getSpanRegex(String field, Element node) {
@@ -265,8 +298,9 @@ public class XMLToQuery {
             inOrder = "yes".equals(node.getAttribute("ordered"));
         SpanQuery query = null;
         if (hasElementContent(node)) {
-            SpanQuery[] children = parseSpanChildren(field, node, analyzer);
-            query = spanNearOrSingle(children, slop, inOrder);
+            final SpanClauses clauses = new SpanClauses(field, slop, inOrder);
+            parseSpanChildren(field, node, analyzer, clauses);
+            query = clauses.build();
         } else {
         	String termStr = getTerm(field, getText(node), analyzer);
         	if (termStr != null)
