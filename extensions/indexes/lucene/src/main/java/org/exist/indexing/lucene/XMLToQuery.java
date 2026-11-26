@@ -52,9 +52,9 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.QueryBuilder;
-import org.apache.lucene.util.automaton.Automaton;
-import org.apache.lucene.util.automaton.ByteRunAutomaton;
+import org.apache.lucene.util.automaton.CompiledAutomaton;
 import org.apache.lucene.util.automaton.LevenshteinAutomata;
+import org.apache.lucene.util.automaton.Operations;
 import org.apache.lucene.util.automaton.RunAutomaton;
 import org.apache.lucene.util.automaton.UTF32ToUTF8;
 import org.exist.util.Configuration;
@@ -138,7 +138,7 @@ public class XMLToQuery {
             String text = getText(elem);
             if (text.indexOf('?') > -1 || text.indexOf('*') > -1) {
                 try {
-                    Term[] expanded = expandTerms(field, text);
+                    Term[] expanded = expandTerms(field, analyzer != null ? normalizeMultiTermPattern(field, text, analyzer) : text);
                     if (expanded.length > 0)
                         builder.add(expanded);
                 } catch (IOException e) {
@@ -296,62 +296,28 @@ public class XMLToQuery {
         return -1;
     }
 
-    private Term[] expandTerms(String field, String queryStr) throws XPathException, IOException {
-        return expandTerms(field, (CharSequence) queryStr);
-    }
-
-    // Extracted overload to allow more flexible callers while retaining original signature
-    private Term[] expandTerms(String field, CharSequence wildcardPattern) throws XPathException, IOException {
+    /**
+     * The terms of the field that a wildcard pattern matches, read with the syntax of {@link WildcardQuery}: the same
+     * as the wildcard form of the query reads it.
+     */
+    private Term[] expandTerms(final String field, final String wildcardPattern) throws XPathException, IOException {
+        final CompiledAutomaton automaton = new CompiledAutomaton(
+                WildcardQuery.toAutomaton(new Term(field, wildcardPattern), Operations.DEFAULT_DETERMINIZE_WORK_LIMIT));
         return index.withReader(reader -> {
-            final ByteRunAutomaton run = buildWildcardRunAutomaton(wildcardPattern.toString());
-
             final List<Term> termList = new ArrayList<>(8);
             for (LeafReaderContext ctx : reader.leaves()) {
                 final Terms terms = ctx.reader().terms(field);
                 if (terms == null) {
                     continue;
                 }
-                collectMatchingTermsForLeaf(field, run, terms, termList);
+                final TermsEnum matching = automaton.getTermsEnum(terms);
+                BytesRef term;
+                while ((term = matching.next()) != null) {
+                    termList.add(new Term(field, BytesRef.deepCopyOf(term)));
+                }
             }
             return termList.toArray(new Term[0]);
         });
-    }
-
-    // Build RunAutomaton from a wildcard pattern using RegExp
-    private ByteRunAutomaton buildWildcardRunAutomaton(String wildcardPattern) {
-        // Convert wildcard (*, ?) to a RegExp that matches the same semantics
-        // Escape other regex meta characters to treat them literally
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < wildcardPattern.length(); i++) {
-            char c = wildcardPattern.charAt(i);
-            switch (c) {
-                case '*' -> sb.append(".*");
-                case '?' -> sb.append(".");
-                case '\\' -> sb.append("\\\\");
-                case '.', '+', '(', ')', '[', ']', '{', '}', '^', '$', '|' -> sb.append('\\').append(c);
-                default -> sb.append(c);
-            }
-        }
-        final String regex = sb.toString();
-        final Automaton wildcardAutomaton =
-                new org.apache.lucene.util.automaton.RegExp(regex).toAutomaton();
-        return new ByteRunAutomaton(wildcardAutomaton);
-    }
-
-    // Extracted to simplify expandTerms loop body
-    private void collectMatchingTermsForLeaf(String field, ByteRunAutomaton run, Terms terms, List<Term> out) throws IOException {
-        final TermsEnum te = terms.iterator();
-        BytesRef term;
-        while ((term = te.next()) != null) {
-            if (matchesWildcard(run, term)) {
-                out.add(new Term(field, term.utf8ToString()));
-            }
-        }
-    }
-
-    // Extracted and clarified name; delegates to run.run with BytesRef slices
-    private static boolean matchesWildcard(ByteRunAutomaton run, BytesRef utf8Term) {
-        return run.run(utf8Term.bytes, utf8Term.offset, utf8Term.length);
     }
 
     private Query termQuery(String field, Element node, Analyzer analyzer) throws XPathException {
