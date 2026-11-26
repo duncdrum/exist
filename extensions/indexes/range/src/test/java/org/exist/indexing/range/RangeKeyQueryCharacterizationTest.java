@@ -89,6 +89,7 @@ class RangeKeyQueryCharacterizationTest {
                         <create qname="kdatetime" type="xs:dateTime"/>
                         <create qname="kconvstring" type="xs:string" converter="org.exist.indexing.range.conversion.LowerCaseTestConverter"/>
                         <create qname="kconvdate" type="xs:date" converter="org.exist.indexing.range.conversion.DateConverter"/>
+                        <create qname="knullconv" type="xs:string" converter="org.exist.indexing.range.conversion.NullForBlankTestConverter"/>
                     </range>
                 </index>
             </collection>""";
@@ -158,6 +159,7 @@ class RangeKeyQueryCharacterizationTest {
                 new Case("kdate", List.of(new DateValue("2012-01-20"), new DateValue("-0800-02-11"))),
                 new Case("ktime", List.of(new TimeValue("10:00:00"), new TimeValue("23:59:59+01:00"))),
                 new Case("kconvstring", List.of(new StringValue("Foo"), new StringValue(" FOO "), new StringValue(""))),
+                new Case("knullconv", List.of(new StringValue(" "), new StringValue("foo"))),
                 new Case("kconvdate", List.of(new DateValue("1918-01-01"), new DateValue("0800-12-01"))),
                 new Case("kdatetime", List.of(new DateTimeValue("2012-01-20T10:00:00Z"), new DateTimeValue("2012-01-20T11:00:00+01:00"))));
     }

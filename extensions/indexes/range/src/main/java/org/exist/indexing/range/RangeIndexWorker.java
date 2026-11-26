@@ -147,8 +147,8 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         }
         final org.apache.lucene.document.Field converted = converter.toField(field, content.getStringValue());
         if (converted == null) {
-            // a text the converter does not index: no stored text is equal to it
-            return new MatchNoDocsQuery();
+            // a text the converter does not index is equal to no indexed text: only != finds anything, every node of the field
+            return operator == RangeIndex.Operator.NE ? new FieldExistsQuery(field) : new MatchNoDocsQuery();
         }
         final NumericKey point = NumericKey.of(converted.numericValue());
         if (point != null) {

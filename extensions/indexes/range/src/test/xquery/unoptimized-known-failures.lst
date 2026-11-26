@@ -12,6 +12,7 @@ comparison-typing.xqm: converter-date-key-finds-the-filled-in-digits
 comparison-typing.xqm: converter-date-key-finds-the-normalised-year
 comparison-typing.xqm: converter-field-answers-a-date-key
 comparison-typing.xqm: converter-field-date-key-finds-the-normalised-year
+comparison-typing.xqm: converter-key-not-indexed-not-equal-finds-the-indexed-nodes
 comparison-typing.xqm: converter-string-answers-with-the-text-it-indexed
 comparison-typing.xqm: converter-string-field-answers-with-the-text-it-indexed
 comparison-typing.xqm: converter-string-field-key-is-converted

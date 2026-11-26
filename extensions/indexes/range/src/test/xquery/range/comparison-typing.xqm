@@ -85,6 +85,7 @@ declare variable $ct:CONVERTER_CONF :=
                 <create qname="ctl">
                     <field name="clf" match="clf" type="xs:string" converter="org.exist.indexing.range.conversion.LowerCaseTestConverter"/>
                 </create>
+                <create qname="cnb" type="xs:string" converter="org.exist.indexing.range.conversion.NullForBlankTestConverter"/>
                 <create qname="ctcd" type="xs:date" converter="org.exist.indexing.range.conversion.DateConverter"/>
                 <create qname="ctc">
                     <field name="ctcf" match="ctcf" type="xs:date" converter="org.exist.indexing.range.conversion.DateConverter"/>
@@ -95,6 +96,9 @@ declare variable $ct:CONVERTER_CONF :=
 
 declare variable $ct:CONVERTER_XML :=
     <t>
+        <cnb id="n1">foo</cnb>
+        <cnb id="n2">bar</cnb>
+        <cnb id="n3"> </cnb>
         <ctc id="c1"><ctcd>1918</ctcd><ctcf>1918</ctcf></ctc>
         <ctc id="c2"><ctcd>800-12-1</ctcd><ctcf>800-12-1</ctcf></ctc>
         <ctc id="c3"><ctcd>2000-01-01</ctcd><ctcf>2000-01-01</ctcf></ctc>
@@ -373,3 +377,24 @@ declare %test:assertEquals("l1,l2,l4") function ct:converter-string-key-is-conve
 declare %test:assertEquals("l3") function ct:converter-string-key-is-converted-for-less-than() {
     string-join(collection("/db/ct-converter")//ctl[cls < "FOO"]/@id/string(), ",")
 };
+
+(:
+ : A key that the converter does not index (here a blank text, which the converter leaves out of the index) is equal to no
+ : indexed text, so a comparison with it finds nothing, and != finds every node the converter indexed. The stored blank
+ : text is not indexed, so the index and the comparison as written differ here, by design of the converter.
+ :)
+
+declare %test:assertEquals("(none)") function ct:converter-key-not-indexed-finds-nothing() {
+    let $r := string-join(collection("/db/ct-converter")//cnb[. = " "]/@id/string(), ",")
+    return if ($r = "") then "(none)" else $r
+};
+
+declare %test:assertEquals("(none)") function ct:converter-key-not-indexed-starts-with-finds-nothing() {
+    let $r := string-join(collection("/db/ct-converter")//cnb[starts-with(., " ")]/@id/string(), ",")
+    return if ($r = "") then "(none)" else $r
+};
+
+declare %test:assertEquals("n1,n2") function ct:converter-key-not-indexed-not-equal-finds-the-indexed-nodes() {
+    string-join(collection("/db/ct-converter")//cnb[. != " "]/@id/string(), ",")
+};
+

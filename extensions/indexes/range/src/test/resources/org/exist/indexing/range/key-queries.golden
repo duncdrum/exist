@@ -278,6 +278,26 @@ kconvstring | xs:string  | ends-with | kconvstring:*
 kconvstring | xs:string  | starts-with | kconvstring:*
 kconvstring | xs:string  | contains | kconvstring:**
 kconvstring | xs:string  | matches | kconvstring://
+knullconv | xs:string   | gt | MatchNoDocsQuery("")
+knullconv | xs:string   | lt | MatchNoDocsQuery("")
+knullconv | xs:string   | eq | MatchNoDocsQuery("")
+knullconv | xs:string   | ge | MatchNoDocsQuery("")
+knullconv | xs:string   | le | MatchNoDocsQuery("")
+knullconv | xs:string   | ne | FieldExistsQuery [field=knullconv]
+knullconv | xs:string   | ends-with | MatchNoDocsQuery("")
+knullconv | xs:string   | starts-with | MatchNoDocsQuery("")
+knullconv | xs:string   | contains | MatchNoDocsQuery("")
+knullconv | xs:string   | matches | knullconv:/ /
+knullconv | xs:string foo | gt | knullconv:{foo TO *}
+knullconv | xs:string foo | lt | knullconv:{* TO foo}
+knullconv | xs:string foo | eq | knullconv:foo
+knullconv | xs:string foo | ge | knullconv:[foo TO *}
+knullconv | xs:string foo | le | knullconv:{* TO foo]
+knullconv | xs:string foo | ne | +knullconv:* -knullconv:foo
+knullconv | xs:string foo | ends-with | knullconv:*foo
+knullconv | xs:string foo | starts-with | knullconv:foo*
+knullconv | xs:string foo | contains | knullconv:*foo*
+knullconv | xs:string foo | matches | knullconv:/foo/
 kconvdate | xs:date 1918-01-01 | gt | kconvdate:[125698306 TO 9223372036854775807]
 kconvdate | xs:date 1918-01-01 | lt | kconvdate:[-9223372036854775808 TO 125698304]
 kconvdate | xs:date 1918-01-01 | eq | kconvdate:[125698305 TO 125698305]
