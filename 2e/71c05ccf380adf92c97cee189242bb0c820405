@@ -1,0 +1,43 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_545f96ebe4ea56::t_991a75ec97e848 254-258,264-315,868-869
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  s_545f96ebe4ea56::t_48cdf67e4c794e 1-178
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_545f96ebe4ea56::t_905ea8eecb52e3 140-149
+exist-core/src/test/java/org/exist/xmldb/CollectionConfigurationTest.java
+  s_545f96ebe4ea56::t_501f88a1b18eb7 34,1042-1052,1071,1076
+exist-core/src/test/java/org/exist/xquery/IndexKeyTypingTest.java
+  s_545f96ebe4ea56::t_b64bc7f5bd99de 1-137
+exist-core/src/test/java/org/exist/xquery/ValueIndexTest.java
+  s_545f96ebe4ea56::t_3334431bfd4f12 46-47,138,147,154,406-418
+exist-core/src/test/xquery/dates/dates.xml
+  s_545f96ebe4ea56::t_d4cdf58fb268e4 67,72,77,82,87,92,97,102,107,112,117-138,141-145
+exist-core/src/test/xquery/indexing/range.xml
+  s_545f96ebe4ea56::t_41cac2a4484f5f 106-107
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_545f96ebe4ea56::t_03c87182e8b806 530-531,579-609
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_545f96ebe4ea56::t_18bfa7e71c08a9 305-308,318-341
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_545f96ebe4ea56::t_734edd0e2cf8b9 216-230
+extensions/indexes/range/src/test/java/org/exist/indexing/range/conversion/LowerCaseTestConverter.java
+  s_545f96ebe4ea56::t_6ad27e4486cc86 1-39
+extensions/indexes/range/src/test/xquery/range/types.xql
+  s_545f96ebe4ea56::t_127dfe77c81f40 173-181,216-224,386,389-390,392
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2e71c05ccf380adf92c97cee189242bb0c820405",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
