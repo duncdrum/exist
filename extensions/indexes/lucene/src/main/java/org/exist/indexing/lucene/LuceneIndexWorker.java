@@ -605,11 +605,7 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
             final Query docIdQuery = IntField.newExactQuery(FIELD_DOC_ID, currentDoc.getDocId());
             for (NodeId nodeId : nodesToRemove) {
-                // store the node id
-                int nodeIdLen = nodeId.size();
-                byte[] data = new byte[nodeIdLen + 2];
-                ByteConversion.shortToByteH((short) nodeId.units(), data, 0);
-                nodeId.serialize(data, 2);
+                byte[] data = LuceneUtil.encodeNodeIdWithUnits(nodeId);
 
                 Term it = new Term(LuceneFieldNames.FIELD_NODE_ID, new BytesRef(data));
 
@@ -1930,10 +1926,7 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
     }
 
     private static Query docIdAndNodeIdQuery(final int existDocId, final NodeId nodeId) {
-        final int nodeIdLen = nodeId.size();
-        final byte[] data = new byte[nodeIdLen + 2];
-        ByteConversion.shortToByteH((short) nodeId.units(), data, 0);
-        nodeId.serialize(data, 2);
+        final byte[] data = LuceneUtil.encodeNodeIdWithUnits(nodeId);
         final Term nodeTerm = new Term(LuceneFieldNames.FIELD_NODE_ID, new BytesRef(data));
         return new BooleanQuery.Builder()
             .add(IntField.newExactQuery(FIELD_DOC_ID, existDocId), BooleanClause.Occur.MUST)
@@ -2661,10 +2654,7 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 }
 
                 // store the node id (new field per doc to avoid shared mutable state)
-                int nodeIdLen = pending.nodeId.size();
-                byte[] data = new byte[nodeIdLen + 2];
-                ByteConversion.shortToByteH((short) pending.nodeId.units(), data, 0);
-                pending.nodeId.serialize(data, 2);
+                byte[] data = LuceneUtil.encodeNodeIdWithUnits(pending.nodeId);
                 doc.add(new BinaryDocValuesField(LuceneFieldNames.FIELD_NODE_ID_DV, new BytesRef(data)));
 
                 // add separate index for node id (FIELD_NODE_ID for Term queries)

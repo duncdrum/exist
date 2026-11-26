@@ -56,6 +56,20 @@ public class LuceneUtil {
         return data;
     }
 
+    /**
+     * The id of a node as the indexes keep it as a term and as a doc value: the units of the id as a short, then the id.
+     * {@link #readNodeId} reads it back.
+     *
+     * @param nodeId the id of the node
+     * @return the bytes
+     */
+    public static byte[] encodeNodeIdWithUnits(final NodeId nodeId) {
+        final byte[] data = new byte[nodeId.size() + 2];
+        ByteConversion.shortToByteH((short) nodeId.units(), data, 0);
+        nodeId.serialize(data, 2);
+        return data;
+    }
+
     public static byte[] createId(final NodeId nodeId) {
         final byte[] data = new byte[nodeId.size()];
         nodeId.serialize(data, 0);

@@ -562,10 +562,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 final Map<String, Analyzer> documentAnalyzers = new HashMap<>();
 
                 // store the node id
-                int nodeIdLen = pending.getNodeId().size();
-                byte[] data = new byte[nodeIdLen + 2];
-                ByteConversion.shortToByteH((short) pending.getNodeId().units(), data, 0);
-                pending.getNodeId().serialize(data, 2);
+                byte[] data = LuceneUtil.encodeNodeIdWithUnits(pending.getNodeId());
                 fNodeId.setBytesValue(data);
                 doc.add(fNodeId);
 

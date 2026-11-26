@@ -179,8 +179,21 @@ public class LuceneNodeIdTermsTest {
         final BrokerPool pool = existEmbeddedServer.getBrokerPool();
         final NodeId nodeId = pool.getNodeFactory().createFromString("1.2.3");
         assertEquals("000e110c", HexFormat.of().formatHex(unitsAndId(nodeId)), "the units and the id");
+        assertEquals("000e110c", HexFormat.of().formatHex(LuceneUtil.encodeNodeIdWithUnits(nodeId)), "LuceneUtil.encodeNodeIdWithUnits");
         assertEquals("00000007110c", HexFormat.of().formatHex(LuceneUtil.createId(7, nodeId)), "LuceneUtil.createId with the doc id 7");
         assertEquals("110c", HexFormat.of().formatHex(LuceneUtil.createId(nodeId)), "LuceneUtil.createId of the node alone");
+    }
+
+    @Test
+    void anIdWithItsUnitsReadsBackAsTheSameId() {
+        final BrokerPool pool = existEmbeddedServer.getBrokerPool();
+        for (final String id : List.of("1", "1.2", "1.2.3", "1.7.100.2", "1.3.5.7.9.11", "1.1000.2.65536")) {
+            final NodeId nodeId = pool.getNodeFactory().createFromString(id);
+            final byte[] bytes = LuceneUtil.encodeNodeIdWithUnits(nodeId);
+            final int units = ByteConversion.byteToShortH(bytes, 0);
+            assertEquals(nodeId, pool.getNodeFactory().createFromData(units, bytes, 2), "the id " + id);
+            assertEquals(HexFormat.of().formatHex(unitsAndId(nodeId)), HexFormat.of().formatHex(bytes), "the bytes of " + id);
+        }
     }
 
     private static Query nodeQuery(final int docId, final NodeId nodeId) {
