@@ -1,0 +1,19 @@
+extensions/indexes/lucene/src/test/xquery/lucene/reference-lucene.xqm
+  s_545f96ebe4ea56::t_b5176ced09096c 30-34,50-63,86-95,106-108,212-266
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ffaf1da4cbf8787d385b05f71677c467d2445784",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
