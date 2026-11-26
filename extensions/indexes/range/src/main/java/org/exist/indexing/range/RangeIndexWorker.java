@@ -188,13 +188,13 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 case ENDS_WITH -> {
                     bytes = new BytesRefBuilder();
                     bytes.append((byte)'*');
-                    bytes.append(key);
+                    bytes.append(escapeWildcards(key));
                     return new WildcardQuery(new Term(field, bytes.toBytesRef()));
                 }
                 case CONTAINS -> {
                     bytes = new BytesRefBuilder();
                     bytes.append((byte)'*');
-                    bytes.append(key);
+                    bytes.append(escapeWildcards(key));
                     bytes.append((byte)'*');
                     return new WildcardQuery(new Term(field, bytes.toBytesRef()));
                 }
@@ -268,6 +268,24 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         return new WildcardQuery(new Term(field, new BytesRef("*")));
     }
 
+    /**
+     * The key as a literal inside the term of a {@link WildcardQuery}: the characters that Lucene reads as wildcard
+     * syntax have no such meaning in the key of a comparison, so they are escaped.
+     *
+     * @param key the key
+     * @return the key with the wildcard characters and the escape character escaped
+     */
+    private static BytesRef escapeWildcards(final BytesRef key) {
+        final BytesRefBuilder escaped = new BytesRefBuilder();
+        for (int i = key.offset; i < key.offset + key.length; i++) {
+            final byte b = key.bytes[i];
+            if (b == WildcardQuery.WILDCARD_STRING || b == WildcardQuery.WILDCARD_CHAR || b == WildcardQuery.WILDCARD_ESCAPE) {
+                escaped.append((byte) WildcardQuery.WILDCARD_ESCAPE);
+            }
+            escaped.append(b);
+        }
+        return escaped.get();
+    }
 
     @Override
     public String getIndexId() {

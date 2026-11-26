@@ -34,10 +34,40 @@ kstring | xs:string fo.* | eq | kstring:fo.*
 kstring | xs:string fo.* | ge | kstring:[fo.* TO *}
 kstring | xs:string fo.* | le | kstring:{* TO fo.*]
 kstring | xs:string fo.* | ne | +kstring:* -kstring:fo.*
-kstring | xs:string fo.* | ends-with | kstring:*fo.*
+kstring | xs:string fo.* | ends-with | kstring:*fo.\*
 kstring | xs:string fo.* | starts-with | kstring:fo.**
-kstring | xs:string fo.* | contains | kstring:*fo.**
+kstring | xs:string fo.* | contains | kstring:*fo.\**
 kstring | xs:string fo.* | matches | kstring:/fo.*/
+kstring | xs:string a*b | gt | kstring:{a*b TO *}
+kstring | xs:string a*b | lt | kstring:{* TO a*b}
+kstring | xs:string a*b | eq | kstring:a*b
+kstring | xs:string a*b | ge | kstring:[a*b TO *}
+kstring | xs:string a*b | le | kstring:{* TO a*b]
+kstring | xs:string a*b | ne | +kstring:* -kstring:a*b
+kstring | xs:string a*b | ends-with | kstring:*a\*b
+kstring | xs:string a*b | starts-with | kstring:a*b*
+kstring | xs:string a*b | contains | kstring:*a\*b*
+kstring | xs:string a*b | matches | kstring:/a*b/
+kstring | xs:string a?b | gt | kstring:{a?b TO *}
+kstring | xs:string a?b | lt | kstring:{* TO a?b}
+kstring | xs:string a?b | eq | kstring:a?b
+kstring | xs:string a?b | ge | kstring:[a?b TO *}
+kstring | xs:string a?b | le | kstring:{* TO a?b]
+kstring | xs:string a?b | ne | +kstring:* -kstring:a?b
+kstring | xs:string a?b | ends-with | kstring:*a\?b
+kstring | xs:string a?b | starts-with | kstring:a?b*
+kstring | xs:string a?b | contains | kstring:*a\?b*
+kstring | xs:string a?b | matches | kstring:/a?b/
+kstring | xs:string a\b | gt | kstring:{a\b TO *}
+kstring | xs:string a\b | lt | kstring:{* TO a\b}
+kstring | xs:string a\b | eq | kstring:a\b
+kstring | xs:string a\b | ge | kstring:[a\b TO *}
+kstring | xs:string a\b | le | kstring:{* TO a\b]
+kstring | xs:string a\b | ne | +kstring:* -kstring:a\b
+kstring | xs:string a\b | ends-with | kstring:*a\\b
+kstring | xs:string a\b | starts-with | kstring:a\b*
+kstring | xs:string a\b | contains | kstring:*a\\b*
+kstring | xs:string a\b | matches | ERR XPathException
 kcase | xs:string Foo | gt | kcase:{foo TO *}
 kcase | xs:string Foo | lt | kcase:{* TO foo}
 kcase | xs:string Foo | eq | kcase:foo

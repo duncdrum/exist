@@ -145,7 +145,8 @@ class RangeKeyQueryCharacterizationTest {
 
     private static List<Case> cases() throws Exception {
         return List.of(
-                new Case("kstring", List.of(new StringValue("Foo"), new StringValue("foo bar"), new StringValue(""), new StringValue("fo.*"))),
+                new Case("kstring", List.of(new StringValue("Foo"), new StringValue("foo bar"), new StringValue(""), new StringValue("fo.*"),
+                        new StringValue("a*b"), new StringValue("a?b"), new StringValue("a\\b"))),
                 new Case("kcase", List.of(new StringValue("Foo"), new StringValue("FOO BAR"))),
                 new Case("kinteger", List.of(new IntegerValue(5), new IntegerValue(-3))),
                 new Case("klong", List.of(new IntegerValue(5, Type.LONG), new IntegerValue(-3, Type.LONG))),
