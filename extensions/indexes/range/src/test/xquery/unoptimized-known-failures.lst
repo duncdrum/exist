@@ -147,3 +147,4 @@ types.xql: starts-with-ignore-case
 types.xql: string-contains-ignore-case
 types.xql: string-equals-2-ignore-case
 types.xql: string-equals-ignore-case
+not-equal.xqm: not-equal-uses-the-index

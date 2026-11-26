@@ -175,17 +175,12 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 LOG.debug("QUERY field={} qname={} input={} key={} operator={}",
                         field, qname, content.getStringValue(), safeBytesRefToDisplay(key), operator);
             }
-            WildcardQuery query;
             switch (operator) {
                 case EQ -> {
                     return new TermQuery(new Term(field, key));
                 }
                 case NE -> {
-                    final BooleanQuery.Builder builder = new BooleanQuery.Builder();
-                    query = new WildcardQuery(new Term(field, new BytesRef("*")));
-                    builder.add(query, BooleanClause.Occur.MUST);
-                    builder.add(new TermQuery(new Term(field, key)), BooleanClause.Occur.MUST_NOT);
-                    return builder.build();
+                    return not(anyTermOf(field), new TermQuery(new Term(field, key)));
                 }
                 case STARTS_WITH -> {
                     return new PrefixQuery(new Term(field, key));
@@ -229,7 +224,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
             return new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
         }
         if (operator == RangeIndex.Operator.NE) {
-            return not(new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content))));
+            return not(anyTermOf(field), new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content))));
         }
         final boolean includeUpper = operator == RangeIndex.Operator.LE;
         final boolean includeLower = operator == RangeIndex.Operator.GE;
@@ -248,18 +243,31 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
             return point.exact(field);
         }
         if (operator == RangeIndex.Operator.NE) {
-            return not(point.exact(field));
+            return not(new FieldExistsQuery(field), point.exact(field));
         }
         return point.range(field, operator);
     }
 
-    /** Every node that the query does not match. */
-    private static Query not(final Query query) {
+    /**
+     * The nodes of one field that the query does not match. The nodes of the other indexed names are not among them:
+     * every indexed node is a Lucene document of its own, and a query over all documents would match them too.
+     *
+     * @param exists the nodes that have a value in the field
+     * @param query the nodes to leave out
+     * @return the query
+     */
+    private static Query not(final Query exists, final Query query) {
         final BooleanQuery.Builder builder = new BooleanQuery.Builder();
-        builder.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
+        builder.add(exists, BooleanClause.Occur.MUST);
         builder.add(query, BooleanClause.Occur.MUST_NOT);
         return builder.build();
     }
+
+    /** The nodes that have a term in the field, for a field that is indexed as terms and may have no norms or doc values. */
+    private static Query anyTermOf(final String field) {
+        return new WildcardQuery(new Term(field, new BytesRef("*")));
+    }
+
 
     @Override
     public String getIndexId() {

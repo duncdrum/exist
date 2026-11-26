@@ -63,7 +63,7 @@ kinteger | xs:integer 5 | lt | kinteger:[-9223372036854775808 TO 4]
 kinteger | xs:integer 5 | eq | kinteger:[5 TO 5]
 kinteger | xs:integer 5 | ge | kinteger:[5 TO 9223372036854775807]
 kinteger | xs:integer 5 | le | kinteger:[-9223372036854775808 TO 5]
-kinteger | xs:integer 5 | ne | +*:* -kinteger:[5 TO 5]
+kinteger | xs:integer 5 | ne | +FieldExistsQuery [field=kinteger] -kinteger:[5 TO 5]
 kinteger | xs:integer 5 | ends-with | kinteger:[5 TO 9223372036854775807]
 kinteger | xs:integer 5 | starts-with | kinteger:[5 TO 9223372036854775807]
 kinteger | xs:integer 5 | contains | kinteger:[5 TO 9223372036854775807]
@@ -73,7 +73,7 @@ kinteger | xs:integer -3 | lt | kinteger:[-9223372036854775808 TO -4]
 kinteger | xs:integer -3 | eq | kinteger:[-3 TO -3]
 kinteger | xs:integer -3 | ge | kinteger:[-3 TO 9223372036854775807]
 kinteger | xs:integer -3 | le | kinteger:[-9223372036854775808 TO -3]
-kinteger | xs:integer -3 | ne | +*:* -kinteger:[-3 TO -3]
+kinteger | xs:integer -3 | ne | +FieldExistsQuery [field=kinteger] -kinteger:[-3 TO -3]
 kinteger | xs:integer -3 | ends-with | kinteger:[-3 TO 9223372036854775807]
 kinteger | xs:integer -3 | starts-with | kinteger:[-3 TO 9223372036854775807]
 kinteger | xs:integer -3 | contains | kinteger:[-3 TO 9223372036854775807]
@@ -83,7 +83,7 @@ klong | xs:long 5 | lt | klong:[-9223372036854775808 TO 4]
 klong | xs:long 5 | eq | klong:[5 TO 5]
 klong | xs:long 5 | ge | klong:[5 TO 9223372036854775807]
 klong | xs:long 5 | le | klong:[-9223372036854775808 TO 5]
-klong | xs:long 5 | ne | +*:* -klong:[5 TO 5]
+klong | xs:long 5 | ne | +FieldExistsQuery [field=klong] -klong:[5 TO 5]
 klong | xs:long 5 | ends-with | klong:[5 TO 9223372036854775807]
 klong | xs:long 5 | starts-with | klong:[5 TO 9223372036854775807]
 klong | xs:long 5 | contains | klong:[5 TO 9223372036854775807]
@@ -93,7 +93,7 @@ klong | xs:long -3 | lt | klong:[-9223372036854775808 TO -4]
 klong | xs:long -3 | eq | klong:[-3 TO -3]
 klong | xs:long -3 | ge | klong:[-3 TO 9223372036854775807]
 klong | xs:long -3 | le | klong:[-9223372036854775808 TO -3]
-klong | xs:long -3 | ne | +*:* -klong:[-3 TO -3]
+klong | xs:long -3 | ne | +FieldExistsQuery [field=klong] -klong:[-3 TO -3]
 klong | xs:long -3 | ends-with | klong:[-3 TO 9223372036854775807]
 klong | xs:long -3 | starts-with | klong:[-3 TO 9223372036854775807]
 klong | xs:long -3 | contains | klong:[-3 TO 9223372036854775807]
@@ -103,7 +103,7 @@ kint | xs:int 5 | lt | kint:[-2147483648 TO 4]
 kint | xs:int 5 | eq | kint:[5 TO 5]
 kint | xs:int 5 | ge | kint:[5 TO 2147483647]
 kint | xs:int 5 | le | kint:[-2147483648 TO 5]
-kint | xs:int 5 | ne | +*:* -kint:[5 TO 5]
+kint | xs:int 5 | ne | +FieldExistsQuery [field=kint] -kint:[5 TO 5]
 kint | xs:int 5 | ends-with | kint:[5 TO 2147483647]
 kint | xs:int 5 | starts-with | kint:[5 TO 2147483647]
 kint | xs:int 5 | contains | kint:[5 TO 2147483647]
@@ -113,7 +113,7 @@ kint | xs:int -3 | lt | kint:[-2147483648 TO -4]
 kint | xs:int -3 | eq | kint:[-3 TO -3]
 kint | xs:int -3 | ge | kint:[-3 TO 2147483647]
 kint | xs:int -3 | le | kint:[-2147483648 TO -3]
-kint | xs:int -3 | ne | +*:* -kint:[-3 TO -3]
+kint | xs:int -3 | ne | +FieldExistsQuery [field=kint] -kint:[-3 TO -3]
 kint | xs:int -3 | ends-with | kint:[-3 TO 2147483647]
 kint | xs:int -3 | starts-with | kint:[-3 TO 2147483647]
 kint | xs:int -3 | contains | kint:[-3 TO 2147483647]
@@ -123,7 +123,7 @@ kshort | xs:short 5 | lt | kshort:[-2147483648 TO 4]
 kshort | xs:short 5 | eq | kshort:[5 TO 5]
 kshort | xs:short 5 | ge | kshort:[5 TO 2147483647]
 kshort | xs:short 5 | le | kshort:[-2147483648 TO 5]
-kshort | xs:short 5 | ne | +*:* -kshort:[5 TO 5]
+kshort | xs:short 5 | ne | +FieldExistsQuery [field=kshort] -kshort:[5 TO 5]
 kshort | xs:short 5 | ends-with | kshort:[5 TO 2147483647]
 kshort | xs:short 5 | starts-with | kshort:[5 TO 2147483647]
 kshort | xs:short 5 | contains | kshort:[5 TO 2147483647]
@@ -133,7 +133,7 @@ kdecimal | xs:decimal 2.5 | lt | IndexOrDocValuesQuery(indexQuery=kdecimal:[-Inf
 kdecimal | xs:decimal 2.5 | eq | IndexOrDocValuesQuery(indexQuery=kdecimal:[2.5 TO 2.5], dvQuery=kdecimal:[4612811918334230528 TO 4612811918334230528])
 kdecimal | xs:decimal 2.5 | ge | IndexOrDocValuesQuery(indexQuery=kdecimal:[2.5 TO Infinity], dvQuery=kdecimal:[4612811918334230528 TO 9218868437227405312])
 kdecimal | xs:decimal 2.5 | le | IndexOrDocValuesQuery(indexQuery=kdecimal:[-Infinity TO 2.5], dvQuery=kdecimal:[-9218868437227405313 TO 4612811918334230528])
-kdecimal | xs:decimal 2.5 | ne | +*:* -IndexOrDocValuesQuery(indexQuery=kdecimal:[2.5 TO 2.5], dvQuery=kdecimal:[4612811918334230528 TO 4612811918334230528])
+kdecimal | xs:decimal 2.5 | ne | +FieldExistsQuery [field=kdecimal] -IndexOrDocValuesQuery(indexQuery=kdecimal:[2.5 TO 2.5], dvQuery=kdecimal:[4612811918334230528 TO 4612811918334230528])
 kdecimal | xs:decimal 2.5 | ends-with | IndexOrDocValuesQuery(indexQuery=kdecimal:[2.5 TO Infinity], dvQuery=kdecimal:[4612811918334230528 TO 9218868437227405312])
 kdecimal | xs:decimal 2.5 | starts-with | IndexOrDocValuesQuery(indexQuery=kdecimal:[2.5 TO Infinity], dvQuery=kdecimal:[4612811918334230528 TO 9218868437227405312])
 kdecimal | xs:decimal 2.5 | contains | IndexOrDocValuesQuery(indexQuery=kdecimal:[2.5 TO Infinity], dvQuery=kdecimal:[4612811918334230528 TO 9218868437227405312])
@@ -143,7 +143,7 @@ kdecimal | xs:decimal -0.25 | lt | IndexOrDocValuesQuery(indexQuery=kdecimal:[-I
 kdecimal | xs:decimal -0.25 | eq | IndexOrDocValuesQuery(indexQuery=kdecimal:[-0.25 TO -0.25], dvQuery=kdecimal:[-4598175219545276417 TO -4598175219545276417])
 kdecimal | xs:decimal -0.25 | ge | IndexOrDocValuesQuery(indexQuery=kdecimal:[-0.25 TO Infinity], dvQuery=kdecimal:[-4598175219545276417 TO 9218868437227405312])
 kdecimal | xs:decimal -0.25 | le | IndexOrDocValuesQuery(indexQuery=kdecimal:[-Infinity TO -0.25], dvQuery=kdecimal:[-9218868437227405313 TO -4598175219545276417])
-kdecimal | xs:decimal -0.25 | ne | +*:* -IndexOrDocValuesQuery(indexQuery=kdecimal:[-0.25 TO -0.25], dvQuery=kdecimal:[-4598175219545276417 TO -4598175219545276417])
+kdecimal | xs:decimal -0.25 | ne | +FieldExistsQuery [field=kdecimal] -IndexOrDocValuesQuery(indexQuery=kdecimal:[-0.25 TO -0.25], dvQuery=kdecimal:[-4598175219545276417 TO -4598175219545276417])
 kdecimal | xs:decimal -0.25 | ends-with | IndexOrDocValuesQuery(indexQuery=kdecimal:[-0.25 TO Infinity], dvQuery=kdecimal:[-4598175219545276417 TO 9218868437227405312])
 kdecimal | xs:decimal -0.25 | starts-with | IndexOrDocValuesQuery(indexQuery=kdecimal:[-0.25 TO Infinity], dvQuery=kdecimal:[-4598175219545276417 TO 9218868437227405312])
 kdecimal | xs:decimal -0.25 | contains | IndexOrDocValuesQuery(indexQuery=kdecimal:[-0.25 TO Infinity], dvQuery=kdecimal:[-4598175219545276417 TO 9218868437227405312])
@@ -153,7 +153,7 @@ kdouble | xs:double 2.5 | lt | IndexOrDocValuesQuery(indexQuery=kdouble:[-Infini
 kdouble | xs:double 2.5 | eq | IndexOrDocValuesQuery(indexQuery=kdouble:[2.5 TO 2.5], dvQuery=kdouble:[4612811918334230528 TO 4612811918334230528])
 kdouble | xs:double 2.5 | ge | IndexOrDocValuesQuery(indexQuery=kdouble:[2.5 TO Infinity], dvQuery=kdouble:[4612811918334230528 TO 9218868437227405312])
 kdouble | xs:double 2.5 | le | IndexOrDocValuesQuery(indexQuery=kdouble:[-Infinity TO 2.5], dvQuery=kdouble:[-9218868437227405313 TO 4612811918334230528])
-kdouble | xs:double 2.5 | ne | +*:* -IndexOrDocValuesQuery(indexQuery=kdouble:[2.5 TO 2.5], dvQuery=kdouble:[4612811918334230528 TO 4612811918334230528])
+kdouble | xs:double 2.5 | ne | +FieldExistsQuery [field=kdouble] -IndexOrDocValuesQuery(indexQuery=kdouble:[2.5 TO 2.5], dvQuery=kdouble:[4612811918334230528 TO 4612811918334230528])
 kdouble | xs:double 2.5 | ends-with | IndexOrDocValuesQuery(indexQuery=kdouble:[2.5 TO Infinity], dvQuery=kdouble:[4612811918334230528 TO 9218868437227405312])
 kdouble | xs:double 2.5 | starts-with | IndexOrDocValuesQuery(indexQuery=kdouble:[2.5 TO Infinity], dvQuery=kdouble:[4612811918334230528 TO 9218868437227405312])
 kdouble | xs:double 2.5 | contains | IndexOrDocValuesQuery(indexQuery=kdouble:[2.5 TO Infinity], dvQuery=kdouble:[4612811918334230528 TO 9218868437227405312])
@@ -163,7 +163,7 @@ kdouble | xs:double -0.25 | lt | IndexOrDocValuesQuery(indexQuery=kdouble:[-Infi
 kdouble | xs:double -0.25 | eq | IndexOrDocValuesQuery(indexQuery=kdouble:[-0.25 TO -0.25], dvQuery=kdouble:[-4598175219545276417 TO -4598175219545276417])
 kdouble | xs:double -0.25 | ge | IndexOrDocValuesQuery(indexQuery=kdouble:[-0.25 TO Infinity], dvQuery=kdouble:[-4598175219545276417 TO 9218868437227405312])
 kdouble | xs:double -0.25 | le | IndexOrDocValuesQuery(indexQuery=kdouble:[-Infinity TO -0.25], dvQuery=kdouble:[-9218868437227405313 TO -4598175219545276417])
-kdouble | xs:double -0.25 | ne | +*:* -IndexOrDocValuesQuery(indexQuery=kdouble:[-0.25 TO -0.25], dvQuery=kdouble:[-4598175219545276417 TO -4598175219545276417])
+kdouble | xs:double -0.25 | ne | +FieldExistsQuery [field=kdouble] -IndexOrDocValuesQuery(indexQuery=kdouble:[-0.25 TO -0.25], dvQuery=kdouble:[-4598175219545276417 TO -4598175219545276417])
 kdouble | xs:double -0.25 | ends-with | IndexOrDocValuesQuery(indexQuery=kdouble:[-0.25 TO Infinity], dvQuery=kdouble:[-4598175219545276417 TO 9218868437227405312])
 kdouble | xs:double -0.25 | starts-with | IndexOrDocValuesQuery(indexQuery=kdouble:[-0.25 TO Infinity], dvQuery=kdouble:[-4598175219545276417 TO 9218868437227405312])
 kdouble | xs:double -0.25 | contains | IndexOrDocValuesQuery(indexQuery=kdouble:[-0.25 TO Infinity], dvQuery=kdouble:[-4598175219545276417 TO 9218868437227405312])
@@ -173,7 +173,7 @@ kfloat | xs:float 2.5 | lt | IndexOrDocValuesQuery(indexQuery=kfloat:[-Infinity 
 kfloat | xs:float 2.5 | eq | IndexOrDocValuesQuery(indexQuery=kfloat:[2.5 TO 2.5], dvQuery=kfloat:[1075838976 TO 1075838976])
 kfloat | xs:float 2.5 | ge | IndexOrDocValuesQuery(indexQuery=kfloat:[2.5 TO Infinity], dvQuery=kfloat:[1075838976 TO 2139095040])
 kfloat | xs:float 2.5 | le | IndexOrDocValuesQuery(indexQuery=kfloat:[-Infinity TO 2.5], dvQuery=kfloat:[-2139095041 TO 1075838976])
-kfloat | xs:float 2.5 | ne | +*:* -IndexOrDocValuesQuery(indexQuery=kfloat:[2.5 TO 2.5], dvQuery=kfloat:[1075838976 TO 1075838976])
+kfloat | xs:float 2.5 | ne | +FieldExistsQuery [field=kfloat] -IndexOrDocValuesQuery(indexQuery=kfloat:[2.5 TO 2.5], dvQuery=kfloat:[1075838976 TO 1075838976])
 kfloat | xs:float 2.5 | ends-with | IndexOrDocValuesQuery(indexQuery=kfloat:[2.5 TO Infinity], dvQuery=kfloat:[1075838976 TO 2139095040])
 kfloat | xs:float 2.5 | starts-with | IndexOrDocValuesQuery(indexQuery=kfloat:[2.5 TO Infinity], dvQuery=kfloat:[1075838976 TO 2139095040])
 kfloat | xs:float 2.5 | contains | IndexOrDocValuesQuery(indexQuery=kfloat:[2.5 TO Infinity], dvQuery=kfloat:[1075838976 TO 2139095040])
@@ -183,7 +183,7 @@ kdate | xs:date 2012-01-20 | lt | kdate:[-9223372036854775808 TO 131858707]
 kdate | xs:date 2012-01-20 | eq | kdate:[131858708 TO 131858708]
 kdate | xs:date 2012-01-20 | ge | kdate:[131858708 TO 9223372036854775807]
 kdate | xs:date 2012-01-20 | le | kdate:[-9223372036854775808 TO 131858708]
-kdate | xs:date 2012-01-20 | ne | +*:* -kdate:[131858708 TO 131858708]
+kdate | xs:date 2012-01-20 | ne | +FieldExistsQuery [field=kdate] -kdate:[131858708 TO 131858708]
 kdate | xs:date 2012-01-20 | ends-with | kdate:[131858708 TO 9223372036854775807]
 kdate | xs:date 2012-01-20 | starts-with | kdate:[131858708 TO 9223372036854775807]
 kdate | xs:date 2012-01-20 | contains | kdate:[131858708 TO 9223372036854775807]
@@ -193,7 +193,7 @@ kdate | xs:date -0800-02-11 | lt | kdate:[-9223372036854775808 TO -52428278]
 kdate | xs:date -0800-02-11 | eq | kdate:[-52428277 TO -52428277]
 kdate | xs:date -0800-02-11 | ge | kdate:[-52428277 TO 9223372036854775807]
 kdate | xs:date -0800-02-11 | le | kdate:[-9223372036854775808 TO -52428277]
-kdate | xs:date -0800-02-11 | ne | +*:* -kdate:[-52428277 TO -52428277]
+kdate | xs:date -0800-02-11 | ne | +FieldExistsQuery [field=kdate] -kdate:[-52428277 TO -52428277]
 kdate | xs:date -0800-02-11 | ends-with | kdate:[-52428277 TO 9223372036854775807]
 kdate | xs:date -0800-02-11 | starts-with | kdate:[-52428277 TO 9223372036854775807]
 kdate | xs:date -0800-02-11 | contains | kdate:[-52428277 TO 9223372036854775807]
@@ -203,7 +203,7 @@ ktime | xs:time 10:00:00 | lt | ktime:[-9223372036854775808 TO 94640399999]
 ktime | xs:time 10:00:00 | eq | ktime:[94640400000 TO 94640400000]
 ktime | xs:time 10:00:00 | ge | ktime:[94640400000 TO 9223372036854775807]
 ktime | xs:time 10:00:00 | le | ktime:[-9223372036854775808 TO 94640400000]
-ktime | xs:time 10:00:00 | ne | +*:* -ktime:[94640400000 TO 94640400000]
+ktime | xs:time 10:00:00 | ne | +FieldExistsQuery [field=ktime] -ktime:[94640400000 TO 94640400000]
 ktime | xs:time 10:00:00 | ends-with | ktime:[94640400000 TO 9223372036854775807]
 ktime | xs:time 10:00:00 | starts-with | ktime:[94640400000 TO 9223372036854775807]
 ktime | xs:time 10:00:00 | contains | ktime:[94640400000 TO 9223372036854775807]
@@ -213,7 +213,7 @@ ktime | xs:time 23:59:59+01:00 | lt | ktime:[-9223372036854775808 TO 94690798999
 ktime | xs:time 23:59:59+01:00 | eq | ktime:[94690799000 TO 94690799000]
 ktime | xs:time 23:59:59+01:00 | ge | ktime:[94690799000 TO 9223372036854775807]
 ktime | xs:time 23:59:59+01:00 | le | ktime:[-9223372036854775808 TO 94690799000]
-ktime | xs:time 23:59:59+01:00 | ne | +*:* -ktime:[94690799000 TO 94690799000]
+ktime | xs:time 23:59:59+01:00 | ne | +FieldExistsQuery [field=ktime] -ktime:[94690799000 TO 94690799000]
 ktime | xs:time 23:59:59+01:00 | ends-with | ktime:[94690799000 TO 9223372036854775807]
 ktime | xs:time 23:59:59+01:00 | starts-with | ktime:[94690799000 TO 9223372036854775807]
 ktime | xs:time 23:59:59+01:00 | contains | ktime:[94690799000 TO 9223372036854775807]
@@ -253,7 +253,7 @@ kconvdate | xs:date 1918-01-01 | lt | kconvdate:[-9223372036854775808 TO 1256983
 kconvdate | xs:date 1918-01-01 | eq | kconvdate:[125698305 TO 125698305]
 kconvdate | xs:date 1918-01-01 | ge | kconvdate:[125698305 TO 9223372036854775807]
 kconvdate | xs:date 1918-01-01 | le | kconvdate:[-9223372036854775808 TO 125698305]
-kconvdate | xs:date 1918-01-01 | ne | +*:* -kconvdate:[125698305 TO 125698305]
+kconvdate | xs:date 1918-01-01 | ne | +FieldExistsQuery [field=kconvdate] -kconvdate:[125698305 TO 125698305]
 kconvdate | xs:date 1918-01-01 | ends-with | kconvdate:[125698305 TO 9223372036854775807]
 kconvdate | xs:date 1918-01-01 | starts-with | kconvdate:[125698305 TO 9223372036854775807]
 kconvdate | xs:date 1918-01-01 | contains | kconvdate:[125698305 TO 9223372036854775807]
@@ -263,7 +263,7 @@ kconvdate | xs:date 0800-12-01 | lt | kconvdate:[-9223372036854775808 TO 5243187
 kconvdate | xs:date 0800-12-01 | eq | kconvdate:[52431873 TO 52431873]
 kconvdate | xs:date 0800-12-01 | ge | kconvdate:[52431873 TO 9223372036854775807]
 kconvdate | xs:date 0800-12-01 | le | kconvdate:[-9223372036854775808 TO 52431873]
-kconvdate | xs:date 0800-12-01 | ne | +*:* -kconvdate:[52431873 TO 52431873]
+kconvdate | xs:date 0800-12-01 | ne | +FieldExistsQuery [field=kconvdate] -kconvdate:[52431873 TO 52431873]
 kconvdate | xs:date 0800-12-01 | ends-with | kconvdate:[52431873 TO 9223372036854775807]
 kconvdate | xs:date 0800-12-01 | starts-with | kconvdate:[52431873 TO 9223372036854775807]
 kconvdate | xs:date 0800-12-01 | contains | kconvdate:[52431873 TO 9223372036854775807]
@@ -273,7 +273,7 @@ kdatetime | xs:dateTime 2012-01-20T10:00:00Z | lt | kdatetime:{* TO 201201201000
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | eq | kdatetime:20120120100000000
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | ge | kdatetime:[20120120100000000 TO *}
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | le | kdatetime:{* TO 20120120100000000]
-kdatetime | xs:dateTime 2012-01-20T10:00:00Z | ne | +*:* -kdatetime:20120120100000000
+kdatetime | xs:dateTime 2012-01-20T10:00:00Z | ne | +kdatetime:* -kdatetime:20120120100000000
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | ends-with | kdatetime:{20120120100000000 TO *}
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | starts-with | kdatetime:{20120120100000000 TO *}
 kdatetime | xs:dateTime 2012-01-20T10:00:00Z | contains | kdatetime:{20120120100000000 TO *}
@@ -283,7 +283,7 @@ kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | lt | kdatetime:{* TO 2012012
 kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | eq | kdatetime:20120120100000000
 kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | ge | kdatetime:[20120120100000000 TO *}
 kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | le | kdatetime:{* TO 20120120100000000]
-kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | ne | +*:* -kdatetime:20120120100000000
+kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | ne | +kdatetime:* -kdatetime:20120120100000000
 kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | ends-with | kdatetime:{20120120100000000 TO *}
 kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | starts-with | kdatetime:{20120120100000000 TO *}
 kdatetime | xs:dateTime 2012-01-20T11:00:00+01:00 | contains | kdatetime:{20120120100000000 TO *}
