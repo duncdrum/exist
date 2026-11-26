@@ -1,0 +1,19 @@
+exist-core/src/main/java/org/exist/Indexer.java
+  s_545f96ebe4ea56::t_df5bdba3451268 808-814,816-822
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2d2d2a77e6c6900a0c7f7537f43471649cc0d4bb",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
