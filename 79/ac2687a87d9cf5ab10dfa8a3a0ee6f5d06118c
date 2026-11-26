@@ -1,0 +1,21 @@
+extensions/indexes/range/src/test/java/org/exist/indexing/range/RangeKeyQueryCharacterizationTest.java
+  s_545f96ebe4ea56::t_a8be7687ebaa6b 1-159
+extensions/indexes/range/src/test/resources/org/exist/indexing/range/key-queries.golden
+  s_545f96ebe4ea56::t_7f527e983a620f 1-240
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "79ac2687a87d9cf5ab10dfa8a3a0ee6f5d06118c",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
