@@ -1,0 +1,21 @@
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/LuceneRemovalTest.java
+  s_545f96ebe4ea56::t_2740416aa18487 161-185
+extensions/indexes/lucene/src/test/java/xquery/lucene/ReindexScopeVectorTest.java
+  s_545f96ebe4ea56::t_f2db42c905c91e 146-169
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d9f630db6bd008cbeff1e036b7b6977e672c7ff7",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
