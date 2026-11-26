@@ -1,0 +1,27 @@
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndexWorker.java
+  s_545f96ebe4ea56::t_31485de04b4c96 2653
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneUtil.java
+  s_545f96ebe4ea56::t_ab3851d3bd46ca 24-25,52-64
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexWorker.java
+  s_545f96ebe4ea56::t_e1dedaed6fb7b9 575
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/LuceneNodeIdTermsTest.java
+  s_545f96ebe4ea56::t_87d3bc0d23563e 167-173
+extensions/indexes/range/src/test/java/org/exist/indexing/range/RangeNodeIdTermsTest.java
+  s_545f96ebe4ea56::t_896ca732b5b31d 165-171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9cebae1cad427c7c6cc8b65b3fec55ea984244f3",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}

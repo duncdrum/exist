@@ -1,0 +1,25 @@
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneIndexWorker.java
+  s_545f96ebe4ea56::t_04d8289e64e89f 608,1929,2657
+extensions/indexes/lucene/src/main/java/org/exist/indexing/lucene/LuceneUtil.java
+  s_545f96ebe4ea56::t_a899223019a6ea 59-72
+extensions/indexes/lucene/src/test/java/org/exist/indexing/lucene/LuceneNodeIdTermsTest.java
+  s_545f96ebe4ea56::t_e73452f7dd4df9 182,187-198
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexWorker.java
+  s_545f96ebe4ea56::t_8bc62ab0b1f415 565
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c2cf908a4b729a6c6cf0426a5e583c1c5c0f0c91",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
