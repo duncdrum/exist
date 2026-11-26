@@ -1,0 +1,23 @@
+extensions/indexes/range/src/test/java/org/exist/indexing/range/conversion/LowerCaseTestConverter.java
+  s_545f96ebe4ea56::t_65c8a72c680971 1-39
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_545f96ebe4ea56::t_4cf746ca516a5e 84-87,101-104,317-342
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_545f96ebe4ea56::t_4dff5bb9818d19 15-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f1ef32d2802c0400e182e705ee5612e3a9aea339",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
