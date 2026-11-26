@@ -666,79 +666,9 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
     private NodeSet doQuery(final int contextId, final DocumentSet docs, final NodeSet contextSet, final int axis,
                             IndexSearcher searcher, final short nodeType, Query query) throws IOException {
-        if (System.getProperty("exist.range.diagnose") != null) {
-            diagnoseQuery(searcher, query);
-        }
         SearchCollector collector = new SearchCollector(docs, contextSet, nodeType, axis, contextId);
         searcher.search(query, collector);
-        if (System.getProperty("exist.range.diagnose") != null) {
-            System.err.println("[RIW] SEARCH count=" + collector.getResultSet().getLength());
-        }
         return collector.getResultSet();
-    }
-
-    /**
-     * Diagnostic helper: dumps terms for the query's field and search term to stderr.
-     * Only runs when {@code -Dexist.range.diagnose} is enabled, to avoid overhead on normal queries.
-     */
-    private void diagnoseQuery(IndexSearcher searcher, Query query) {
-        String field = null;
-        String searchTerm = null;
-        switch (query) {
-            case TermQuery tq -> {
-                Term t = tq.getTerm();
-                field = t.field();
-                searchTerm = t.text();
-            }
-            case PrefixQuery pq -> {
-                Term t = pq.getPrefix();
-                field = t.field();
-                searchTerm = t.text();
-            }
-            case WildcardQuery wq -> {
-                Term t = wq.getTerm();
-                field = t.field();
-                searchTerm = t.text();
-            }
-            case null, default -> {}
-        }
-        if (field == null || LuceneFieldNames.isInternal(field)) {
-            return;
-        }
-        try {
-            IndexReader reader = searcher.getIndexReader();
-            System.err.println("[RIW] DIAG field=" + field + " searchTerm=" + searchTerm + " reader.maxDoc=" + reader.maxDoc() + " numDocs=" + reader.numDocs());
-            int totalTerms = 0;
-            for (LeafReaderContext ctx : reader.leaves()) {
-                Terms terms = ctx.reader().terms(field);
-                if (terms == null) {
-                    System.err.println("[RIW] DIAG segment has null Terms for field=" + field);
-                    continue;
-                }
-                TermsEnum te = terms.iterator();
-                BytesRef ref;
-                int n = 0;
-                while ((ref = te.next()) != null && n < 15) {
-                    System.err.println("[RIW] TERM " + field + "=" + safeBytesRefToDisplay(ref));
-                    n++;
-                    totalTerms++;
-                }
-                if (n == 0) {
-                    System.err.println("[RIW] DIAG segment has 0 terms for field=" + field);
-                } else {
-                    totalTerms += countRemaining(te);
-                }
-            }
-            System.err.println("[RIW] DIAG total terms for " + field + " (approx)=" + totalTerms);
-        } catch (IOException e) {
-            System.err.println("[RIW] DIAG error: " + e.getMessage());
-        }
-    }
-
-    private int countRemaining(TermsEnum te) throws IOException {
-        int c = 0;
-        while (te.next() != null) c++;
-        return c;
     }
 
     private class SearchCollector implements Collector {
