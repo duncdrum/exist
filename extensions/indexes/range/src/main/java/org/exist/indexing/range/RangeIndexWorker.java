@@ -71,6 +71,7 @@ import org.exist.xquery.value.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -159,10 +160,8 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
     private Query toQueryForKey(String field, QName qname, AtomicValue content, RangeIndex.Operator operator, DocumentSet docs, int matchFlags,
             boolean xpathSyntax) throws XPathException {
-        final int type = content.getType();
-        BytesRefBuilder bytes;
         BytesRef key = null;
-        if (Type.subTypeOf(type, Type.STRING)) {
+        if (Type.subTypeOf(content.getType(), Type.STRING)) {
             if (operator != RangeIndex.Operator.MATCH) {
                 key = analyzeContent(field, qname, content.getStringValue(), docs);
             }
@@ -170,46 +169,64 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 LOG.debug("QUERY field={} qname={} input={} key={} operator={}",
                         field, qname, content.getStringValue(), safeBytesRefToDisplay(key), operator);
             }
-            switch (operator) {
-                case EQ -> {
-                    return new TermQuery(new Term(field, key));
-                }
-                case NE -> {
-                    return not(anyTermOf(field), new TermQuery(new Term(field, key)));
-                }
-                case STARTS_WITH -> {
-                    return new PrefixQuery(new Term(field, key));
-                }
-                case ENDS_WITH -> {
-                    bytes = new BytesRefBuilder();
-                    bytes.append((byte)'*');
-                    bytes.append(escapeWildcards(key));
-                    return new WildcardQuery(new Term(field, bytes.toBytesRef()));
-                }
-                case CONTAINS -> {
-                    bytes = new BytesRefBuilder();
-                    bytes.append((byte)'*');
-                    bytes.append(escapeWildcards(key));
-                    bytes.append((byte)'*');
-                    return new WildcardQuery(new Term(field, bytes.toBytesRef()));
-                }
-                case MATCH -> {
-                    final String pattern = content.getStringValue();
-                    try {
-                        // for fn:matches, Lookup checks isServable first and falls back to fn:matches, so this is
-                        // the last line of defense rather than the expected path
-                        return xpathSyntax
-                                ? XPathToLuceneRegexTranslator.toQuery(field, pattern, matchFlags)
-                                : XPathToLuceneRegexTranslator.toLuceneSyntaxQuery(field, pattern, matchFlags);
-                    } catch (final IllegalArgumentException | TooComplexToDeterminizeException e) {
-                        throw new XPathException(ErrorCodes.FORX0002,
-                                "Invalid regular expression '" + pattern + "': " + e.getMessage());
-                    }
-                }
-                default -> {
-                }
+            final Query query = stringQuery(field, content, key, operator, matchFlags, xpathSyntax);
+            if (query != null) {
+                return query;
             }
         }
+        return pointOrTermQuery(field, content, key, operator);
+    }
+
+    /**
+     * The query of a string key for the operators that ask for terms.
+     *
+     * @return the query, or null for the comparisons of order, which a range of terms answers
+     */
+    private static @Nullable Query stringQuery(final String field, final AtomicValue content, final BytesRef key,
+            final RangeIndex.Operator operator, final int matchFlags, final boolean xpathSyntax) throws XPathException {
+        return switch (operator) {
+            case EQ -> new TermQuery(new Term(field, key));
+            case NE -> not(anyTermOf(field), new TermQuery(new Term(field, key)));
+            case STARTS_WITH -> new PrefixQuery(new Term(field, key));
+            case ENDS_WITH -> wildcardAround(field, key, false);
+            case CONTAINS -> wildcardAround(field, key, true);
+            case MATCH -> matchQuery(field, content.getStringValue(), matchFlags, xpathSyntax);
+            default -> null;
+        };
+    }
+
+    /** The nodes whose term ends with the key, or holds it when {@code both} is set. */
+    private static Query wildcardAround(final String field, final BytesRef key, final boolean both) {
+        final BytesRefBuilder bytes = new BytesRefBuilder();
+        bytes.append((byte) '*');
+        bytes.append(escapeWildcards(key));
+        if (both) {
+            bytes.append((byte) '*');
+        }
+        return new WildcardQuery(new Term(field, bytes.toBytesRef()));
+    }
+
+    private static Query matchQuery(final String field, final String pattern, final int matchFlags, final boolean xpathSyntax)
+            throws XPathException {
+        try {
+            // for fn:matches, Lookup checks isServable first and falls back to fn:matches, so this is
+            // the last line of defense rather than the expected path
+            return xpathSyntax
+                    ? XPathToLuceneRegexTranslator.toQuery(field, pattern, matchFlags)
+                    : XPathToLuceneRegexTranslator.toLuceneSyntaxQuery(field, pattern, matchFlags);
+        } catch (final IllegalArgumentException | TooComplexToDeterminizeException e) {
+            throw new XPathException(ErrorCodes.FORX0002,
+                    "Invalid regular expression '" + pattern + "': " + e.getMessage());
+        }
+    }
+
+    /**
+     * The query of a key that is not a string, and of a comparison of order on a string.
+     *
+     * @param key the analyzed key of a string, null for any other key
+     */
+    private static Query pointOrTermQuery(final String field, final AtomicValue content, final BytesRef key,
+            final RangeIndex.Operator operator) throws XPathException {
         // numbers, dates and times are Lucene points, asked for by NumericKey; everything else is a term
         final NumericKey numeric = NumericKey.of(content);
         if (numeric != null) {
@@ -223,13 +240,11 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
         }
         final boolean includeUpper = operator == RangeIndex.Operator.LE;
         final boolean includeLower = operator == RangeIndex.Operator.GE;
-        if (type == Type.DATE_TIME) {
-            key = RangeIndexConfigElement.convertToBytes(content);
-        }
+        final BytesRef bound = content.getType() == Type.DATE_TIME ? RangeIndexConfigElement.convertToBytes(content) : key;
         if (operator == RangeIndex.Operator.LT || operator == RangeIndex.Operator.LE) {
-            return new TermRangeQuery(field, null, key, includeLower, includeUpper);
+            return new TermRangeQuery(field, null, bound, includeLower, includeUpper);
         } else {
-            return new TermRangeQuery(field, key, null, includeLower, includeUpper);
+            return new TermRangeQuery(field, bound, null, includeLower, includeUpper);
         }
     }
 
