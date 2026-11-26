@@ -102,16 +102,11 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
     }
 
     /**
-     * Safely convert a BytesRef to a display string. ICU collation sort keys are binary, not UTF-8,
-     * so utf8ToString() throws AssertionError. Use this for logging/debug output.
+     * A term for a log line: its text if the bytes are UTF-8, the raw bytes if they are not, as the sort keys of an ICU
+     * collation are.
      */
     private static String safeBytesRefToDisplay(BytesRef ref) {
-        if (ref == null) return "null";
-        try {
-            return ref.utf8ToString();
-        } catch (AssertionError e) {
-            return "[collation key, " + ref.length + " bytes]";
-        }
+        return ref == null ? "null" : Term.toString(ref);
     }
 
     private final RangeIndex index;
