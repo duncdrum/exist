@@ -1,0 +1,47 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  s_545f96ebe4ea56::t_0a2b643890a833 254-258,264-315,868-869
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  s_545f96ebe4ea56::t_53f65bc3f16826 1-178
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  s_545f96ebe4ea56::t_1fe290f4f387d1 140-149
+exist-core/src/test/java/org/exist/xmldb/CollectionConfigurationTest.java
+  s_545f96ebe4ea56::t_3daa91e8b8ac59 34,1042-1052,1071,1076
+exist-core/src/test/java/org/exist/xquery/IndexKeyTypingTest.java
+  s_545f96ebe4ea56::t_78391f6429ca94 1-137
+exist-core/src/test/java/org/exist/xquery/ValueIndexTest.java
+  s_545f96ebe4ea56::t_af8647f83503ae 46-47,138,147,154,406-418
+exist-core/src/test/xquery/dates/dates.xml
+  s_545f96ebe4ea56::t_a8ad4744d1f333 67,72,77,82,87,92,97,102,107,112,117-138,141-145
+exist-core/src/test/xquery/indexing/range.xml
+  s_545f96ebe4ea56::t_ac8e3fae13c40c 106-107
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  s_545f96ebe4ea56::t_ecf48c3c872c55 530-531,579-609
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  s_545f96ebe4ea56::t_6b98a3a80ce355 305-308,318-341
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  s_545f96ebe4ea56::t_0689242382354e 216-230
+extensions/indexes/range/src/test/java/org/exist/indexing/range/conversion/LowerCaseTestConverter.java
+  s_545f96ebe4ea56::t_3ad2ce590338a1 1-39
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_545f96ebe4ea56::t_5a24b6979fcd50 1-342
+extensions/indexes/range/src/test/xquery/range/types.xql
+  s_545f96ebe4ea56::t_e0d547ffb75162 173-181,216-224,386,389-390,392
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_545f96ebe4ea56::t_ba6f4f2824c206 10-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e909bfc060376ae62bf9d2ba25f84c8bf3d7fdd1",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "unknown"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
