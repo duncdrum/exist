@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/java/org/exist/indexing/range/RangeRemovalTest.java
+  s_545f96ebe4ea56::t_92378941bbc24a 157-158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "00db12719b024782706f2d091b8840e526890c2a",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
