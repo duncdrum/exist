@@ -1,0 +1,19 @@
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexWorker.java
+  s_545f96ebe4ea56::t_199359af9054ca 522,578
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d481c1c774ad6f46d64f56369bbb3efc08849d11",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
