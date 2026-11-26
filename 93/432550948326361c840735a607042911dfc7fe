@@ -1,0 +1,27 @@
+extensions/indexes/range/src/main/java/org/exist/indexing/range/RangeIndexWorker.java
+  s_545f96ebe4ea56::t_7e3749a54d4522 191,197,271-288
+extensions/indexes/range/src/test/java/org/exist/indexing/range/RangeKeyQueryCharacterizationTest.java
+  s_545f96ebe4ea56::t_4add298397a03d 148-149
+extensions/indexes/range/src/test/xquery/range/wildcard-keys.xqm
+  s_545f96ebe4ea56::t_c6ecb74da60994 1-116
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_545f96ebe4ea56::t_6a9576df5ebfaa 177
+extensions/indexes/range/src/test/resources/org/exist/indexing/range/key-queries.golden
+  s_545f96ebe4ea56::t_b8f7526484ce91 37,39,41-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "93432550948326361c840735a607042911dfc7fe",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
