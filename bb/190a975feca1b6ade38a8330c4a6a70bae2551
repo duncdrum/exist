@@ -1,0 +1,21 @@
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  s_545f96ebe4ea56::t_40d95646467ce7 79-98,118-123,133-135,251-308
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  s_545f96ebe4ea56::t_e508f208f15da4 10-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bb190a975feca1b6ade38a8330c4a6a70bae2551",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
