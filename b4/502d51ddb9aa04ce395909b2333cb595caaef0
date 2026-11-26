@@ -1,0 +1,19 @@
+extensions/indexes/range/src/test/xquery/range/eq-cardinality.xqm
+  s_545f96ebe4ea56::t_31032ca2a92b2b 1-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b4502d51ddb9aa04ce395909b2333cb595caaef0",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
