@@ -1,0 +1,16 @@
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  h_ff0005bef58c9d 28-30,40,84-139
+extensions/indexes/range/src/test/xquery/range/eq-cardinality.xqm
+  h_ff0005bef58c9d 1-152
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a118f1ec4badab04f93f9f8251e1d9da4df137a7",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
