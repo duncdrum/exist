@@ -198,136 +198,41 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 }
             }
         }
-        // EQ/NE for numeric/date types: use Point queries (LongField.newExactQuery etc.), not TermQuery
-        // (LongField/IntField index as Points; TermQuery searches terms and never matches)
+        // numbers, dates and times are Lucene points, asked for by NumericKey; everything else is a term
+        final NumericKey numeric = NumericKey.of(content);
+        if (numeric != null) {
+            if (operator == RangeIndex.Operator.EQ) {
+                return numeric.exact(field);
+            }
+            if (operator == RangeIndex.Operator.NE) {
+                return not(numeric.exact(field));
+            }
+            return numeric.range(field, operator);
+        }
         if (operator == RangeIndex.Operator.EQ) {
-            return switch (type) {
-                case Type.INTEGER, Type.LONG, Type.UNSIGNED_LONG ->
-                    LongField.newExactQuery(field, ((NumericValue) content).getLong());
-                case Type.INT, Type.UNSIGNED_INT, Type.SHORT, Type.UNSIGNED_SHORT ->
-                    IntField.newExactQuery(field, ((NumericValue) content).getInt());
-                case Type.DECIMAL, Type.DOUBLE ->
-                    DoubleField.newExactQuery(field, ((NumericValue) content).getDouble());
-                case Type.FLOAT ->
-                    FloatField.newExactQuery(field, (float) ((NumericValue) content).getDouble());
-                case Type.DATE ->
-                    LongField.newExactQuery(field, RangeIndexConfigElement.dateToLong((DateValue) content));
-                case Type.TIME ->
-                    LongField.newExactQuery(field, RangeIndexConfigElement.timeToLong((TimeValue) content));
-                case Type.DATE_TIME ->
-                    new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
-                default ->
-                    new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
-            };
+            return new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
         }
         if (operator == RangeIndex.Operator.NE) {
-            Query eqQuery = switch (type) {
-                case Type.INTEGER, Type.LONG, Type.UNSIGNED_LONG ->
-                        LongField.newExactQuery(field, ((NumericValue) content).getLong());
-                case Type.INT, Type.UNSIGNED_INT, Type.SHORT, Type.UNSIGNED_SHORT ->
-                        IntField.newExactQuery(field, ((NumericValue) content).getInt());
-                case Type.DECIMAL, Type.DOUBLE ->
-                        DoubleField.newExactQuery(field, ((NumericValue) content).getDouble());
-                case Type.FLOAT ->
-                        FloatField.newExactQuery(field, (float) ((NumericValue) content).getDouble());
-                case Type.DATE ->
-                        LongField.newExactQuery(field, RangeIndexConfigElement.dateToLong((DateValue) content));
-                case Type.TIME ->
-                        LongField.newExactQuery(field, RangeIndexConfigElement.timeToLong((TimeValue) content));
-                default -> new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
-            };
-            final BooleanQuery.Builder nqb = new BooleanQuery.Builder();
-            nqb.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
-            nqb.add(eqQuery, BooleanClause.Occur.MUST_NOT);
-            return nqb.build();
+            return not(new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content))));
         }
         final boolean includeUpper = operator == RangeIndex.Operator.LE;
         final boolean includeLower = operator == RangeIndex.Operator.GE;
-        // LongField.newRangeQuery ranges are inclusive; for LT/GT use exclusive bounds per Lucene 10 docs
-        switch (type) {
-            case Type.INTEGER:
-            case Type.LONG:
-            case Type.UNSIGNED_LONG:
-                long lval = ((NumericValue) content).getLong();
-                if (operator == RangeIndex.Operator.LT) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, Math.addExact(lval, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, lval);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return LongField.newRangeQuery(field, Math.addExact(lval, 1), Long.MAX_VALUE);
-                } else {
-                    return LongField.newRangeQuery(field, lval, Long.MAX_VALUE);
-                }
-            case Type.INT:
-            case Type.UNSIGNED_INT:
-            case Type.SHORT:
-            case Type.UNSIGNED_SHORT:
-                int ival = ((NumericValue) content).getInt();
-                if (operator == RangeIndex.Operator.LT) {
-                    return IntField.newRangeQuery(field, Integer.MIN_VALUE, Math.addExact(ival, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return IntField.newRangeQuery(field, Integer.MIN_VALUE, ival);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return IntField.newRangeQuery(field, Math.addExact(ival, 1), Integer.MAX_VALUE);
-                } else {
-                    return IntField.newRangeQuery(field, ival, Integer.MAX_VALUE);
-                }
-            case Type.DECIMAL:
-            case Type.DOUBLE:
-                double dval = ((NumericValue) content).getDouble();
-                if (operator == RangeIndex.Operator.LT) {
-                    return DoubleField.newRangeQuery(field, Double.NEGATIVE_INFINITY, Math.nextDown(dval));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return DoubleField.newRangeQuery(field, Double.NEGATIVE_INFINITY, dval);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return DoubleField.newRangeQuery(field, Math.nextUp(dval), Double.POSITIVE_INFINITY);
-                } else {
-                    return DoubleField.newRangeQuery(field, dval, Double.POSITIVE_INFINITY);
-                }
-            case Type.FLOAT:
-                float fval = (float) ((NumericValue) content).getDouble();
-                if (operator == RangeIndex.Operator.LT) {
-                    return FloatField.newRangeQuery(field, Float.NEGATIVE_INFINITY, Math.nextDown(fval));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return FloatField.newRangeQuery(field, Float.NEGATIVE_INFINITY, fval);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return FloatField.newRangeQuery(field, Math.nextUp(fval), Float.POSITIVE_INFINITY);
-                } else {
-                    return FloatField.newRangeQuery(field, fval, Float.POSITIVE_INFINITY);
-                }
-            case Type.DATE:
-                long dl = RangeIndexConfigElement.dateToLong((DateValue) content);
-                if (operator == RangeIndex.Operator.LT) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, Math.addExact(dl, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, dl);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return LongField.newRangeQuery(field, Math.addExact(dl, 1), Long.MAX_VALUE);
-                } else {
-                    return LongField.newRangeQuery(field, dl, Long.MAX_VALUE);
-                }
-            case Type.TIME:
-                long tl = RangeIndexConfigElement.timeToLong((TimeValue) content);
-                if (operator == RangeIndex.Operator.LT) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, Math.addExact(tl, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, tl);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return LongField.newRangeQuery(field, Math.addExact(tl, 1), Long.MAX_VALUE);
-                } else {
-                    return LongField.newRangeQuery(field, tl, Long.MAX_VALUE);
-                }
-            case Type.DATE_TIME:
-            default:
-                if (type == Type.DATE_TIME) {
-                    key = RangeIndexConfigElement.convertToBytes(content);
-                }
-                if (operator == RangeIndex.Operator.LT || operator == RangeIndex.Operator.LE) {
-                    return new TermRangeQuery(field, null, key, includeLower, includeUpper);
-                } else {
-                    return new TermRangeQuery(field, key, null, includeLower, includeUpper);
-                }
+        if (type == Type.DATE_TIME) {
+            key = RangeIndexConfigElement.convertToBytes(content);
         }
+        if (operator == RangeIndex.Operator.LT || operator == RangeIndex.Operator.LE) {
+            return new TermRangeQuery(field, null, key, includeLower, includeUpper);
+        } else {
+            return new TermRangeQuery(field, key, null, includeLower, includeUpper);
+        }
+    }
+
+    /** Every node that the query does not match. */
+    private static Query not(final Query query) {
+        final BooleanQuery.Builder builder = new BooleanQuery.Builder();
+        builder.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
+        builder.add(query, BooleanClause.Occur.MUST_NOT);
+        return builder.build();
     }
 
     @Override
