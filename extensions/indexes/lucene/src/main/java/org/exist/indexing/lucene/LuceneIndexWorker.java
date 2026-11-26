@@ -101,15 +101,6 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
     private static final String REINDEX_DELETE_BATCH_PROPERTY = "exist.lucene.reindex.delete.batchClauses";
     private static final int DEFAULT_REINDEX_DELETE_DOCID_BATCH_SIZE = 256;
 
-    public static final org.apache.lucene.document.FieldType TYPE_NODE_ID = new org.apache.lucene.document.FieldType();
-    static {
-        TYPE_NODE_ID.setTokenized(true);
-        TYPE_NODE_ID.setStored(false);
-        TYPE_NODE_ID.setOmitNorms(true);
-        TYPE_NODE_ID.setStoreTermVectors(false);
-        TYPE_NODE_ID.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
-    }
-
     static final Logger LOG = LogManager.getLogger(LuceneIndexWorker.class);
 
     /** releases the hold on a taxonomy reader when the facets that need it are unreachable, see {@link LuceneFacets} */
@@ -2659,7 +2650,7 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
                 // add separate index for node id (FIELD_NODE_ID for Term queries)
                 BinaryTokenStream bts = new BinaryTokenStream(new BytesRef(data));
-                Field fNodeIdIdx = new Field(LuceneFieldNames.FIELD_NODE_ID, bts, TYPE_NODE_ID);
+                Field fNodeIdIdx = new Field(LuceneFieldNames.FIELD_NODE_ID, bts, LuceneUtil.TYPE_NODE_ID);
                 doc.add(fNodeIdIdx);
 
                 String contentField = null;

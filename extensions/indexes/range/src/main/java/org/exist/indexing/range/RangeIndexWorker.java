@@ -49,7 +49,6 @@ import org.exist.indexing.*;
 import org.exist.indexing.StreamListener.ReindexMode;
 import org.exist.indexing.lucene.BinaryTokenStream;
 import org.exist.indexing.lucene.LuceneFieldNames;
-import org.exist.indexing.lucene.LuceneIndexWorker;
 import org.exist.indexing.lucene.LuceneUtil;
 import org.exist.numbering.NodeId;
 import org.exist.security.PermissionDeniedException;
@@ -573,7 +572,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
                 // add separate index for node id
                 BinaryTokenStream bts = new BinaryTokenStream(new BytesRef(LuceneUtil.createId(currentDoc.getDocId(), pending.getNodeId())));
-                Field fNodeIdIdx = new Field(FIELD_ID, bts, LuceneIndexWorker.TYPE_NODE_ID);
+                Field fNodeIdIdx = new Field(FIELD_ID, bts, LuceneUtil.TYPE_NODE_ID);
                 doc.add(fNodeIdIdx);
 
                 for (TextCollector.Field field : pending.getCollector().getFields()) {

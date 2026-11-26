@@ -21,6 +21,8 @@
  */
 package org.exist.indexing.lucene;
 
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.document.FieldType;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +48,19 @@ import org.exist.storage.BrokerPool;
 import org.exist.util.ByteConversion;
 
 public class LuceneUtil {
+
+    /**
+     * The type of the field that indexes the id of a node as one term: a token stream of one binary token, with no norms.
+     * The full-text index and the range index both use it.
+     */
+    public static final FieldType TYPE_NODE_ID = new FieldType();
+    static {
+        TYPE_NODE_ID.setTokenized(true);
+        TYPE_NODE_ID.setStored(false);
+        TYPE_NODE_ID.setOmitNorms(true);
+        TYPE_NODE_ID.setStoreTermVectors(false);
+        TYPE_NODE_ID.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
+    }
 
     public static byte[] createId(final int docId, final NodeId nodeId) {
         // build id from nodeId and docId
