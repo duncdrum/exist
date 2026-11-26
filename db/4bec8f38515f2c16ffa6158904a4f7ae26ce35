@@ -1,0 +1,21 @@
+extensions/indexes/ngram/src/main/java/org/exist/xquery/modules/ngram/NGramSearch.java
+  s_545f96ebe4ea56::t_e8fa9eaad2d9e4 410-412
+extensions/indexes/ngram/src/test/xquery/ngram/char-class-supplementary.xqm
+  s_545f96ebe4ea56::t_dd295de9933f74 1-82
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "db4bec8f38515f2c16ffa6158904a4f7ae26ce35",
+  "prompts": {},
+  "sessions": {
+    "s_545f96ebe4ea56": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "61fdbb27-391e-401a-9dd6-2f0e8ba78e02",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
