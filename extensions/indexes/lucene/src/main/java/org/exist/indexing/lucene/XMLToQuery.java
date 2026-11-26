@@ -266,7 +266,7 @@ public class XMLToQuery {
         SpanQuery query = null;
         if (hasElementContent(node)) {
             SpanQuery[] children = parseSpanChildren(field, node, analyzer);
-            query = new SpanNearQuery(children, slop, inOrder);
+            query = spanNearOrSingle(children, slop, inOrder);
         } else {
         	String termStr = getTerm(field, getText(node), analyzer);
         	if (termStr != null)
