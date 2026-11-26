@@ -519,13 +519,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
             writer = index.getWriter();
 
             for (NodeId nodeId : nodesToRemove) {
-                // build id from nodeId and docId (must match write() encoding: ByteConversion.intToByteH)
-                int nodeIdLen = nodeId.size();
-                byte[] data = new byte[nodeIdLen + 4];
-                ByteConversion.intToByteH(currentDoc.getDocId(), data, 0);
-                nodeId.serialize(data, 4);
-
-                Term it = new Term(FIELD_ID, new BytesRef(data));
+                Term it = new Term(FIELD_ID, new BytesRef(LuceneUtil.createId(currentDoc.getDocId(), nodeId)));
                 TermQuery iq = new TermQuery(it);
                 writer.deleteDocuments(iq);
             }
@@ -581,10 +575,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 }
 
                 // add separate index for node id
-                byte[] idData = new byte[nodeIdLen + 4];
-                ByteConversion.intToByteH(currentDoc.getDocId(), idData, 0);
-                pending.getNodeId().serialize(idData, 4);
-                BinaryTokenStream bts = new BinaryTokenStream(new BytesRef(idData));
+                BinaryTokenStream bts = new BinaryTokenStream(new BytesRef(LuceneUtil.createId(currentDoc.getDocId(), pending.getNodeId())));
                 Field fNodeIdIdx = new Field(FIELD_ID, bts, LuceneIndexWorker.TYPE_NODE_ID);
                 doc.add(fNodeIdIdx);
 
