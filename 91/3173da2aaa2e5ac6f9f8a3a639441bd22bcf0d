@@ -1,0 +1,22 @@
+exist-indexes-jmh/pom.xml
+  s_e197b16c6c23bb::t_d463fb79fb034a 82-85
+  s_e197b16c6c23bb::t_d0e19f277df780 81
+exist-indexes-jmh/src/main/java/org/exist/indexing/jmh/OnnxEmbeddingBenchmark.java
+  s_e197b16c6c23bb::t_f632db3c2ae8c0 1-132
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "913173da2aaa2e5ac6f9f8a3a639441bd22bcf0d",
+  "prompts": {},
+  "sessions": {
+    "s_e197b16c6c23bb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f942af03-ab0c-44c9-a177-be25ab57682b",
+        "model": "default"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
