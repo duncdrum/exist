@@ -1,0 +1,25 @@
+extensions/vector/src/main/java/org/exist/vector/OnnxVectorProvider.java
+  s_e197b16c6c23bb::t_2869b0f6b8f1af 310
+  s_e197b16c6c23bb::t_8a87de0e8f17a6 39
+  s_e197b16c6c23bb::t_0727626df0a011 63
+  s_e197b16c6c23bb::t_6a4904551acda2 322-357
+  s_e197b16c6c23bb::t_bdbc3e7220f7f2 305-309,311
+extensions/vector/src/test/java/org/exist/vector/OnnxCpuListTest.java
+  s_e197b16c6c23bb::t_69f9b5376b2eed 1-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2f2ec466924d6c3c368345b6bf4c43077b625316",
+  "prompts": {},
+  "sessions": {
+    "s_e197b16c6c23bb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f942af03-ab0c-44c9-a177-be25ab57682b",
+        "model": "default"
+      },
+      "human_author": null
+    }
+  }
+}
