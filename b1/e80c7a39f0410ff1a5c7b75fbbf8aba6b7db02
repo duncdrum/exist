@@ -1,0 +1,19 @@
+.github/workflows/ci-benchmarks.yml
+  s_e197b16c6c23bb::t_fcf913867169ee 77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b1e80c7a39f0410ff1a5c7b75fbbf8aba6b7db02",
+  "prompts": {},
+  "sessions": {
+    "s_e197b16c6c23bb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f942af03-ab0c-44c9-a177-be25ab57682b",
+        "model": "default"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
