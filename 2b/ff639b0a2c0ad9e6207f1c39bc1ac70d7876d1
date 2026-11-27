@@ -1,0 +1,20 @@
+exist-indexes-jmh/pom.xml
+  h_ff0005bef58c9d 81-85
+exist-indexes-jmh/src/main/java/org/exist/indexing/jmh/OnnxEmbeddingBenchmark.java
+  h_ff0005bef58c9d 1-132
+extensions/vector/src/main/java/org/exist/vector/OnnxVectorProvider.java
+  h_ff0005bef58c9d 39,63,305-311,322-357
+extensions/vector/src/test/java/org/exist/vector/OnnxCpuListTest.java
+  h_ff0005bef58c9d 1-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2bff639b0a2c0ad9e6207f1c39bc1ac70d7876d1",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
