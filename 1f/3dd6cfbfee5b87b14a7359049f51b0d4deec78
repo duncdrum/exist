@@ -1,0 +1,26 @@
+extensions/indexes/vector-it/src/test/java/xquery/lucene/VectorBatchEmbeddingIT.java
+  s_e197b16c6c23bb::t_aa814c2aa7090a 80-81,85-92
+  s_e197b16c6c23bb::t_6cdf86966f3332 1-79,82-84,93-111
+extensions/vector/src/main/java/org/exist/vector/OnnxVectorProvider.java
+  s_e197b16c6c23bb::t_aec6d193f75a47 40,177-180,182-196
+extensions/vector/src/main/java/org/exist/vector/VectorEmbeddingProvider.java
+  s_e197b16c6c23bb::t_568c1b4245ff09 68-78,81
+extensions/vector/src/main/java/org/exist/xquery/modules/vector/EmbedBatch.java
+  s_e197b16c6c23bb::t_a9e8ca59cc89b7 109,111-125,127
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1f3dd6cfbfee5b87b14a7359049f51b0d4deec78",
+  "prompts": {},
+  "sessions": {
+    "s_e197b16c6c23bb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f942af03-ab0c-44c9-a177-be25ab57682b",
+        "model": "default"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
