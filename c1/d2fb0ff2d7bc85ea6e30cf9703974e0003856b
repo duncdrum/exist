@@ -1,0 +1,29 @@
+extensions/vector/src/test/java/org/exist/vector/OnnxThreadsTest.java
+  s_e197b16c6c23bb::t_0d47dbb6e838e3 25-78
+  s_e197b16c6c23bb::t_a20d5ba6a29c99 79
+  s_e197b16c6c23bb::t_a4f24a3f8fcfac 22-24
+  s_e197b16c6c23bb::t_e5f481b78a3a30 1-21
+extensions/vector/src/main/java/org/exist/vector/OnnxVectorProvider.java
+  s_e197b16c6c23bb::t_0727626df0a011 61
+  s_e197b16c6c23bb::t_bdbc3e7220f7f2 295,300
+  s_e197b16c6c23bb::t_05b7fcf4542434 296-299
+  s_e197b16c6c23bb::t_133d4fb5a15819 312-323
+  s_e197b16c6c23bb::t_8a87de0e8f17a6 37
+  s_e197b16c6c23bb::t_6a4904551acda2 311,324-358
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c1d2fb0ff2d7bc85ea6e30cf9703974e0003856b",
+  "prompts": {},
+  "sessions": {
+    "s_e197b16c6c23bb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f942af03-ab0c-44c9-a177-be25ab57682b",
+        "model": "default"
+      },
+      "human_author": null
+    }
+  }
+}
