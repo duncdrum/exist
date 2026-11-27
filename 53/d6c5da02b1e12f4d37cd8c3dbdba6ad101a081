@@ -1,0 +1,27 @@
+.github/workflows/ci-benchmarks.yml
+  s_e197b16c6c23bb::t_4223c8c4f9edbb 77
+exist-indexes-jmh/pom.xml
+  s_e197b16c6c23bb::t_889e5a86005c63 81-85
+exist-indexes-jmh/src/main/java/org/exist/indexing/jmh/OnnxEmbeddingBenchmark.java
+  s_e197b16c6c23bb::t_62fc7e98c6c828 1-132
+extensions/vector/src/main/java/org/exist/vector/OnnxVectorProvider.java
+  s_e197b16c6c23bb::t_da04d89a67d3df 39,63,305-310,321-368
+extensions/vector/src/test/java/org/exist/vector/OnnxThreadsTest.java
+  s_e197b16c6c23bb::t_53a96a9fa6bc60 1-79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "53d6c5da02b1e12f4d37cd8c3dbdba6ad101a081",
+  "prompts": {},
+  "sessions": {
+    "s_e197b16c6c23bb": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f942af03-ab0c-44c9-a177-be25ab57682b",
+        "model": "default"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
