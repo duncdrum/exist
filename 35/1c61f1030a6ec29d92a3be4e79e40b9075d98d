@@ -1,0 +1,42 @@
+exist-core/src/main/java/org/exist/xquery/GeneralComparison.java
+  h_ff0005bef58c9d 254-258,264-315,868-869
+exist-core/src/main/java/org/exist/xquery/IndexKeyTyping.java
+  h_ff0005bef58c9d 1-178
+exist-core/src/main/java/org/exist/xquery/ValueComparison.java
+  h_ff0005bef58c9d 140-149
+exist-core/src/test/java/org/exist/xmldb/CollectionConfigurationTest.java
+  h_ff0005bef58c9d 34,1042-1052,1071,1076
+exist-core/src/test/java/org/exist/xquery/IndexKeyTypingTest.java
+  h_ff0005bef58c9d 1-137
+exist-core/src/test/java/org/exist/xquery/ValueIndexTest.java
+  h_ff0005bef58c9d 46-47,138,147,154,406-418
+exist-core/src/test/xquery/dates/dates.xml
+  h_ff0005bef58c9d 67,72,77,82,87,92,97,102,107,112,117-138,141-145
+exist-core/src/test/xquery/indexing/range.xml
+  h_ff0005bef58c9d 106-107
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/Lookup.java
+  h_ff0005bef58c9d 530-531,579-609
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/OptimizeFieldPragma.java
+  h_ff0005bef58c9d 305-308,318-341
+extensions/indexes/range/src/main/java/org/exist/xquery/modules/range/RangeQueryRewriter.java
+  h_ff0005bef58c9d 216-230
+extensions/indexes/range/src/test/java/org/exist/indexing/range/conversion/LowerCaseTestConverter.java
+  h_ff0005bef58c9d 1-39
+extensions/indexes/range/src/test/xquery/range/comparison-typing.xqm
+  h_ff0005bef58c9d 1-342
+extensions/indexes/range/src/test/xquery/range/types.xql
+  h_ff0005bef58c9d 173-181,216-224,386,389-390,392
+extensions/indexes/range/src/test/xquery/unoptimized-known-failures.lst
+  h_ff0005bef58c9d 10-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "351c61f1030a6ec29d92a3be4e79e40b9075d98d",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
