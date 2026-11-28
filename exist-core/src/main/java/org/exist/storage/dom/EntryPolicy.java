@@ -27,29 +27,43 @@ import org.w3c.dom.Node;
  * Decides which nodes of a document get an entry in the DOM B-tree ({@code dom.dbx}), which maps the id of a node to the
  * address of its record.
  *
- * <p>A node without an entry is found by walking the document from its nearest ancestor that has one, so what has an
- * entry sets the cost of finding a node by its id. Up to {@code index-depth} levels every element has one; text,
- * attribute and CDATA records never do.</p>
+ * <p>A node without an entry is found by reading the document forward from the nearest entry before it, so what has an
+ * entry sets the cost of finding a node by its id. Every node at level 1 has an entry, see
+ * https://github.com/eXist-db/exist/issues/1691, and below it every element up to {@code index-depth} levels. The same
+ * rule applies when a node is stored, when the entries of a document are rebuilt and when an update inserts nodes.</p>
  *
- * <p>The rule is asked in two places that do not agree about every node. Storing a node gives an entry to everything
- * but text, attributes and CDATA up to the index depth, so comments and processing instructions get one. Rebuilding the
- * entries of a document (a reindex that stores, and nodes inserted by an update) gives one to every element up to the
- * index depth and to anything at level 1, so comments and processing instructions below the root level lose theirs.
- * Both rules are kept as they were, in one place; whether they should be one is a separate question.</p>
+ * <p>Below that head, a run of more than {@code index-scan-limit} records without an entry is cut by an anchor: an
+ * entry for a record of any kind but an attribute, which {@link EntryPlanner} places. Finding a node then reads at most
+ * that many records from the nearest entry before it, in a document that was stored or rebuilt in one go and has
+ * no attribute runs of that length. Updates can make a run up to twice as long, and removing nodes can make it
+ * longer; see {@link EntryPlanner}. With a scan limit of 0 there are no anchors.</p>
  *
- * <p>With an index depth of 0 nothing gets an entry when storing, but the root level still does when rebuilding.</p>
+ * <p>Documents stored before the rule was made one may hold entries for comments and processing instructions below the
+ * root level. They are harmless: an entry is only a hint, and a node found through one is read and checked.</p>
  */
 public final class EntryPolicy {
 
     private final int indexDepth;
+    private final int scanLimit;
 
     /**
-     * Creates the policy for an index depth.
+     * Creates the policy for an index depth, without anchors.
      *
      * @param indexDepth the number of levels, counted from the root element at level 1, whose elements have an entry
      */
     public EntryPolicy(final int indexDepth) {
+        this(indexDepth, 0);
+    }
+
+    /**
+     * Creates the policy for an index depth and a scan limit.
+     *
+     * @param indexDepth the number of levels, counted from the root element at level 1, whose elements have an entry
+     * @param scanLimit the most records a lookup reads from the nearest entry before the node, 0 for no limit
+     */
+    public EntryPolicy(final int indexDepth, final int scanLimit) {
         this.indexDepth = indexDepth;
+        this.scanLimit = scanLimit;
     }
 
     /**
@@ -62,30 +76,22 @@ public final class EntryPolicy {
     }
 
     /**
-     * Tells whether a node gets an entry when it is stored.
+     * Returns the scan limit.
+     *
+     * @return the most records a lookup reads from the nearest entry before the node, 0 for no limit
+     */
+    public int getScanLimit() {
+        return scanLimit;
+    }
+
+    /**
+     * Tells whether a node gets an entry because of where it is: at the root level, or an element within the index depth.
      *
      * @param nodeType the DOM node type of the node
      * @param level the level of the node in the document, 1 for the root element
      * @return true if the record of the node is stored with an entry
      */
-    public boolean entryOnStore(final short nodeType, final int level) {
-        if (nodeType == Node.TEXT_NODE || nodeType == Node.ATTRIBUTE_NODE || nodeType == Node.CDATA_SECTION_NODE) {
-            return false;
-        }
-        return level <= indexDepth;
-    }
-
-    /**
-     * Tells whether a node gets an entry when the entries of its document are rebuilt, or when it is inserted by an
-     * update.
-     *
-     * <p>All nodes at level 1 get one, see https://github.com/eXist-db/exist/issues/1691, and only elements below.</p>
-     *
-     * @param nodeType the DOM node type of the node
-     * @param level the level of the node in the document, 1 for the root element
-     * @return true if an entry is added for the node
-     */
-    public boolean entryOnReindex(final short nodeType, final int level) {
+    public boolean hasEntry(final short nodeType, final int level) {
         return level == 1 || (nodeType == Node.ELEMENT_NODE && level <= indexDepth);
     }
 }

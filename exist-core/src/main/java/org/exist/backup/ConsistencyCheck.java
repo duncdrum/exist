@@ -375,10 +375,9 @@ public class ConsistencyCheck {
                             }
 
                             case XMLStreamReader.START_ELEMENT: {
-                                // the check asks only about elements, and for an element both forms of the entry rule,
-                                // stored and rebuilt, agree: it has an entry up to the index depth. So this is the old
-                                // level check, asked of the one place that holds the rule instead of a third copy of it
-                                if (entryPolicy.entryOnStore(Node.ELEMENT_NODE, nodeId.getTreeLevel())) {
+                                // the check asks only about elements; an element has an entry up to the index depth,
+                                // asked of the one place that holds the rule instead of a copy of the level check here
+                                if (entryPolicy.hasEntry(Node.ELEMENT_NODE, nodeId.getTreeLevel())) {
 
                                     // check dom.dbx btree, which maps the node
                                     // id to the node's storage address

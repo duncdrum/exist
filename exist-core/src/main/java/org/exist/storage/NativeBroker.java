@@ -50,6 +50,7 @@ import org.exist.storage.blob.BlobId;
 import org.exist.storage.blob.BlobStore;
 import org.exist.storage.btree.*;
 import org.exist.storage.dom.DOMFile;
+import org.exist.storage.dom.EntryPlanner;
 import org.exist.storage.dom.EntryPolicy;
 import org.exist.storage.dom.DOMTransaction;
 import org.exist.storage.dom.NodeIterator;
@@ -131,8 +132,10 @@ public class NativeBroker implements DBBroker {
 
     public static final String PAGE_SIZE_ATTRIBUTE = "pageSize";
     public static final String INDEX_DEPTH_ATTRIBUTE = "index-depth";
+    public static final String INDEX_SCAN_LIMIT_ATTRIBUTE = "index-scan-limit";
 
     public static final String PROPERTY_INDEX_DEPTH = "indexer.index-depth";
+    public static final String PROPERTY_INDEX_SCAN_LIMIT = "indexer.index-scan-limit";
     private static final byte[] ALL_STORAGE_FILES = {
         COLLECTIONS_DBX_ID, VALUES_DBX_ID, DOM_DBX_ID
     };
@@ -145,7 +148,8 @@ public class NativeBroker implements DBBroker {
     }
 
     public static final String DEFAULT_DATA_DIR = "data";
-    public static final int DEFAULT_INDEX_DEPTH = 1;
+    public static final int DEFAULT_INDEX_DEPTH = 5;
+    public static final int DEFAULT_INDEX_SCAN_LIMIT = 64;
 
     /** check available memory after storing DEFAULT_NODES_BEFORE_MEMORY_CHECK nodes */
     public static final int DEFAULT_NODES_BEFORE_MEMORY_CHECK = 500;
@@ -197,6 +201,7 @@ public class NativeBroker implements DBBroker {
     private final IndexSpec indexConfiguration;
 
     private EntryPolicy entryPolicy;
+    private EntryPlanner entryPlanner;
 
     private final XmlSerializerPool xmlSerializerPool;
 
@@ -222,6 +227,32 @@ public class NativeBroker implements DBBroker {
 
     private ObjectLinkedOpenHashSet<Txn> currentTransactions = new ObjectLinkedOpenHashSet(4);  // 4 - we don't expect many concurrent transactions per-broker!
 
+    /**
+     * Returns the {@code index-depth} of a configuration: the levels of elements that get an entry in the DOM index.
+     *
+     * @param config the configuration
+     * @return the configured depth, or the default if there is none
+     */
+    public static int configuredIndexDepth(final Configuration config) {
+        return integerOrDefault(config, PROPERTY_INDEX_DEPTH, DEFAULT_INDEX_DEPTH);
+    }
+
+    /**
+     * Returns the {@code index-scan-limit} of a configuration: the most records a lookup of a node by its id reads from the
+     * nearest entry in the DOM index before it.
+     *
+     * @param config the configuration
+     * @return the configured limit, or the default if there is none; 0 means no anchors
+     */
+    public static int configuredIndexScanLimit(final Configuration config) {
+        return integerOrDefault(config, PROPERTY_INDEX_SCAN_LIMIT, DEFAULT_INDEX_SCAN_LIMIT);
+    }
+
+    private static int integerOrDefault(final Configuration config, final String property, final int defaultValue) {
+        final int value = config.getInteger(property);
+        return value < 0 ? defaultValue : value;
+    }
+
     // initialize database; read configuration, etc.
     public NativeBroker(final BrokerPool pool, final Configuration config) throws EXistException {
         this.config = config;
@@ -238,11 +269,10 @@ public class NativeBroker implements DBBroker {
             nodesCountThreshold = nodesCountThreshold * 1000;
         }
 
-        int indexDepth = config.getInteger(PROPERTY_INDEX_DEPTH);
-        if(indexDepth < 0) {
-            indexDepth = DEFAULT_INDEX_DEPTH;
-        }
-        this.entryPolicy = new EntryPolicy(indexDepth);
+        final int indexDepth = configuredIndexDepth(config);
+        final int indexScanLimit = configuredIndexScanLimit(config);
+        this.entryPolicy = new EntryPolicy(indexDepth, indexScanLimit);
+        this.entryPlanner = new EntryPlanner(entryPolicy);
 
         this.indexConfiguration = (IndexSpec) config.getProperty(Indexer.PROPERTY_INDEXER_CONFIG);
         this.xmlSerializerPool = new XmlSerializerPool(this, config, 5);
@@ -3552,7 +3582,7 @@ public class NativeBroker implements DBBroker {
             @Override
             public Object start() throws ReadOnlyException {
                 final long address;
-                if(entryPolicy.entryOnStore(nodeType, node.getNodeId().getTreeLevel())) {
+                if(entryPlanner.nextRecord(doc.getDocId(), nodeType, node.getNodeId().getTreeLevel())) {
                     address = domDb.put(transaction, new NodeRef(doc.getDocId(), node.getNodeId()), data);
                 } else {
                     address = domDb.add(transaction, data);
@@ -4488,8 +4518,8 @@ public class NativeBroker implements DBBroker {
          */
         public void store() {
             final DocumentImpl doc = node.getOwnerDocument();
-            // all nodes at level 1 get an entry, and only element nodes after, see EntryPolicy
-            if(indexMode == IndexMode.STORE && entryPolicy.entryOnReindex(node.getNodeType(), level)) {
+            // which records get an entry, the head and the anchors, is decided in EntryPlanner
+            if(indexMode == IndexMode.STORE && entryPlanner.nextRecord(doc.getDocId(), node.getNodeType(), level)) {
                 //TODO : used to be this, but NativeBroker.this avoids an owner change
                 new DOMTransaction(NativeBroker.this, domDb, () -> lockManager.acquireBtreeWriteLock(domDb.getLockName())) {
                     @Override

@@ -58,7 +58,7 @@
         - http://exist-db.org/exist/apps/doc/documentation.xml
 
 -->
-<exist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/conf.xsd" schemaVersion="2.11.1">
+<exist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../schema/conf.xsd" schemaVersion="2.13.0">
 
     <!-- 
         Configures the database backend.
@@ -541,6 +541,14 @@
             retrieving query results or for some types of XPath subexpressions, 
             like equality comparisons.
         
+        - index-scan-limit:
+            the most records a lookup of a node by its id reads from the nearest
+            entry in the DOM index before it. A run of more records without an
+            entry is cut by an extra entry, an anchor, so that finding a node
+            below index-depth does not depend on the shape of the document.
+            0 means no anchors. Only newly stored documents, and documents whose
+            DOM index is rebuilt by a reindex that stores, get anchors.
+
         - suppress-whitespace:
             should leading or trailing whitespace be removed from a text node?
             Set to "leading", "trailing", "both" or "none".
@@ -550,7 +558,7 @@
         - preserve-whitespace-mixed-content:
             preserve the white space inside a mixed content node: "yes" or "no".
     -->
-    <indexer caseSensitive="yes" index-depth="5" preserve-whitespace-mixed-content="no"
+    <indexer caseSensitive="yes" index-depth="5" index-scan-limit="64" preserve-whitespace-mixed-content="no"
         suppress-whitespace="none">
 
         <modules>
