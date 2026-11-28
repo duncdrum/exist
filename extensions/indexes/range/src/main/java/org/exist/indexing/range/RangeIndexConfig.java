@@ -26,6 +26,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.exist.dom.NodeListImpl;
+import org.exist.indexing.range.conversion.TypeConverter;
 import org.exist.dom.QName;
 import org.exist.storage.NodePath;
 import org.exist.util.DatabaseConfigurationException;
@@ -166,6 +167,34 @@ public class RangeIndexConfig {
             }
         }
         return analyzer;
+    }
+
+    /**
+     * The converter that turns the stored text of an element or field into what is indexed. Either the name or the
+     * field name is given, as for {@link #getAnalyzer}.
+     *
+     * @param qname the name of the indexed element, or null
+     * @param fieldName the name of the field, or null
+     * @return the converter, or null if there is none
+     */
+    public TypeConverter getTypeConverter(QName qname, String fieldName) {
+        TypeConverter converter = null;
+        if (qname != null) {
+            final RangeIndexConfigElement idxConf = paths.get(qname);
+            if (idxConf != null) {
+                converter = idxConf.getTypeConverter(null);
+            }
+        } else {
+            for (RangeIndexConfigElement idxConf: paths.values()) {
+                if (idxConf.isComplex()) {
+                    converter = idxConf.getTypeConverter(fieldName);
+                    if (converter != null) {
+                        break;
+                    }
+                }
+            }
+        }
+        return converter;
     }
 
     public boolean isCaseSensitive(QName qname, String fieldName) {

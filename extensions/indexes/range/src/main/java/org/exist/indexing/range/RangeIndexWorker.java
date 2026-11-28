@@ -47,6 +47,7 @@ import org.apache.lucene.util.automaton.TooComplexToDeterminizeException;
 import org.exist.collections.Collection;
 import org.exist.indexing.*;
 import org.exist.indexing.StreamListener.ReindexMode;
+import org.exist.indexing.range.conversion.TypeConverter;
 import org.exist.indexing.lucene.BinaryTokenStream;
 import org.exist.indexing.lucene.LuceneFieldNames;
 import org.exist.indexing.lucene.LuceneIndexWorker;
@@ -70,6 +71,7 @@ import org.exist.xquery.value.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
@@ -101,16 +103,11 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
     }
 
     /**
-     * Safely convert a BytesRef to a display string. ICU collation sort keys are binary, not UTF-8,
-     * so utf8ToString() throws AssertionError. Use this for logging/debug output.
+     * A term for a log line: its text if the bytes are UTF-8, the raw bytes if they are not, as the sort keys of an ICU
+     * collation are.
      */
     private static String safeBytesRefToDisplay(BytesRef ref) {
-        if (ref == null) return "null";
-        try {
-            return ref.utf8ToString();
-        } catch (AssertionError e) {
-            return "[collation key, " + ref.length + " bytes]";
-        }
+        return ref == null ? "null" : Term.toString(ref);
     }
 
     private final RangeIndex index;
@@ -142,10 +139,29 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
      */
     public Query toQuery(String field, QName qname, AtomicValue content, RangeIndex.Operator operator, DocumentSet docs, int matchFlags,
             boolean xpathSyntax) throws XPathException {
-        final int type = content.getType();
-        BytesRefBuilder bytes;
+        // a converter defines what the index holds for a text, so the key goes through it as the stored text did;
+        // a pattern is not text
+        final TypeConverter converter = operator == RangeIndex.Operator.MATCH ? null : getTypeConverter(qname, field, docs);
+        if (converter == null) {
+            return toQueryForKey(field, qname, content, operator, docs, matchFlags, xpathSyntax);
+        }
+        final org.apache.lucene.document.Field converted = converter.toField(field, content.getStringValue());
+        if (converted == null) {
+            // a text the converter does not index is equal to no indexed text: only != finds anything, every node of the field
+            return operator == RangeIndex.Operator.NE ? new FieldExistsQuery(field) : new MatchNoDocsQuery();
+        }
+        final NumericKey point = NumericKey.of(converted.numericValue());
+        if (point != null) {
+            return pointQuery(field, point, operator);
+        }
+        final AtomicValue text = converted.stringValue() != null ? new StringValue(converted.stringValue()) : content;
+        return toQueryForKey(field, qname, text, operator, docs, matchFlags, xpathSyntax);
+    }
+
+    private Query toQueryForKey(String field, QName qname, AtomicValue content, RangeIndex.Operator operator, DocumentSet docs, int matchFlags,
+            boolean xpathSyntax) throws XPathException {
         BytesRef key = null;
-        if (Type.subTypeOf(type, Type.STRING)) {
+        if (Type.subTypeOf(content.getType(), Type.STRING)) {
             if (operator != RangeIndex.Operator.MATCH) {
                 key = analyzeContent(field, qname, content.getStringValue(), docs);
             }
@@ -153,181 +169,132 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 LOG.debug("QUERY field={} qname={} input={} key={} operator={}",
                         field, qname, content.getStringValue(), safeBytesRefToDisplay(key), operator);
             }
-            WildcardQuery query;
-            switch (operator) {
-                case EQ -> {
-                    return new TermQuery(new Term(field, key));
-                }
-                case NE -> {
-                    final BooleanQuery.Builder builder = new BooleanQuery.Builder();
-                    query = new WildcardQuery(new Term(field, new BytesRef("*")));
-                    builder.add(query, BooleanClause.Occur.MUST);
-                    builder.add(new TermQuery(new Term(field, key)), BooleanClause.Occur.MUST_NOT);
-                    return builder.build();
-                }
-                case STARTS_WITH -> {
-                    return new PrefixQuery(new Term(field, key));
-                }
-                case ENDS_WITH -> {
-                    bytes = new BytesRefBuilder();
-                    bytes.append((byte)'*');
-                    bytes.append(key);
-                    return new WildcardQuery(new Term(field, bytes.toBytesRef()));
-                }
-                case CONTAINS -> {
-                    bytes = new BytesRefBuilder();
-                    bytes.append((byte)'*');
-                    bytes.append(key);
-                    bytes.append((byte)'*');
-                    return new WildcardQuery(new Term(field, bytes.toBytesRef()));
-                }
-                case MATCH -> {
-                    final String pattern = content.getStringValue();
-                    try {
-                        // for fn:matches, Lookup checks isServable first and falls back to fn:matches, so this is
-                        // the last line of defense rather than the expected path
-                        return xpathSyntax
-                                ? XPathToLuceneRegexTranslator.toQuery(field, pattern, matchFlags)
-                                : XPathToLuceneRegexTranslator.toLuceneSyntaxQuery(field, pattern, matchFlags);
-                    } catch (final IllegalArgumentException | TooComplexToDeterminizeException e) {
-                        throw new XPathException(ErrorCodes.FORX0002,
-                                "Invalid regular expression '" + pattern + "': " + e.getMessage());
-                    }
-                }
-                default -> {
-                }
+            final Query query = stringQuery(field, content, key, operator, matchFlags, xpathSyntax);
+            if (query != null) {
+                return query;
             }
         }
-        // EQ/NE for numeric/date types: use Point queries (LongField.newExactQuery etc.), not TermQuery
-        // (LongField/IntField index as Points; TermQuery searches terms and never matches)
+        return pointOrTermQuery(field, content, key, operator);
+    }
+
+    /**
+     * The query of a string key for the operators that ask for terms.
+     *
+     * @return the query, or null for the comparisons of order, which a range of terms answers
+     */
+    private static @Nullable Query stringQuery(final String field, final AtomicValue content, final BytesRef key,
+            final RangeIndex.Operator operator, final int matchFlags, final boolean xpathSyntax) throws XPathException {
+        return switch (operator) {
+            case EQ -> new TermQuery(new Term(field, key));
+            case NE -> not(anyTermOf(field), new TermQuery(new Term(field, key)));
+            case STARTS_WITH -> new PrefixQuery(new Term(field, key));
+            case ENDS_WITH -> wildcardAround(field, key, false);
+            case CONTAINS -> wildcardAround(field, key, true);
+            case MATCH -> matchQuery(field, content.getStringValue(), matchFlags, xpathSyntax);
+            default -> null;
+        };
+    }
+
+    /** The nodes whose term ends with the key, or holds it when {@code both} is set. */
+    private static Query wildcardAround(final String field, final BytesRef key, final boolean both) {
+        final BytesRefBuilder bytes = new BytesRefBuilder();
+        bytes.append((byte) '*');
+        bytes.append(escapeWildcards(key));
+        if (both) {
+            bytes.append((byte) '*');
+        }
+        return new WildcardQuery(new Term(field, bytes.toBytesRef()));
+    }
+
+    private static Query matchQuery(final String field, final String pattern, final int matchFlags, final boolean xpathSyntax)
+            throws XPathException {
+        try {
+            // for fn:matches, Lookup checks isServable first and falls back to fn:matches, so this is
+            // the last line of defense rather than the expected path
+            return xpathSyntax
+                    ? XPathToLuceneRegexTranslator.toQuery(field, pattern, matchFlags)
+                    : XPathToLuceneRegexTranslator.toLuceneSyntaxQuery(field, pattern, matchFlags);
+        } catch (final IllegalArgumentException | TooComplexToDeterminizeException e) {
+            throw new XPathException(ErrorCodes.FORX0002,
+                    "Invalid regular expression '" + pattern + "': " + e.getMessage());
+        }
+    }
+
+    /**
+     * The query of a key that is not a string, and of a comparison of order on a string.
+     *
+     * @param key the analyzed key of a string, null for any other key
+     */
+    private static Query pointOrTermQuery(final String field, final AtomicValue content, final BytesRef key,
+            final RangeIndex.Operator operator) throws XPathException {
+        // numbers, dates and times are Lucene points, asked for by NumericKey; everything else is a term
+        final NumericKey numeric = NumericKey.of(content);
+        if (numeric != null) {
+            return pointQuery(field, numeric, operator);
+        }
         if (operator == RangeIndex.Operator.EQ) {
-            return switch (type) {
-                case Type.INTEGER, Type.LONG, Type.UNSIGNED_LONG ->
-                    LongField.newExactQuery(field, ((NumericValue) content).getLong());
-                case Type.INT, Type.UNSIGNED_INT, Type.SHORT, Type.UNSIGNED_SHORT ->
-                    IntField.newExactQuery(field, ((NumericValue) content).getInt());
-                case Type.DECIMAL, Type.DOUBLE ->
-                    DoubleField.newExactQuery(field, ((NumericValue) content).getDouble());
-                case Type.FLOAT ->
-                    FloatField.newExactQuery(field, (float) ((NumericValue) content).getDouble());
-                case Type.DATE ->
-                    LongField.newExactQuery(field, RangeIndexConfigElement.dateToLong((DateValue) content));
-                case Type.TIME ->
-                    LongField.newExactQuery(field, RangeIndexConfigElement.timeToLong((TimeValue) content));
-                case Type.DATE_TIME ->
-                    new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
-                default ->
-                    new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
-            };
+            return new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
         }
         if (operator == RangeIndex.Operator.NE) {
-            Query eqQuery = switch (type) {
-                case Type.INTEGER, Type.LONG, Type.UNSIGNED_LONG ->
-                        LongField.newExactQuery(field, ((NumericValue) content).getLong());
-                case Type.INT, Type.UNSIGNED_INT, Type.SHORT, Type.UNSIGNED_SHORT ->
-                        IntField.newExactQuery(field, ((NumericValue) content).getInt());
-                case Type.DECIMAL, Type.DOUBLE ->
-                        DoubleField.newExactQuery(field, ((NumericValue) content).getDouble());
-                case Type.FLOAT ->
-                        FloatField.newExactQuery(field, (float) ((NumericValue) content).getDouble());
-                case Type.DATE ->
-                        LongField.newExactQuery(field, RangeIndexConfigElement.dateToLong((DateValue) content));
-                case Type.TIME ->
-                        LongField.newExactQuery(field, RangeIndexConfigElement.timeToLong((TimeValue) content));
-                default -> new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content)));
-            };
-            final BooleanQuery.Builder nqb = new BooleanQuery.Builder();
-            nqb.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
-            nqb.add(eqQuery, BooleanClause.Occur.MUST_NOT);
-            return nqb.build();
+            return not(anyTermOf(field), new TermQuery(new Term(field, RangeIndexConfigElement.convertToBytes(content))));
         }
         final boolean includeUpper = operator == RangeIndex.Operator.LE;
         final boolean includeLower = operator == RangeIndex.Operator.GE;
-        // LongField.newRangeQuery ranges are inclusive; for LT/GT use exclusive bounds per Lucene 10 docs
-        switch (type) {
-            case Type.INTEGER:
-            case Type.LONG:
-            case Type.UNSIGNED_LONG:
-                long lval = ((NumericValue) content).getLong();
-                if (operator == RangeIndex.Operator.LT) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, Math.addExact(lval, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, lval);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return LongField.newRangeQuery(field, Math.addExact(lval, 1), Long.MAX_VALUE);
-                } else {
-                    return LongField.newRangeQuery(field, lval, Long.MAX_VALUE);
-                }
-            case Type.INT:
-            case Type.UNSIGNED_INT:
-            case Type.SHORT:
-            case Type.UNSIGNED_SHORT:
-                int ival = ((NumericValue) content).getInt();
-                if (operator == RangeIndex.Operator.LT) {
-                    return IntField.newRangeQuery(field, Integer.MIN_VALUE, Math.addExact(ival, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return IntField.newRangeQuery(field, Integer.MIN_VALUE, ival);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return IntField.newRangeQuery(field, Math.addExact(ival, 1), Integer.MAX_VALUE);
-                } else {
-                    return IntField.newRangeQuery(field, ival, Integer.MAX_VALUE);
-                }
-            case Type.DECIMAL:
-            case Type.DOUBLE:
-                double dval = ((NumericValue) content).getDouble();
-                if (operator == RangeIndex.Operator.LT) {
-                    return DoubleField.newRangeQuery(field, Double.NEGATIVE_INFINITY, Math.nextDown(dval));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return DoubleField.newRangeQuery(field, Double.NEGATIVE_INFINITY, dval);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return DoubleField.newRangeQuery(field, Math.nextUp(dval), Double.POSITIVE_INFINITY);
-                } else {
-                    return DoubleField.newRangeQuery(field, dval, Double.POSITIVE_INFINITY);
-                }
-            case Type.FLOAT:
-                float fval = (float) ((NumericValue) content).getDouble();
-                if (operator == RangeIndex.Operator.LT) {
-                    return FloatField.newRangeQuery(field, Float.NEGATIVE_INFINITY, Math.nextDown(fval));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return FloatField.newRangeQuery(field, Float.NEGATIVE_INFINITY, fval);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return FloatField.newRangeQuery(field, Math.nextUp(fval), Float.POSITIVE_INFINITY);
-                } else {
-                    return FloatField.newRangeQuery(field, fval, Float.POSITIVE_INFINITY);
-                }
-            case Type.DATE:
-                long dl = RangeIndexConfigElement.dateToLong((DateValue) content);
-                if (operator == RangeIndex.Operator.LT) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, Math.addExact(dl, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, dl);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return LongField.newRangeQuery(field, Math.addExact(dl, 1), Long.MAX_VALUE);
-                } else {
-                    return LongField.newRangeQuery(field, dl, Long.MAX_VALUE);
-                }
-            case Type.TIME:
-                long tl = RangeIndexConfigElement.timeToLong((TimeValue) content);
-                if (operator == RangeIndex.Operator.LT) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, Math.addExact(tl, -1));
-                } else if (operator == RangeIndex.Operator.LE) {
-                    return LongField.newRangeQuery(field, Long.MIN_VALUE, tl);
-                } else if (operator == RangeIndex.Operator.GT) {
-                    return LongField.newRangeQuery(field, Math.addExact(tl, 1), Long.MAX_VALUE);
-                } else {
-                    return LongField.newRangeQuery(field, tl, Long.MAX_VALUE);
-                }
-            case Type.DATE_TIME:
-            default:
-                if (type == Type.DATE_TIME) {
-                    key = RangeIndexConfigElement.convertToBytes(content);
-                }
-                if (operator == RangeIndex.Operator.LT || operator == RangeIndex.Operator.LE) {
-                    return new TermRangeQuery(field, null, key, includeLower, includeUpper);
-                } else {
-                    return new TermRangeQuery(field, key, null, includeLower, includeUpper);
-                }
+        final BytesRef bound = content.getType() == Type.DATE_TIME ? RangeIndexConfigElement.convertToBytes(content) : key;
+        if (operator == RangeIndex.Operator.LT || operator == RangeIndex.Operator.LE) {
+            return new TermRangeQuery(field, null, bound, includeLower, includeUpper);
+        } else {
+            return new TermRangeQuery(field, bound, null, includeLower, includeUpper);
         }
+    }
+
+    private static Query pointQuery(final String field, final NumericKey point, final RangeIndex.Operator operator) {
+        if (operator == RangeIndex.Operator.EQ) {
+            return point.exact(field);
+        }
+        if (operator == RangeIndex.Operator.NE) {
+            return not(new FieldExistsQuery(field), point.exact(field));
+        }
+        return point.range(field, operator);
+    }
+
+    /**
+     * The nodes of one field that the query does not match. The nodes of the other indexed names are not among them:
+     * every indexed node is a Lucene document of its own, and a query over all documents would match them too.
+     *
+     * @param exists the nodes that have a value in the field
+     * @param query the nodes to leave out
+     * @return the query
+     */
+    private static Query not(final Query exists, final Query query) {
+        final BooleanQuery.Builder builder = new BooleanQuery.Builder();
+        builder.add(exists, BooleanClause.Occur.MUST);
+        builder.add(query, BooleanClause.Occur.MUST_NOT);
+        return builder.build();
+    }
+
+    /** The nodes that have a term in the field, for a field that is indexed as terms and may have no norms or doc values. */
+    private static Query anyTermOf(final String field) {
+        return new WildcardQuery(new Term(field, new BytesRef("*")));
+    }
+
+    /**
+     * The key as a literal inside the term of a {@link WildcardQuery}: the characters that Lucene reads as wildcard
+     * syntax have no such meaning in the key of a comparison, so they are escaped.
+     *
+     * @param key the key
+     * @return the key with the wildcard characters and the escape character escaped
+     */
+    private static BytesRef escapeWildcards(final BytesRef key) {
+        final BytesRefBuilder escaped = new BytesRefBuilder();
+        for (int i = key.offset; i < key.offset + key.length; i++) {
+            final byte b = key.bytes[i];
+            if (b == WildcardQuery.WILDCARD_STRING || b == WildcardQuery.WILDCARD_CHAR || b == WildcardQuery.WILDCARD_ESCAPE) {
+                escaped.append((byte) WildcardQuery.WILDCARD_ESCAPE);
+            }
+            escaped.append(b);
+        }
+        return escaped.get();
     }
 
     @Override
@@ -709,79 +676,9 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
     private NodeSet doQuery(final int contextId, final DocumentSet docs, final NodeSet contextSet, final int axis,
                             IndexSearcher searcher, final short nodeType, Query query) throws IOException {
-        if (System.getProperty("exist.range.diagnose") != null) {
-            diagnoseQuery(searcher, query);
-        }
         SearchCollector collector = new SearchCollector(docs, contextSet, nodeType, axis, contextId);
         searcher.search(query, collector);
-        if (System.getProperty("exist.range.diagnose") != null) {
-            System.err.println("[RIW] SEARCH count=" + collector.getResultSet().getLength());
-        }
         return collector.getResultSet();
-    }
-
-    /**
-     * Diagnostic helper: dumps terms for the query's field and search term to stderr.
-     * Only runs when {@code -Dexist.range.diagnose} is enabled, to avoid overhead on normal queries.
-     */
-    private void diagnoseQuery(IndexSearcher searcher, Query query) {
-        String field = null;
-        String searchTerm = null;
-        switch (query) {
-            case TermQuery tq -> {
-                Term t = tq.getTerm();
-                field = t.field();
-                searchTerm = t.text();
-            }
-            case PrefixQuery pq -> {
-                Term t = pq.getPrefix();
-                field = t.field();
-                searchTerm = t.text();
-            }
-            case WildcardQuery wq -> {
-                Term t = wq.getTerm();
-                field = t.field();
-                searchTerm = t.text();
-            }
-            case null, default -> {}
-        }
-        if (field == null || LuceneFieldNames.isInternal(field)) {
-            return;
-        }
-        try {
-            IndexReader reader = searcher.getIndexReader();
-            System.err.println("[RIW] DIAG field=" + field + " searchTerm=" + searchTerm + " reader.maxDoc=" + reader.maxDoc() + " numDocs=" + reader.numDocs());
-            int totalTerms = 0;
-            for (LeafReaderContext ctx : reader.leaves()) {
-                Terms terms = ctx.reader().terms(field);
-                if (terms == null) {
-                    System.err.println("[RIW] DIAG segment has null Terms for field=" + field);
-                    continue;
-                }
-                TermsEnum te = terms.iterator();
-                BytesRef ref;
-                int n = 0;
-                while ((ref = te.next()) != null && n < 15) {
-                    System.err.println("[RIW] TERM " + field + "=" + safeBytesRefToDisplay(ref));
-                    n++;
-                    totalTerms++;
-                }
-                if (n == 0) {
-                    System.err.println("[RIW] DIAG segment has 0 terms for field=" + field);
-                } else {
-                    totalTerms += countRemaining(te);
-                }
-            }
-            System.err.println("[RIW] DIAG total terms for " + field + " (approx)=" + totalTerms);
-        } catch (IOException e) {
-            System.err.println("[RIW] DIAG error: " + e.getMessage());
-        }
-    }
-
-    private int countRemaining(TermsEnum te) throws IOException {
-        int c = 0;
-        while (te.next() != null) c++;
-        return c;
     }
 
     private class SearchCollector implements Collector {
@@ -982,6 +879,22 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
      * Return the analyzer to be used for the given field or qname. Either field
      * or qname should be specified.
      */
+    private TypeConverter getTypeConverter(QName qname, String fieldName, DocumentSet docs) {
+        for (Iterator<Collection> i = docs.getCollectionIterator(); i.hasNext(); ) {
+            final IndexSpec idxConf = i.next().getIndexConfiguration(broker);
+            if (idxConf != null) {
+                final RangeIndexConfig config = (RangeIndexConfig) idxConf.getCustomIndexSpec(RangeIndex.ID);
+                if (config != null) {
+                    final TypeConverter converter = config.getTypeConverter(qname, fieldName);
+                    if (converter != null) {
+                        return converter;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     private boolean isCaseSensitive(QName qname, String fieldName, DocumentSet docs) {
         for (Iterator<Collection> i = docs.getCollectionIterator(); i.hasNext(); ) {
             Collection collection = i.next();

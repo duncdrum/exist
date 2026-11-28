@@ -12,8 +12,16 @@ comparison-typing.xqm: converter-date-key-finds-the-filled-in-digits
 comparison-typing.xqm: converter-date-key-finds-the-normalised-year
 comparison-typing.xqm: converter-field-answers-a-date-key
 comparison-typing.xqm: converter-field-date-key-finds-the-normalised-year
+comparison-typing.xqm: converter-key-not-indexed-not-equal-finds-the-indexed-nodes
 comparison-typing.xqm: converter-string-answers-with-the-text-it-indexed
 comparison-typing.xqm: converter-string-field-answers-with-the-text-it-indexed
+comparison-typing.xqm: converter-string-field-key-is-converted
+comparison-typing.xqm: converter-string-key-is-converted
+comparison-typing.xqm: converter-string-key-is-converted-for-contains
+comparison-typing.xqm: converter-string-key-is-converted-for-ends-with
+comparison-typing.xqm: converter-string-key-is-converted-for-less-than
+comparison-typing.xqm: converter-string-key-is-converted-for-not-equal
+comparison-typing.xqm: converter-string-key-is-converted-for-starts-with
 comparison-typing.xqm: fields-answer-a-general-comparison
 comparison-typing.xqm: fields-answer-a-string-key
 comparison-typing.xqm: legacy-answers-a-general-comparison
@@ -148,3 +156,5 @@ types.xql: starts-with-ignore-case
 types.xql: string-contains-ignore-case
 types.xql: string-equals-2-ignore-case
 types.xql: string-equals-ignore-case
+not-equal.xqm: not-equal-uses-the-index
+wildcard-keys.xqm: contains-uses-the-index
