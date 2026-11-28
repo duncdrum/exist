@@ -25,6 +25,22 @@ module namespace fni="http://exist-db.org/xquery/test/function_id";
 
 declare namespace test="http://exist-db.org/xquery/xqsuite";
 
+declare
+    %test:setUp
+function fni:duplicates-setup() {
+    xmldb:create-collection("/db", "fnid-duplicates"),
+    xmldb:store("/db/fnid-duplicates", "dtd.xml",
+        '<!DOCTYPE r [<!ATTLIST c id ID #IMPLIED>]><r><c id="a">first</c><c id="a">second</c></r>', "application/xml"),
+    xmldb:store("/db/fnid-duplicates", "xmlid.xml",
+        '<r><c xml:id="a">first</c><c xml:id="a">second</c></r>', "application/xml")
+};
+
+declare
+    %test:tearDown
+function fni:duplicates-cleanup() {
+    xmldb:remove("/db/fnid-duplicates")
+};
+
 declare variable $fni:data :=
           document{
             <employee xml:id="ID21256"
@@ -139,4 +155,31 @@ declare
     %test:assertError("XPTY0004")
 function fni:fn-id-context-item-not-node() {
     (1 to 5)[fn:id("argument1")]
+};
+
+(: If several elements have the same ID value, only the first one in document order is returned (#7076) :)
+declare
+    %test:assertEquals("first")
+function fni:duplicate-id-declared-by-dtd() {
+    doc("/db/fnid-duplicates/dtd.xml")/id('a')/string()
+};
+
+declare
+    %test:assertEquals("first")
+function fni:duplicate-xml-id() {
+    doc("/db/fnid-duplicates/xmlid.xml")/id('a')/string()
+};
+
+declare
+    %test:assertEquals("first")
+function fni:duplicate-xml-id-in-memory() {
+    document { <r><c xml:id="a">first</c><c xml:id="a">second</c></r> }/id('a')/string()
+};
+
+(: the first one of each document, not of the whole sequence of documents :)
+declare
+    %test:assertEquals("2", "first")
+function fni:duplicate-id-one-per-document() {
+    let $found := collection("/db/fnid-duplicates")/id('a')
+    return (count($found), distinct-values($found/string()))
 };

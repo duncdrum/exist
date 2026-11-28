@@ -25,6 +25,22 @@ module namespace fnewi="http://exist-db.org/xquery/test/function_element_with_id
 
 declare namespace test="http://exist-db.org/xquery/xqsuite";
 
+declare
+    %test:setUp
+function fnewi:duplicates-setup() {
+    xmldb:create-collection("/db", "fnewi-duplicates"),
+    xmldb:store("/db/fnewi-duplicates", "dtd.xml",
+        '<!DOCTYPE r [<!ATTLIST c id ID #IMPLIED>]><r><c id="a">first</c><c id="a">second</c></r>', "application/xml"),
+    xmldb:store("/db/fnewi-duplicates", "xmlid.xml",
+        '<r><c xml:id="a">first</c><c xml:id="a">second</c></r>', "application/xml")
+};
+
+declare
+    %test:tearDown
+function fnewi:duplicates-cleanup() {
+    xmldb:remove("/db/fnewi-duplicates")
+};
+
 declare variable $fnewi:data :=
           document{
             <employee xml:id="ID21256"
@@ -133,4 +149,31 @@ declare
     %test:assertEquals("Element-with-ID-union-child", "0")
 function fnewi:fn-element-with-id-5() {
     $fnewi:ids2/element-with-id('omicron')/local-name(), count($fnewi:ids2/element-with-id('853'))
+};
+
+(: If several elements have the same ID value, only the first one in document order is returned (#7076) :)
+declare
+    %test:assertEquals("first")
+function fnewi:duplicate-id-declared-by-dtd() {
+    doc("/db/fnewi-duplicates/dtd.xml")/element-with-id('a')/string()
+};
+
+declare
+    %test:assertEquals("first")
+function fnewi:duplicate-xml-id() {
+    doc("/db/fnewi-duplicates/xmlid.xml")/element-with-id('a')/string()
+};
+
+declare
+    %test:assertEquals("first")
+function fnewi:duplicate-xml-id-in-memory() {
+    document { <r><c xml:id="a">first</c><c xml:id="a">second</c></r> }/element-with-id('a')/string()
+};
+
+(: the first one of each document, not of the whole sequence of documents :)
+declare
+    %test:assertEquals("2", "first")
+function fnewi:duplicate-id-one-per-document() {
+    let $found := collection("/db/fnewi-duplicates")/element-with-id('a')
+    return (count($found), distinct-values($found/string()))
 };

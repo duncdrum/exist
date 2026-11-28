@@ -153,11 +153,7 @@ public class FunElementWithId extends BasicFunction {
 
 	private void getId(final NodeSet result, final DocumentSet docs, final String id) throws XPathException {
 		final NodeSet attribs = context.getBroker().getValueIndex().find(context.getWatchDog(), Comparison.EQ, docs, null, -1, null, new StringValue(id, Type.ID));
-		NodeProxy p;
-		for (final NodeProxy n : attribs) {
-			p = new NodeProxy(n.getOwnerDocument(), n.getNodeId().getParentId(), Node.ELEMENT_NODE);
-			result.add(p);
-		}
+		IdMatches.addFirstElementOfEachDocument(result, attribs);
 	}
 
     private void getId(final Sequence result, final Sequence seq, final String id) throws XPathException {
