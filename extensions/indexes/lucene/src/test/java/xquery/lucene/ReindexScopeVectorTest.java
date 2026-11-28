@@ -143,6 +143,30 @@ class ReindexScopeVectorTest {
         assertEquals(null, pool.getVectorStore().get(uri, node.getNodeId()), "removed with the node");
     }
 
+    @Test
+    void aRemovedDocumentRemovesItsStoredVectors() throws Exception {
+        store("scope-document-removed", GIVEN_STORED_XCONF, "<d><p v='0 1 0'>alpha</p></d>");
+        final NodeProxy node = firstParagraph("scope-document-removed");
+        final String uri = node.getOwnerDocument().getURI().toString();
+        plant(uri, node, 1);
+        final BrokerPool pool = existEmbeddedServer.getBrokerPool();
+        assertEquals(12, pool.getVectorStore().get(uri, node.getNodeId()).length, "planted");
+        execute("xmldb:remove('/db/scope-document-removed', 'd.xml')");
+        assertEquals(null, pool.getVectorStore().get(uri, node.getNodeId()), "removed with the document");
+    }
+
+    @Test
+    void aRemovedCollectionRemovesTheStoredVectorsOfItsDocuments() throws Exception {
+        store("scope-collection-removed", GIVEN_STORED_XCONF, "<d><p v='0 1 0'>alpha</p></d>");
+        final NodeProxy node = firstParagraph("scope-collection-removed");
+        final String uri = node.getOwnerDocument().getURI().toString();
+        plant(uri, node, 1);
+        final BrokerPool pool = existEmbeddedServer.getBrokerPool();
+        assertEquals(12, pool.getVectorStore().get(uri, node.getNodeId()).length, "planted");
+        execute("xmldb:remove('/db/scope-collection-removed')");
+        assertEquals(null, pool.getVectorStore().get(uri, node.getNodeId()), "removed with the collection");
+    }
+
     /**
      * A "vector" reindex computes the vectors again: a vector stored for the node, which the document does not give, is
      * not the node's vector after it, and an "all" reindex is no different. A "fulltext" reindex restores it.

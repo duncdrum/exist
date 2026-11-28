@@ -21,6 +21,8 @@
  */
 package org.exist.indexing.lucene;
 
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.document.FieldType;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -47,12 +49,39 @@ import org.exist.util.ByteConversion;
 
 public class LuceneUtil {
 
+    /**
+     * The type of the field that indexes the id of a node as one term: a token stream of one binary token, with no norms.
+     * The full-text index and the range index both use it.
+     */
+    public static final FieldType TYPE_NODE_ID = new FieldType();
+    static {
+        TYPE_NODE_ID.setTokenized(true);
+        TYPE_NODE_ID.setStored(false);
+        TYPE_NODE_ID.setOmitNorms(true);
+        TYPE_NODE_ID.setStoreTermVectors(false);
+        TYPE_NODE_ID.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
+    }
+
     public static byte[] createId(final int docId, final NodeId nodeId) {
         // build id from nodeId and docId
         final byte[] data = new byte[nodeId.size() + 4];
         ByteConversion.intToByteH(docId, data, 0);
         nodeId.serialize(data, 4);
 
+        return data;
+    }
+
+    /**
+     * The id of a node as the indexes keep it as a term and as a doc value: the units of the id as a short, then the id.
+     * {@link #readNodeId} reads it back.
+     *
+     * @param nodeId the id of the node
+     * @return the bytes
+     */
+    public static byte[] encodeNodeIdWithUnits(final NodeId nodeId) {
+        final byte[] data = new byte[nodeId.size() + 2];
+        ByteConversion.shortToByteH((short) nodeId.units(), data, 0);
+        nodeId.serialize(data, 2);
         return data;
     }
 

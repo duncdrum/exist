@@ -102,15 +102,6 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
     private static final String REINDEX_DELETE_BATCH_PROPERTY = "exist.lucene.reindex.delete.batchClauses";
     private static final int DEFAULT_REINDEX_DELETE_DOCID_BATCH_SIZE = 256;
 
-    public static final org.apache.lucene.document.FieldType TYPE_NODE_ID = new org.apache.lucene.document.FieldType();
-    static {
-        TYPE_NODE_ID.setTokenized(true);
-        TYPE_NODE_ID.setStored(false);
-        TYPE_NODE_ID.setOmitNorms(true);
-        TYPE_NODE_ID.setStoreTermVectors(false);
-        TYPE_NODE_ID.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);
-    }
-
     static final Logger LOG = LogManager.getLogger(LuceneIndexWorker.class);
 
     /** releases the hold on a taxonomy reader when the facets that need it are unreachable, see {@link LuceneFacets} */
@@ -606,11 +597,7 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
 
             final Query docIdQuery = IntField.newExactQuery(FIELD_DOC_ID, currentDoc.getDocId());
             for (NodeId nodeId : nodesToRemove) {
-                // store the node id
-                int nodeIdLen = nodeId.size();
-                byte[] data = new byte[nodeIdLen + 2];
-                ByteConversion.shortToByteH((short) nodeId.units(), data, 0);
-                nodeId.serialize(data, 2);
+                byte[] data = LuceneUtil.encodeNodeIdWithUnits(nodeId);
 
                 Term it = new Term(LuceneFieldNames.FIELD_NODE_ID, new BytesRef(data));
 
@@ -1981,10 +1968,7 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
     }
 
     private static Query docIdAndNodeIdQuery(final int existDocId, final NodeId nodeId) {
-        final int nodeIdLen = nodeId.size();
-        final byte[] data = new byte[nodeIdLen + 2];
-        ByteConversion.shortToByteH((short) nodeId.units(), data, 0);
-        nodeId.serialize(data, 2);
+        final byte[] data = LuceneUtil.encodeNodeIdWithUnits(nodeId);
         final Term nodeTerm = new Term(LuceneFieldNames.FIELD_NODE_ID, new BytesRef(data));
         return new BooleanQuery.Builder()
             .add(IntField.newExactQuery(FIELD_DOC_ID, existDocId), BooleanClause.Occur.MUST)
@@ -2712,15 +2696,12 @@ public class LuceneIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 }
 
                 // store the node id (new field per doc to avoid shared mutable state)
-                int nodeIdLen = pending.nodeId.size();
-                byte[] data = new byte[nodeIdLen + 2];
-                ByteConversion.shortToByteH((short) pending.nodeId.units(), data, 0);
-                pending.nodeId.serialize(data, 2);
+                byte[] data = LuceneUtil.encodeNodeIdWithUnits(pending.nodeId);
                 doc.add(new BinaryDocValuesField(LuceneFieldNames.FIELD_NODE_ID_DV, new BytesRef(data)));
 
                 // add separate index for node id (FIELD_NODE_ID for Term queries)
                 BinaryTokenStream bts = new BinaryTokenStream(new BytesRef(data));
-                Field fNodeIdIdx = new Field(LuceneFieldNames.FIELD_NODE_ID, bts, TYPE_NODE_ID);
+                Field fNodeIdIdx = new Field(LuceneFieldNames.FIELD_NODE_ID, bts, LuceneUtil.TYPE_NODE_ID);
                 doc.add(fNodeIdIdx);
 
                 String contentField = null;

@@ -50,7 +50,6 @@ import org.exist.indexing.StreamListener.ReindexMode;
 import org.exist.indexing.range.conversion.TypeConverter;
 import org.exist.indexing.lucene.BinaryTokenStream;
 import org.exist.indexing.lucene.LuceneFieldNames;
-import org.exist.indexing.lucene.LuceneIndexWorker;
 import org.exist.indexing.lucene.LuceneUtil;
 import org.exist.numbering.NodeId;
 import org.exist.security.PermissionDeniedException;
@@ -486,13 +485,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
             writer = index.getWriter();
 
             for (NodeId nodeId : nodesToRemove) {
-                // build id from nodeId and docId (must match write() encoding: ByteConversion.intToByteH)
-                int nodeIdLen = nodeId.size();
-                byte[] data = new byte[nodeIdLen + 4];
-                ByteConversion.intToByteH(currentDoc.getDocId(), data, 0);
-                nodeId.serialize(data, 4);
-
-                Term it = new Term(FIELD_ID, new BytesRef(data));
+                Term it = new Term(FIELD_ID, new BytesRef(LuceneUtil.createId(currentDoc.getDocId(), nodeId)));
                 TermQuery iq = new TermQuery(it);
                 writer.deleteDocuments(iq);
             }
@@ -535,10 +528,7 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 final Map<String, Analyzer> documentAnalyzers = new HashMap<>();
 
                 // store the node id
-                int nodeIdLen = pending.getNodeId().size();
-                byte[] data = new byte[nodeIdLen + 2];
-                ByteConversion.shortToByteH((short) pending.getNodeId().units(), data, 0);
-                pending.getNodeId().serialize(data, 2);
+                byte[] data = LuceneUtil.encodeNodeIdWithUnits(pending.getNodeId());
                 fNodeId.setBytesValue(data);
                 doc.add(fNodeId);
 
@@ -548,11 +538,8 @@ public class RangeIndexWorker implements OrderedValuesIndex, QNamedKeysIndex {
                 }
 
                 // add separate index for node id
-                byte[] idData = new byte[nodeIdLen + 4];
-                ByteConversion.intToByteH(currentDoc.getDocId(), idData, 0);
-                pending.getNodeId().serialize(idData, 4);
-                BinaryTokenStream bts = new BinaryTokenStream(new BytesRef(idData));
-                Field fNodeIdIdx = new Field(FIELD_ID, bts, LuceneIndexWorker.TYPE_NODE_ID);
+                BinaryTokenStream bts = new BinaryTokenStream(new BytesRef(LuceneUtil.createId(currentDoc.getDocId(), pending.getNodeId())));
+                Field fNodeIdIdx = new Field(FIELD_ID, bts, LuceneUtil.TYPE_NODE_ID);
                 doc.add(fNodeIdIdx);
 
                 for (TextCollector.Field field : pending.getCollector().getFields()) {
