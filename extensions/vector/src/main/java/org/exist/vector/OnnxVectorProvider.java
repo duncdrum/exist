@@ -23,10 +23,12 @@ package org.exist.vector;
 
 import ai.djl.huggingface.tokenizers.Encoding;
 import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer;
+import ai.onnxruntime.NodeInfo;
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtEnvironment;
 import ai.onnxruntime.OrtSession;
 import ai.onnxruntime.OrtSession.Result;
+import ai.onnxruntime.TensorInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -280,6 +282,14 @@ public final class OnnxVectorProvider implements VectorEmbeddingProvider {
       final String tokenTypeIdsInputName = resolveTokenTypeIdsInput(session);
       final String outputName = resolveOutputName(session);
 
+      final long modelDimension = outputDimension(session, outputName);
+      if (modelDimension > 0 && modelDimension != dimension) {
+        // every vector would be refused at embed time, so say it once, here
+        LOG.warn("The model in {} embeds into {} dimensions, the configured dimension is {}", modelPath, modelDimension, dimension);
+        closeQuietly(session, tokenizer);
+        return null;
+      }
+
       return new OnnxVectorProvider(env, session, tokenizer, dimension, outputName, tokenTypeIdsInputName);
     } catch (final Exception e) {
       LOG.warn("Failed to create OnnxVectorProvider: {}", e.getMessage());
@@ -298,6 +308,23 @@ public final class OnnxVectorProvider implements VectorEmbeddingProvider {
       }
       return env.createSession(modelFile.toString(), opts);
     }
+  }
+
+  /**
+   * @return the size of the last dimension of the model's output, the embedding dimension, or -1 if the model does
+   *     not declare it
+   */
+  private static long outputDimension(final OrtSession session, final String outputName) throws Exception {
+    final Map<String, NodeInfo> outputs = session.getOutputInfo();
+    NodeInfo output = outputs.get(outputName);
+    if (output == null && !outputs.isEmpty()) {
+      output = outputs.values().iterator().next();
+    }
+    if (output != null && output.getInfo() instanceof TensorInfo tensor && tensor.getShape().length > 0) {
+      final long[] shape = tensor.getShape();
+      return shape[shape.length - 1];
+    }
+    return -1;
   }
 
   @Nullable
