@@ -1,0 +1,24 @@
+.github/workflows/ci-benchmarks.yml
+  h_ff0005bef58c9d 77
+exist-indexes-jmh/pom.xml
+  h_ff0005bef58c9d 81-85
+exist-indexes-jmh/src/main/java/org/exist/indexing/jmh/OnnxEmbeddingBenchmark.java
+  h_ff0005bef58c9d 1-132
+extensions/vector/pom.xml
+  h_ff0005bef58c9d 99-103
+extensions/vector/src/main/java/org/exist/vector/OnnxVectorProvider.java
+  h_ff0005bef58c9d 39,63,305-310,321-368
+extensions/vector/src/test/java/org/exist/vector/OnnxThreadsTest.java
+  h_ff0005bef58c9d 1-83
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "29b7d10e4571bbbb4f1df6fc44e62efd4b748603",
+  "prompts": {},
+  "humans": {
+    "h_ff0005bef58c9d": {
+      "author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
