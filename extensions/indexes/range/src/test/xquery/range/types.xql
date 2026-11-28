@@ -170,6 +170,15 @@ declare
     %test:args("2012-01-20")
     %test:assertXPath("$result//stats:index[@type eq 'new-range'][@optimization-level eq 'OPTIMIZED']")
 function tt:eq-date-type-conversion-optimize($date as xs:string) {
+    collection($tt:COLLECTION)//entry[date = xs:date($date)]
+};
+
+(: a string key compares strings, which the index of dates does not: the comparison is evaluated as written :)
+declare 
+    %test:stats
+    %test:args("2012-01-20")
+    %test:assertXPath("empty($result//stats:index[@type eq 'new-range'][@optimization-level eq 'OPTIMIZED'])")
+function tt:eq-date-string-key-is-compared-as-written($date as xs:string) {
     collection($tt:COLLECTION)//entry[date = $date]
 };
 
@@ -204,6 +213,15 @@ declare
     %test:args("2012-01-20")
     %test:assertXPath("$result//stats:index[@type eq 'new-range'][@optimization-level eq 'OPTIMIZED']")
 function tt:eq-date-field-type-conversion-optimize($date as xs:string) {
+    collection($tt:COLLECTION)//entry[date2 = xs:date($date)]
+};
+
+(: a string key compares strings, which the field of dates does not: the comparison is evaluated as written :)
+declare 
+    %test:stats
+    %test:args("2012-01-20")
+    %test:assertXPath("empty($result//stats:index[@type eq 'new-range'][@optimization-level eq 'OPTIMIZED'])")
+function tt:eq-date-field-string-key-is-compared-as-written($date as xs:string) {
     collection($tt:COLLECTION)//entry[date2 = $date]
 };
 
@@ -365,10 +383,13 @@ function tt:int-field-type-conversion($n as xs:string) {
     collection($tt:COLLECTION)//entry[int2 = $n]/id/string()
 };
 
+(: a key is not rounded to the type of the index: no integer equals 2.4 :)
 declare 
     %test:args(2.4)
+    %test:assertEmpty
+    %test:args(2)
     %test:assertEquals("E2")
-function tt:double-equals-type-conversion($n as xs:double) {
+function tt:double-equals-does-not-round-the-key($n as xs:double) {
     collection($tt:COLLECTION)//entry[int = $n]/id/string()
 };
 

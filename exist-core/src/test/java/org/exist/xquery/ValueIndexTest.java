@@ -43,6 +43,8 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author wolf
@@ -133,7 +135,7 @@ public class ValueIndexTest {
         queryResource(service, ITEMS_FILENAME, "//item[name = 'Racing Bicycle']", 1);
         queryResource(service, ITEMS_FILENAME, "//item[name > 'Racing Bicycle']", 4);
         queryResource(service, ITEMS_FILENAME, "//item[itemno = 3]", 1);
-        queryResource(service, ITEMS_FILENAME, "//item[itemno eq 3]", 1);
+        assertValueComparisonFails(service, ITEMS_FILENAME, "//item[itemno eq 3]");
         ResourceSet result = queryResource(service, ITEMS_FILENAME, "for $i in //item[stock <= 10] return $i/itemno", 5);
         for (long i = 0; i < result.getSize(); i++) {
             Resource res = result.getResource(i);
@@ -142,14 +144,14 @@ public class ValueIndexTest {
         queryResource(service, ITEMS_FILENAME, "//item[stock > 20]", 1);
         queryResource(service, ITEMS_FILENAME, "declare namespace x=\"http://www.foo.com\"; //item[x:rating > 8.0]", 2);
         queryResource(service, ITEMS_FILENAME, "declare namespace xx=\"http://test.com\"; //item[@xx:test = 123]", 1);
-        queryResource(service, ITEMS_FILENAME, "declare namespace xx=\"http://test.com\"; //item[@xx:test eq 123]", 1);
+        assertValueComparisonFails(service, ITEMS_FILENAME, "declare namespace xx=\"http://test.com\"; //item[@xx:test eq 123]");
         queryResource(service, ITEMS_FILENAME, "//item[mixed = 'uneven']", 1);
         queryResource(service, ITEMS_FILENAME, "//item[mixed eq 'uneven']", 1);
         queryResource(service, ITEMS_FILENAME, "//item[mixed = 'external']", 1);
         queryResource(service, ITEMS_FILENAME, "//item[fn:matches(mixed, 'un.*')]", 2);
         queryResource(service, ITEMS_FILENAME, "//item[price/@specialprice = false()]", 2);
         queryResource(service, ITEMS_FILENAME, "//item[price/@specialprice = true()]", 1);
-        queryResource(service, ITEMS_FILENAME, "//item[price/@specialprice eq true()]", 1);
+        assertValueComparisonFails(service, ITEMS_FILENAME, "//item[price/@specialprice eq true()]");
     }
 
     @Test
@@ -399,6 +401,19 @@ public class ValueIndexTest {
             assertEquals(1, mods);
             queryResource(query, ITEMS_FILENAME, "//((#exist:optimize#) { item[itemno = " + i + "] })", 0);
         }
+    }
+
+    /**
+     * A value comparison compares the text as a string, so a number or a boolean as its key is a type error, with the
+     * index too.
+     *
+     * @param service the query service
+     * @param resource the name of the resource to query
+     * @param query a query with such a value comparison
+     */
+    private void assertValueComparisonFails(final XPathQueryService service, final String resource, final String query) {
+        final XMLDBException e = assertThrows(XMLDBException.class, () -> service.queryResource(resource, query));
+        assertTrue(e.getMessage().contains("XPTY0004"), e.getMessage());
     }
 
     protected ResourceSet queryResource(XPathQueryService service,

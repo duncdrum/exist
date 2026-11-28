@@ -64,58 +64,84 @@
     </test>
     <test output="text">
         <task>GT</task>
-        <code>count(//date[. gt xs:dateTime('1960-03-19T19:03:59.782+01:00')])</code>
+        <code>count(//date[. > xs:dateTime('1960-03-19T19:03:59.782+01:00')])</code>
         <expected>4</expected>
     </test>
     <test output="text">
         <task>GT 2</task>
-        <code>count(//date[. gt xs:dateTime('1970-10-07T08:00:00Z')])</code>
+        <code>count(//date[. > xs:dateTime('1970-10-07T08:00:00Z')])</code>
         <expected>1</expected>
     </test>
     <test output="text">
         <task>GT 3</task>
-        <code>count(//date[. gt xs:dateTime('0753-04-21T00:00:00+01:00')])</code>
+        <code>count(//date[. > xs:dateTime('0753-04-21T00:00:00+01:00')])</code>
         <expected>5</expected>
     </test>
     <test output="text">
         <task>GE</task>
-        <code>count(//date[. ge xs:dateTime('1960-03-19T19:03:59.782+01:00')])</code>
+        <code>count(//date[. >= xs:dateTime('1960-03-19T19:03:59.782+01:00')])</code>
         <expected>5</expected>
     </test>
     <test output="text">
         <task>GE 2</task>
-        <code>count(//date[. ge xs:dateTime('1970-10-07T08:00:00Z')])</code>
+        <code>count(//date[. >= xs:dateTime('1970-10-07T08:00:00Z')])</code>
         <expected>2</expected>
     </test>
     <test output="text">
         <task>LT</task>
-        <code>count(//date[. lt xs:dateTime('1960-03-19T19:03:59.782+01:00')])</code>
+        <code>count(//date[. &lt; xs:dateTime('1960-03-19T19:03:59.782+01:00')])</code>
         <expected>1</expected>
     </test>
     <test output="text">
         <task>LT 2</task>
-        <code>count(//date[. lt xs:dateTime('0753-04-21T00:00:00+01:00')])</code>
+        <code>count(//date[. &lt; xs:dateTime('0753-04-21T00:00:00+01:00')])</code>
         <expected>0</expected>
     </test>
     <test output="text">
         <task>LE</task>
-        <code>count(//date[. le xs:dateTime('0753-04-21T00:00:00+01:00')])</code>
+        <code>count(//date[. &lt;= xs:dateTime('0753-04-21T00:00:00+01:00')])</code>
         <expected>1</expected>
     </test>
     <test output="text">
         <task>GT 3</task>
-        <code>count(//date[. gt xs:dateTime('1970-10-07T08:00:00Z')])</code>
+        <code>count(//date[. > xs:dateTime('1970-10-07T08:00:00Z')])</code>
         <expected>1</expected>
     </test>
     <test output="text">
         <task>GT 4</task>
-        <code>count(//date[. gt xs:dateTime('1970-10-07T08:00:00+01:00')])</code>
+        <code>count(//date[. > xs:dateTime('1970-10-07T08:00:00+01:00')])</code>
         <expected>2</expected>
     </test>
     <test output="text">
         <task>GT 5</task>
-        <code>count(//date[. gt xs:dateTime('1970-10-07T08:00:00-01:00')])</code>
+        <code>count(//date[. > xs:dateTime('1970-10-07T08:00:00-01:00')])</code>
         <expected>0</expected>
+    </test>
+
+    <test output="text">
+        <task>A value comparison compares the text as a string: GT is a type error</task>
+        <code>count(//date[. gt xs:dateTime('1960-03-19T19:03:59.782+01:00')])</code>
+        <error>XPTY0004</error>
+    </test>
+    <test output="text">
+        <task>A value comparison compares the text as a string: LE is a type error</task>
+        <code>count(//date[. le xs:dateTime('0753-04-21T00:00:00+01:00')])</code>
+        <error>XPTY0004</error>
+    </test>
+    <test output="text">
+        <task>A value comparison compares the text as a string: a string key finds the same text only</task>
+        <code>count(//date[. eq '1970-10-07T08:00:00Z'])</code>
+        <expected>1</expected>
+    </test>
+    <test output="text">
+        <task>A value comparison compares the text as a string: the same instant in other text is not found</task>
+        <code>count(//date[. eq '1970-10-07T09:00:00Z'])</code>
+        <expected>0</expected>
+    </test>
+    <test output="text">
+        <task>A general comparison compares the text as the type of the key: the same instant in other text is found</task>
+        <code>count(//date[. = xs:dateTime('1970-10-07T09:00:00Z')])</code>
+        <expected>1</expected>
     </test>
 
     <!--test output="text">
