@@ -51,6 +51,7 @@ import org.exist.xquery.value.Type;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -160,6 +161,7 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
      */
     public void analyze( AnalyzeContextInfo contextInfo ) throws XPathException
     {
+        movePathLeft();
         contextInfo.addFlag( NEED_INDEX_INFO );
         contextInfo.setParent( this );
         super.analyze( contextInfo );
@@ -283,7 +285,8 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
         final Sequence nodes = getLeft().eval(contextSequence, null);
         if (!nodes.isPersistentSet()) {
             // Evaluates the left operand again, on purpose: a value comparison overrides this method to raise XPTY0004 for an
-            // operand with several items, and the method that takes the evaluated operand is not overridden.
+            // operand with several items, and the method that takes the evaluated operand is not overridden. Only a left
+            // operand over in-memory nodes gets here; it used to fail with a ClassCastException.
             return genericCompare(contextSequence, null);
         }
         return nodeSetCompare(nodes.toNodeSet(), contextSequence);
@@ -546,8 +549,7 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
                         if( ( !Dependency.dependsOn( rightOpDeps, Dependency.CONTEXT_ITEM ) ) ) {
                             result = compareInPredicate( contextSequence );
                         } else {
-                            final NodeSet nodes = ( NodeSet )getLeft().eval(contextSequence, null);
-                            result = nodeSetCompare( nodes, contextSequence );
+                            result = compareLeftNodes( contextSequence );
                         }
                     } else {
                         result = genericCompare( contextSequence, contextItem );
@@ -1318,6 +1320,32 @@ public class GeneralComparison extends BinaryOp implements Optimizable, IndexUse
         setLeft(right);
     }
 
+
+    /**
+     * Moves a path on the right-hand side to the left, inverting an ordering relation: {@code 'x' = @a} becomes
+     * {@code @a = 'x'} and {@code 15 < @n} becomes {@code @n > 15}. The index lookups read only the left operand, so
+     * without this the mirrored spelling used no index. Not when both operands have steps, and not where
+     * {@link #mayMovePathLeft()} says no.
+     */
+    private void movePathLeft() {
+        if (mayMovePathLeft() && !hasLocationStep(getLeft()) && hasLocationStep(getRight())) {
+            switchOperands();
+        }
+    }
+
+    /**
+     * Whether the operands may swap to put a path on the left. Not with truncation, where the order is part of the
+     * meaning: {@code starts-with('abc', @a)} asks whether {@code @a} is a prefix of 'abc'.
+     *
+     * @return true if swapping the operands keeps the comparison's meaning and its errors
+     */
+    protected boolean mayMovePathLeft() {
+        return truncation == StringTruncationOperator.NONE;
+    }
+
+    private static boolean hasLocationStep(final Expression operand) {
+        return BasicExpressionVisitor.findLocationSteps(operand).stream().anyMatch(Objects::nonNull);
+    }
 
     /**
      * Possibly switch operands to simplify execution.
