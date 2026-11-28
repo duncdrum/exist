@@ -24,6 +24,7 @@ package org.exist.indexing.lucene;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.Term;
@@ -50,9 +51,10 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.util.BytesRef;
-import org.apache.lucene.util.automaton.Automaton;
-import org.apache.lucene.util.automaton.ByteRunAutomaton;
+import org.apache.lucene.util.QueryBuilder;
+import org.apache.lucene.util.automaton.CompiledAutomaton;
 import org.apache.lucene.util.automaton.LevenshteinAutomata;
+import org.apache.lucene.util.automaton.Operations;
 import org.apache.lucene.util.automaton.RunAutomaton;
 import org.apache.lucene.util.automaton.UTF32ToUTF8;
 import org.exist.util.Configuration;
@@ -117,24 +119,18 @@ public class XMLToQuery {
     private Query phraseQuery(String field, Element node, Analyzer analyzer) throws XPathException {
         NodeList termList = node.getElementsByTagName("term");
         if (termList.getLength() == 0) {
-            // Use PhraseQuery.Builder in Lucene 10
-            PhraseQuery.Builder builder = new PhraseQuery.Builder();
-            String qstr = getText(node);
-            try (TokenStream stream = analyzer.tokenStream(field, new StringReader(qstr))) {
-                CharTermAttribute termAttr = stream.addAttribute(CharTermAttribute.class);
-                stream.reset();
-                int pos = 0;
-                while (stream.incrementToken()) {
-                    builder.add(new Term(field, termAttr.toString()), pos++);
+            final String qstr = getText(node);
+            final int slop = Math.max(getSlop(node), 0);
+            try {
+                final Query query = new QueryBuilder(analyzer).createPhraseQuery(field, qstr, slop);
+                // a text without a token, the stop words only, matches nothing
+                return query != null ? query : new PhraseQuery.Builder().build();
+            } catch (final RuntimeException e) {
+                if (e.getCause() instanceof IOException) {
+                    throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
                 }
-                stream.end();
-            } catch (IOException e) {
-                throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
+                throw e;
             }
-            int slop = getSlop(node);
-            if (slop > -1)
-                builder.setSlop(slop);
-            return builder.build();
         }
         MultiPhraseQuery.Builder builder = new MultiPhraseQuery.Builder();
         for (int i = 0; i < termList.getLength(); i++) {
@@ -142,7 +138,7 @@ public class XMLToQuery {
             String text = getText(elem);
             if (text.indexOf('?') > -1 || text.indexOf('*') > -1) {
                 try {
-                    Term[] expanded = expandTerms(field, text);
+                    Term[] expanded = expandTerms(field, analyzer != null ? normalizeMultiTermPattern(field, text, analyzer) : text);
                     if (expanded.length > 0)
                         builder.add(expanded);
                 } catch (IOException e) {
@@ -168,34 +164,81 @@ public class XMLToQuery {
         if (node.hasAttribute("ordered"))
             inOrder = "yes".equals(node.getAttribute("ordered"));
 
-        if (!hasElementContent(node)) {
-            String qstr = getText(node);
-            List<SpanTermQuery> list = new ArrayList<>(8);
-            try (TokenStream stream = analyzer.tokenStream(field, new StringReader(qstr))) {
-                CharTermAttribute termAttr = stream.addAttribute(CharTermAttribute.class);
-                stream.reset();
-                while (stream.incrementToken()) {
-                    list.add(new SpanTermQuery(new Term(field, termAttr.toString())));
-                }
-                stream.end();
-            } catch (IOException e) {
-                throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
-            }
-            return spanNearOrSingle(list.toArray(new SpanTermQuery[0]), slop, inOrder);
+        final SpanClauses clauses = new SpanClauses(field, slop, inOrder);
+        if (hasElementContent(node)) {
+            parseSpanChildren(field, node, analyzer, clauses);
+        } else {
+            addTokensOfText(clauses, field, getText(node), analyzer);
         }
-        SpanQuery[] children = parseSpanChildren(field, node, analyzer);
-        return spanNearOrSingle(children, slop, inOrder);
+        return clauses.build();
     }
 
-    /** SpanNearQuery requires at least 2 clauses; return single span or null for 0. */
-    private SpanQuery spanNearOrSingle(SpanQuery[] clauses, int slop, boolean inOrder) {
-        if (clauses.length == 0) return null;
-        if (clauses.length == 1) return clauses[0];
-        return new SpanNearQuery(clauses, slop, inOrder);
+    /**
+     * The clauses of a near query: terms and nested queries in order, and the gaps that removed words leave between
+     * them. A gap has no meaning before the first and after the last clause, and an unordered near query cannot have one.
+     */
+    private static final class SpanClauses {
+        private final SpanNearQuery.Builder builder;
+        private final boolean ordered;
+        private SpanQuery first;
+        private int count;
+        private int gap;
+        private boolean matchesNothing;
+
+        SpanClauses(final String field, final int slop, final boolean ordered) {
+            this.builder = new SpanNearQuery.Builder(field, ordered).setSlop(slop);
+            this.ordered = ordered;
+        }
+
+        void add(final SpanQuery clause) {
+            if (count > 0 && gap > 0 && ordered) {
+                builder.addGap(gap);
+            }
+            gap = 0;
+            builder.addClause(clause);
+            if (count == 0) {
+                first = clause;
+            }
+            count++;
+        }
+
+        /** @param width the number of positions that the analyzer removed after the last clause */
+        void gap(final int width) {
+            gap += width;
+        }
+
+        /** A part of the query that can match nothing makes the whole query match nothing. */
+        void matchNothing() {
+            matchesNothing = true;
+        }
+
+        /** @return the query, the single clause for one, null for none or for a part that matches nothing */
+        SpanQuery build() {
+            if (matchesNothing || count == 0) {
+                return null;
+            }
+            return count == 1 ? first : builder.build();
+        }
     }
 
-    private SpanQuery[] parseSpanChildren(String field, Element node, Analyzer analyzer) throws XPathException {
-        List<SpanQuery> list = new ArrayList<>(8);
+    /** The tokens of a text, in the order of the text, with a gap where the analyzer removed words. */
+    private void addTokensOfText(final SpanClauses clauses, final String field, final String qstr, final Analyzer analyzer)
+            throws XPathException {
+        try (TokenStream stream = analyzer.tokenStream(field, new StringReader(qstr))) {
+            final CharTermAttribute termAttr = stream.addAttribute(CharTermAttribute.class);
+            final PositionIncrementAttribute increment = stream.addAttribute(PositionIncrementAttribute.class);
+            stream.reset();
+            while (stream.incrementToken()) {
+                clauses.gap(increment.getPositionIncrement() - 1);
+                clauses.add(new SpanTermQuery(new Term(field, termAttr.toString())));
+            }
+            stream.end();
+        } catch (IOException e) {
+            throw new XPathException((Expression) null, "Error while parsing phrase query: " + qstr);
+        }
+    }
+
+    private void parseSpanChildren(String field, Element node, Analyzer analyzer, SpanClauses clauses) throws XPathException {
         Node child = node.getFirstChild();
         while (child != null) {
             if (child.getNodeType() == Node.ELEMENT_NODE) {
@@ -203,18 +246,24 @@ public class XMLToQuery {
                 if (null != localName) {
                     switch (localName) {
                         case "term":
-                            getSpanTerm(list, field, (Element) child, analyzer);
+                            getSpanTerm(clauses, field, (Element) child, analyzer);
                             break;
                         case "near": {
                             SpanQuery sq = nearQuery(field, (Element) child, analyzer);
-                            if (sq != null) list.add(sq);
+                            if (sq != null) clauses.add(sq);
                             break;
                         }
-                        case "first":
-                            list.add(getSpanFirst(field, (Element) child, analyzer));
+                        case "first": {
+                            final SpanQuery sq = getSpanFirst(field, (Element) child, analyzer);
+                            if (sq != null) {
+                                clauses.add(sq);
+                            } else {
+                                clauses.matchNothing();
+                            }
                             break;
+                        }
                         case "regex":
-                            list.add(getSpanRegex(field, (Element) child));
+                            clauses.add(getSpanRegex(field, (Element) child));
                             break;
                         default:
                             throw new XPathException((Expression) null, "Unknown query element: " + child.getNodeName());
@@ -223,13 +272,16 @@ public class XMLToQuery {
             }
             child = child.getNextSibling();
         }
-        return list.toArray(new SpanQuery[0]);
     }
 
-    private void getSpanTerm(List<SpanQuery> list, String field, Element node, Analyzer analyzer) throws XPathException {
-    	String termStr = getTerm(field, getText(node), analyzer);
-    	if (termStr != null)
-    		list.add(new SpanTermQuery(new Term(field, termStr)));
+    /** A term that the analyzer removes keeps its position as a gap. */
+    private void getSpanTerm(SpanClauses clauses, String field, Element node, Analyzer analyzer) throws XPathException {
+        String termStr = getTerm(field, getText(node), analyzer);
+        if (termStr != null) {
+            clauses.add(new SpanTermQuery(new Term(field, termStr)));
+        } else {
+            clauses.gap(1);
+        }
     }
 
     private SpanQuery getSpanRegex(String field, Element node) {
@@ -246,8 +298,9 @@ public class XMLToQuery {
             inOrder = "yes".equals(node.getAttribute("ordered"));
         SpanQuery query = null;
         if (hasElementContent(node)) {
-            SpanQuery[] children = parseSpanChildren(field, node, analyzer);
-            query = new SpanNearQuery(children, slop, inOrder);
+            final SpanClauses clauses = new SpanClauses(field, slop, inOrder);
+            parseSpanChildren(field, node, analyzer, clauses);
+            query = clauses.build();
         } else {
         	String termStr = getTerm(field, getText(node), analyzer);
         	if (termStr != null)
@@ -277,62 +330,28 @@ public class XMLToQuery {
         return -1;
     }
 
-    private Term[] expandTerms(String field, String queryStr) throws XPathException, IOException {
-        return expandTerms(field, (CharSequence) queryStr);
-    }
-
-    // Extracted overload to allow more flexible callers while retaining original signature
-    private Term[] expandTerms(String field, CharSequence wildcardPattern) throws XPathException, IOException {
+    /**
+     * The terms of the field that a wildcard pattern matches, read with the syntax of {@link WildcardQuery}: the same
+     * as the wildcard form of the query reads it.
+     */
+    private Term[] expandTerms(final String field, final String wildcardPattern) throws XPathException, IOException {
+        final CompiledAutomaton automaton = new CompiledAutomaton(
+                WildcardQuery.toAutomaton(new Term(field, wildcardPattern), Operations.DEFAULT_DETERMINIZE_WORK_LIMIT));
         return index.withReader(reader -> {
-            final ByteRunAutomaton run = buildWildcardRunAutomaton(wildcardPattern.toString());
-
             final List<Term> termList = new ArrayList<>(8);
             for (LeafReaderContext ctx : reader.leaves()) {
                 final Terms terms = ctx.reader().terms(field);
                 if (terms == null) {
                     continue;
                 }
-                collectMatchingTermsForLeaf(field, run, terms, termList);
+                final TermsEnum matching = automaton.getTermsEnum(terms);
+                BytesRef term;
+                while ((term = matching.next()) != null) {
+                    termList.add(new Term(field, BytesRef.deepCopyOf(term)));
+                }
             }
             return termList.toArray(new Term[0]);
         });
-    }
-
-    // Build RunAutomaton from a wildcard pattern using RegExp
-    private ByteRunAutomaton buildWildcardRunAutomaton(String wildcardPattern) {
-        // Convert wildcard (*, ?) to a RegExp that matches the same semantics
-        // Escape other regex meta characters to treat them literally
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < wildcardPattern.length(); i++) {
-            char c = wildcardPattern.charAt(i);
-            switch (c) {
-                case '*' -> sb.append(".*");
-                case '?' -> sb.append(".");
-                case '\\' -> sb.append("\\\\");
-                case '.', '+', '(', ')', '[', ']', '{', '}', '^', '$', '|' -> sb.append('\\').append(c);
-                default -> sb.append(c);
-            }
-        }
-        final String regex = sb.toString();
-        final Automaton wildcardAutomaton =
-                new org.apache.lucene.util.automaton.RegExp(regex).toAutomaton();
-        return new ByteRunAutomaton(wildcardAutomaton);
-    }
-
-    // Extracted to simplify expandTerms loop body
-    private void collectMatchingTermsForLeaf(String field, ByteRunAutomaton run, Terms terms, List<Term> out) throws IOException {
-        final TermsEnum te = terms.iterator();
-        BytesRef term;
-        while ((term = te.next()) != null) {
-            if (matchesWildcard(run, term)) {
-                out.add(new Term(field, term.utf8ToString()));
-            }
-        }
-    }
-
-    // Extracted and clarified name; delegates to run.run with BytesRef slices
-    private static boolean matchesWildcard(ByteRunAutomaton run, BytesRef utf8Term) {
-        return run.run(utf8Term.bytes, utf8Term.offset, utf8Term.length);
     }
 
     private Query termQuery(String field, Element node, Analyzer analyzer) throws XPathException {
