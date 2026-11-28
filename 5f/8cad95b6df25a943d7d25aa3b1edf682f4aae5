@@ -1,0 +1,23 @@
+extensions/vector/pom.xml
+  s_7879c6a7245ee4::t_0cd344ad3ae671 101-103
+  s_7879c6a7245ee4::t_87c6b1d629dea0 99-100
+extensions/vector/src/test/java/org/exist/vector/OnnxThreadsTest.java
+  s_7879c6a7245ee4::t_21566c5a3a7ccc 61-67,70-73
+  s_7879c6a7245ee4::t_1a665e39d304d7 27-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5f8cad95b6df25a943d7d25aa3b1edf682f4aae5",
+  "prompts": {},
+  "sessions": {
+    "s_7879c6a7245ee4": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "10351e51-5803-42e6-b911-23698db29544",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "duncdrum <d.paterson@me.com>"
+    }
+  }
+}
